@@ -1,0 +1,8 @@
+packages:
+  - "contracts"
+  - "sdk"
+  - "indexer"
+  - "web"
+  - "weather-seed"
+allowBuilds:
+  esbuild: true
