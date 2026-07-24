@@ -85,20 +85,29 @@ export function startMarketWatcher(marketAddress: string) {
   const normalizedAddress = marketAddress.toLowerCase()
   if (activeWatchers.has(normalizedAddress)) return
 
-  const unwatch = publicClient.watchContractEvent({
-    address: normalizedAddress as `0x${string}`,
-    abi: MarketABI,
-    onLogs: (logs) => {
-      logs.forEach((log) => {
-        const eventName = (log as any).eventName
-        if (eventName === 'PositionMinted') handlePositionMinted(normalizedAddress, log)
-        if (eventName === 'MarketSettled') handleMarketSettled(normalizedAddress, log)
-        if (eventName === 'PositionRedeemed') handlePositionRedeemed(normalizedAddress, log)
-      })
-    },
-    onError: (err) => logger.error('Market watcher error', { market: normalizedAddress, err: err.message })
-  })
+  const watch = () => {
+    const unwatch = publicClient.watchContractEvent({
+      address: normalizedAddress as `0x${string}`,
+      abi: MarketABI,
+      onLogs: (logs) => {
+        logs.forEach((log) => {
+          const eventName = (log as any).eventName
+          if (eventName === 'PositionMinted') handlePositionMinted(normalizedAddress, log)
+          if (eventName === 'MarketSettled') handleMarketSettled(normalizedAddress, log)
+          if (eventName === 'PositionRedeemed') handlePositionRedeemed(normalizedAddress, log)
+        })
+      },
+      onError: (err) => {
+        logger.error('Market watcher error, restarting in 5s...', { market: normalizedAddress, err: err.message })
+        unwatch()
+        activeWatchers.delete(normalizedAddress)
+        setTimeout(() => startMarketWatcher(normalizedAddress), 5000)
+      }
+    })
 
-  activeWatchers.set(normalizedAddress, unwatch)
+    activeWatchers.set(normalizedAddress, unwatch)
+  }
+
+  watch()
   logger.info('Market watcher started', { market: normalizedAddress })
 }

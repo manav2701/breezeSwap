@@ -48,11 +48,15 @@ export async function handleMarketCreated(log: Log) {
 export function startFactoryWatcher() {
   logger.info('Starting factory watcher', { address: FACTORY_ADDRESS })
 
-  publicClient.watchContractEvent({
+  const unwatch = publicClient.watchContractEvent({
     address: FACTORY_ADDRESS,
     abi: FactoryABI,
     eventName: 'MarketCreated',
     onLogs: (logs) => logs.forEach(handleMarketCreated),
-    onError: (err) => logger.error('Factory watcher error', { err: err.message })
+    onError: (err) => {
+      logger.error('Factory watcher error, restarting in 5s...', { err: err.message })
+      unwatch()
+      setTimeout(startFactoryWatcher, 5000)
+    }
   })
 }

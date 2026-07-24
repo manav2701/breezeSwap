@@ -7,7 +7,7 @@ import OracleABI from '../abis/MockWeatherOracle.json'
 const ORACLE_ADDRESS = (process.env.MOCK_WEATHER_ORACLE_ADDRESS || '0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab') as `0x${string}`
 
 export function startOracleWatcher() {
-  publicClient.watchContractEvent({
+  const unwatch = publicClient.watchContractEvent({
     address: ORACLE_ADDRESS,
     abi: OracleABI,
     eventName: 'ReadingSet',
@@ -32,7 +32,11 @@ export function startOracleWatcher() {
         logger.info('Oracle reading indexed', { region: args.regionId, value: args.value.toString() })
       }
     },
-    onError: (err) => logger.error('Oracle watcher error', { err: err.message })
+    onError: (err) => {
+      logger.error('Oracle watcher error, restarting in 5s...', { err: err.message })
+      unwatch()
+      setTimeout(startOracleWatcher, 5000)
+    }
   })
 
   logger.info('Oracle watcher started', { address: ORACLE_ADDRESS })
