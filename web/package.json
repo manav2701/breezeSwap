@@ -2,7 +2,6 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@10.5.2",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@breezeswap/sdk": "workspace:*",
+    "@breezeswap/sdk": "file:../sdk",
     "@tanstack/react-query": "^5.66.0",
     "connectkit": "^1.8.2",
     "lucide-react": "^0.475.0",
