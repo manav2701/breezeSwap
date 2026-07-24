@@ -9,6 +9,11 @@ optimizer_runs = 200
 [fuzz]
 runs = 10000
 
+[invariant]
+runs = 256
+depth = 64
+fail_on_revert = false
+
 [rpc_endpoints]
 coston2 = "https://coston2-api.flare.network/ext/C/rpc"
 flare_mainnet = "https://flare-api.flare.network/ext/C/rpc"

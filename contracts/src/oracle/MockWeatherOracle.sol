@@ -69,6 +69,10 @@ contract MockWeatherOracle is IWeatherOracle, Ownable {
             return true; // No data ever set
         }
 
+        if (block.timestamp < latestTime) {
+            return false;
+        }
+
         return (block.timestamp - latestTime) > maxAge;
     }
 }

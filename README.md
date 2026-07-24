@@ -19,12 +19,14 @@
 
 ---
 
-## Test Summary
+## Test & Hardening Summary
 
-- **Total Unit & Integration Tests:** 44 Passing (100% Pass Rate)
-- **Payoff Fuzzing:** 10,000 Fuzz Iterations Passed (`PayoffCalculatorFuzzTest`)
-- **Protocol Code Coverage:** 95.14% Line Coverage
-- **Live On-Chain Proof:** Live Coston2 transactions executed (`coston2-demo-txs.json`)
+- **Total Consolidated Tests:** 82 Passing Tests (100% Pass Rate across 20 Test Suites)
+- **Adversarial Security Suites:** Reentrancy, Double Settlement, Double Redemption, Oracle Staleness, Access Control, Precision & Dust Loss, FAssets Price Bounds (All 28 Security Tests Passed)
+- **Invariant Fuzzing:** 6 Protocol Invariants Holding across 256 Runs × 64 Depth (`BreezeInvariantsTest`)
+- **Payoff Curve Fuzzing:** 10,000 Fuzz Iterations Passed (`PayoffCalculatorFuzzTest`)
+- **Economic Game Analysis:** Front-running neutrality, griefing resistance, last-redeemer remainder pattern verified (`EconomicGamesTest`)
+- **Core Code Coverage:** 96.83% BreezeMarket line coverage (91.43% overall functions)
 
 ---
 
@@ -44,7 +46,7 @@ This pulls real historical and forecast rainfall and temperature data for 5 regi
 
 ```
 breezeswap/
-  contracts/            # Foundry Solidity smart contracts
+  contracts/            # Foundry Solidity smart contracts (Unit, Fuzz, Security & Invariants)
   weather-seed/         # Open-Meteo weather data seeder script
   indexer/              # Node.js event watcher service (Render ready)
   web/                  # Next.js App Router web application

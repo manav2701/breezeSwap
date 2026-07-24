@@ -127,7 +127,6 @@ contract BreezeMarket is ReentrancyGuard {
         finalOracleValue = reading.value;
 
         // 2. Calculate payouts using PayoffCalculator
-        // If one side has 0 supply, total collateral belongs to the side with supply
         uint256 totalNotional = totalCollateral;
 
         if (totalNotional > 0) {
@@ -164,11 +163,21 @@ contract BreezeMarket is ReentrancyGuard {
         // 1. Burn tokens first (checks-effects-interactions)
         positionToken.burn(msg.sender, tokenId, amount);
 
-        // 2. Calculate payout
         if (side == PositionToken.Side.LONG) {
+            totalLongSupply -= amount;
             payout = (amount * longPayoutPerToken) / 1e18;
         } else {
+            totalShortSupply -= amount;
             payout = (amount * shortPayoutPerToken) / 1e18;
+        }
+
+        // 2. Last redeemer gets remainder pattern: if all market position tokens are burned,
+        // assign remaining vault collateral to the final redeemer to ensure vault drains to 0
+        if (totalLongSupply == 0 && totalShortSupply == 0) {
+            uint256 remainingVault = vault.totalDeposited();
+            if (remainingVault > 0 && remainingVault <= payout + 1e15) {
+                payout = remainingVault;
+            }
         }
 
         // 3. Withdraw payout from vault to user
