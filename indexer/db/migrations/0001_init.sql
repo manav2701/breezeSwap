@@ -1,6 +1,13 @@
 -- Migration 0001: Complete schema for BreezeSwap indexer
 
-CREATE TABLE IF NOT EXISTS markets (
+-- Drop existing tables to ensure clean schema update
+DROP TABLE IF EXISTS positions CASCADE;
+DROP TABLE IF EXISTS settlements CASCADE;
+DROP TABLE IF EXISTS markets CASCADE;
+DROP TABLE IF EXISTS weather_readings CASCADE;
+DROP TABLE IF EXISTS indexer_state CASCADE;
+
+CREATE TABLE markets (
   id                  UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   contract_address    TEXT NOT NULL UNIQUE,
   chain_id            INTEGER NOT NULL DEFAULT 114,
@@ -22,7 +29,7 @@ CREATE TABLE IF NOT EXISTS markets (
   tx_hash             TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS positions (
+CREATE TABLE positions (
   id                  UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   market_address      TEXT NOT NULL REFERENCES markets(contract_address),
   token_id            TEXT NOT NULL,
@@ -39,7 +46,7 @@ CREATE TABLE IF NOT EXISTS positions (
   redeem_tx_hash      TEXT
 );
 
-CREATE TABLE IF NOT EXISTS settlements (
+CREATE TABLE settlements (
   id                  UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   market_address      TEXT NOT NULL REFERENCES markets(contract_address),
   oracle_value        NUMERIC NOT NULL,
@@ -50,7 +57,7 @@ CREATE TABLE IF NOT EXISTS settlements (
   tx_hash             TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS weather_readings (
+CREATE TABLE weather_readings (
   id                  UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   region_id           TEXT NOT NULL,
   region_name         TEXT,
@@ -62,7 +69,7 @@ CREATE TABLE IF NOT EXISTS weather_readings (
   tx_hash             TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS indexer_state (
+CREATE TABLE indexer_state (
   id                  TEXT PRIMARY KEY,
   last_block          BIGINT NOT NULL DEFAULT 0,
   updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -72,7 +79,7 @@ CREATE TABLE IF NOT EXISTS indexer_state (
 INSERT INTO indexer_state (id, last_block) VALUES ('coston2_main', 0) ON CONFLICT (id) DO NOTHING;
 
 -- Indexes for common query patterns
-CREATE INDEX IF NOT EXISTS idx_positions_holder ON positions(holder_address);
-CREATE INDEX IF NOT EXISTS idx_positions_market ON positions(market_address);
-CREATE INDEX IF NOT EXISTS idx_markets_status ON markets(status);
-CREATE INDEX IF NOT EXISTS idx_weather_region ON weather_readings(region_id, reading_timestamp);
+CREATE INDEX idx_positions_holder ON positions(holder_address);
+CREATE INDEX idx_positions_market ON positions(market_address);
+CREATE INDEX idx_markets_status ON markets(status);
+CREATE INDEX idx_weather_region ON weather_readings(region_id, reading_timestamp);
