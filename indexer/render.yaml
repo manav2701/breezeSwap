@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: breezeswap-indexer
+    env: node
+    buildCommand: pnpm install && pnpm build
+    startCommand: node dist/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: COSTON2_RPC
+        value: "https://coston2-api.flare.network/ext/C/rpc"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: FACTORY_ADDRESS
+        value: "0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A"
+      - key: POSITION_TOKEN_ADDRESS
+        value: "0x611653F531D6c584801449548728290EbE298d28"
+      - key: MOCK_WEATHER_ORACLE_ADDRESS
+        value: "0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab"
+      - key: DEPLOYMENT_BLOCK
+        value: "18000000"
+      - key: PORT
+        value: "3001"
