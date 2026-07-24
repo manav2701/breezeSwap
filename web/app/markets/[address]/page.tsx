@@ -32,6 +32,7 @@ import {
   timeUntilExpiry
 } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../../../lib/hooks/useBreezeSDK'
+import MarketABI from '../../../../sdk/src/abis/BreezeMarket.json'
 
 function ensureMarketMapped(m: any): Market {
   if (!m) return m
@@ -135,15 +136,31 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
     try {
       const amountBigInt = BigInt(Math.round(Number(collateralInput) * 1e6))
       const tokenAddress = market.collateralToken as `0x${string}`
-      const spenderAddress = market.contractAddress as `0x${string}`
+      const marketAddressHex = market.contractAddress as `0x${string}`
 
-      console.log('Approving collateral token for vault...', { tokenAddress, spenderAddress, amount: amountBigInt.toString() })
-      // 1. Approve collateral (SDK automatically resolves vault address and checks allowance)
+      // 1. Fetch exact CollateralVault address directly from market contract on-chain
+      let vaultAddress = marketAddressHex
+      try {
+        const v = await publicClient.readContract({
+          address: marketAddressHex,
+          abi: MarketABI,
+          functionName: 'vault'
+        }) as `0x${string}`
+        if (v && v !== '0x0000000000000000000000000000000000000000') {
+          vaultAddress = v
+        }
+      } catch (err) {
+        console.warn('Could not read vault from market contract on-chain:', err)
+      }
+
+      console.log('Target CollateralVault for approval:', { tokenAddress, vaultAddress, amount: amountBigInt.toString() })
+
+      // 2. Approve CollateralVault (0x9CeF89...)
       const approveTxHash = await approveCollateral(
         walletClient as any,
         publicClient as any,
         tokenAddress,
-        spenderAddress,
+        vaultAddress,
         amountBigInt
       )
 
@@ -153,13 +170,13 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
         console.log('Approval transaction mined on Coston2!')
       }
 
-      console.log('Minting position...', { marketAddress: spenderAddress, side, amount: amountBigInt.toString() })
-      // 2. Mint position
+      console.log('Minting position...', { marketAddress: marketAddressHex, side, amount: amountBigInt.toString() })
+      // 3. Mint position
       const hash = await mintPosition(
         walletClient as any,
         publicClient as any,
         {
-          marketAddress: spenderAddress,
+          marketAddress: marketAddressHex,
           side,
           collateralAmount: amountBigInt
         }
