@@ -1,0 +1,85 @@
+import React from 'react'
+import Link from 'next/link'
+import { StatusBadge } from './StatusBadge'
+import { CloudRain, Thermometer, ArrowRight, Calendar, Layers } from 'lucide-react'
+import type { Market } from '@breezeswap/sdk'
+import { formatExpiry, timeUntilExpiry } from '@breezeswap/sdk'
+
+const REGION_FLAGS: Record<string, string> = {
+  Tokyo: '🇯🇵',
+  Seoul: '🇰🇷',
+  Singapore: '🇸🇬',
+  Dubai: '🇦🇪',
+  London: '🇬🇧',
+}
+
+export function MarketCard({ market }: { market: Market }) {
+  const flag = REGION_FLAGS[market.regionName || ''] || '🌐'
+  const isRainfall = market.weatherVariable === 'RAINFALL'
+  const unit = isRainfall ? 'mm' : '°C'
+
+  return (
+    <div className="group relative rounded-2xl bg-slate-900/80 border border-slate-800 p-5 hover:border-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2.5">
+            <span className="text-2xl">{flag}</span>
+            <div>
+              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
+                {market.regionName || 'Global Region'}
+              </h3>
+              <div className="flex items-center gap-1 text-xs text-slate-400">
+                {isRainfall ? (
+                  <CloudRain className="w-3.5 h-3.5 text-cyan-400" />
+                ) : (
+                  <Thermometer className="w-3.5 h-3.5 text-amber-400" />
+                )}
+                <span>{market.weatherVariable}</span>
+              </div>
+            </div>
+          </div>
+          <StatusBadge status={market.status} />
+        </div>
+
+        <div className="space-y-2.5 my-4 py-3 border-y border-slate-800/80 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-400 flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-slate-400" />
+              Payoff Structure
+            </span>
+            <span className="font-semibold text-slate-200 bg-slate-800 px-2 py-0.5 rounded-md">
+              {market.payoffType}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-slate-400">Threshold</span>
+            <span className="font-semibold text-cyan-400 font-mono">
+              {market.thresholdHigh ? `${market.thresholdLow} – ${market.thresholdHigh} ${unit}` : `${market.thresholdLow} ${unit}`}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-slate-400 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              Expiry
+            </span>
+            <span className="text-slate-300 font-medium">
+              {timeUntilExpiry(market.expiryTimestamp)}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-2">
+        <Link
+          href={`/markets/${market.contractAddress}`}
+          className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-800 group-hover:bg-cyan-500 text-slate-200 group-hover:text-slate-950 text-sm font-semibold transition-all duration-300"
+        >
+          View Market Detail
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </div>
+  )
+}

@@ -9,9 +9,18 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@breezeswap/sdk": "workspace:*",
+    "@tanstack/react-query": "^5.66.0",
+    "connectkit": "^1.8.2",
+    "lucide-react": "^0.475.0",
     "next": "16.2.11",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^9.0.3",
+    "recharts": "^2.15.1",
+    "remark-gfm": "^4.0.0",
+    "viem": "^2.23.0",
+    "wagmi": "^2.14.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
