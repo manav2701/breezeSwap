@@ -33,6 +33,34 @@ import {
 } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../../../lib/hooks/useBreezeSDK'
 
+function ensureMarketMapped(m: any): Market {
+  if (!m) return m
+  const rawLow = m.threshold_low ?? m.thresholdLow ?? 0
+  const rawHigh = m.threshold_high ?? m.thresholdHigh ?? null
+  const rawFinal = m.final_oracle_value ?? m.finalOracleValue ?? null
+
+  return {
+    contractAddress: m.contractAddress || m.contract_address || '',
+    chainId: m.chainId || m.chain_id || 114,
+    regionId: m.regionId || m.region_id || '',
+    regionName: m.regionName || m.region_name || null,
+    weatherVariable: m.weatherVariable || m.weather_variable || 'RAINFALL',
+    payoffType: m.payoffType || m.payoff_type || 'CAPPED',
+    thresholdLow: typeof rawLow === 'number' ? (rawLow > 1000 ? rawLow / 1e6 : rawLow) : Number(rawLow) / 1e6,
+    thresholdHigh: rawHigh !== null && rawHigh !== undefined ? (typeof rawHigh === 'number' ? (rawHigh > 1000 ? rawHigh / 1e6 : rawHigh) : Number(rawHigh) / 1e6) : null,
+    expiryTimestamp: m.expiryTimestamp || m.expiry_timestamp || '',
+    collateralToken: m.collateralToken || m.collateral_token || '',
+    status: m.status || 'OPEN',
+    finalOracleValue: rawFinal !== null && rawFinal !== undefined ? (typeof rawFinal === 'number' ? (rawFinal > 1000 ? rawFinal / 1e6 : rawFinal) : Number(rawFinal) / 1e6) : null,
+    longPayoutRatio: m.longPayoutRatio !== undefined && m.longPayoutRatio !== null ? m.longPayoutRatio : (m.long_payout_ratio ? Number(m.long_payout_ratio) : null),
+    shortPayoutRatio: m.shortPayoutRatio !== undefined && m.shortPayoutRatio !== null ? m.shortPayoutRatio : (m.short_payout_ratio ? Number(m.short_payout_ratio) : null),
+    settledAt: m.settledAt || m.settled_at || null,
+    createdAt: m.createdAt || m.created_at || '',
+    blockNumber: m.blockNumber || m.block_number || 0,
+    txHash: m.txHash || m.tx_hash || ''
+  }
+}
+
 export default function MarketDetailPage({ params }: { params: Promise<{ address: string }> }) {
   const resolvedParams = use(params)
   const marketAddress = resolvedParams.address.toLowerCase()
@@ -57,7 +85,8 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
   async function loadData() {
     setLoading(true)
     try {
-      const m = await getMarket(indexerUrl, marketAddress)
+      const rawM = await getMarket(indexerUrl, marketAddress)
+      const m = ensureMarketMapped(rawM)
       setMarket(m)
 
       if (m.regionId) {
