@@ -19026,6 +19026,32 @@ function createBreezeWalletClient(provider) {
 }
 
 // src/reads/markets.ts
+function mapMarketFromDB(item) {
+  if (!item) return item;
+  const rawLow = item.threshold_low ?? item.thresholdLow ?? 0;
+  const rawHigh = item.threshold_high ?? item.thresholdHigh ?? null;
+  const rawFinal = item.final_oracle_value ?? item.finalOracleValue ?? null;
+  return {
+    contractAddress: item.contract_address || item.contractAddress || "",
+    chainId: item.chain_id || item.chainId || 114,
+    regionId: item.region_id || item.regionId || "",
+    regionName: item.region_name || item.regionName || null,
+    weatherVariable: item.weather_variable || item.weatherVariable || "RAINFALL",
+    payoffType: item.payoff_type || item.payoffType || "CAPPED",
+    thresholdLow: typeof rawLow === "number" ? rawLow : Number(rawLow) / 1e6,
+    thresholdHigh: rawHigh !== null && rawHigh !== void 0 ? typeof rawHigh === "number" ? rawHigh : Number(rawHigh) / 1e6 : null,
+    expiryTimestamp: item.expiry_timestamp || item.expiryTimestamp || "",
+    collateralToken: item.collateral_token || item.collateralToken || "",
+    status: item.status || "OPEN",
+    finalOracleValue: rawFinal !== null && rawFinal !== void 0 ? typeof rawFinal === "number" ? rawFinal : Number(rawFinal) / 1e6 : null,
+    longPayoutRatio: item.long_payout_ratio !== void 0 ? item.long_payout_ratio !== null ? Number(item.long_payout_ratio) : null : item.longPayoutRatio ?? null,
+    shortPayoutRatio: item.short_payout_ratio !== void 0 ? item.short_payout_ratio !== null ? Number(item.short_payout_ratio) : null : item.shortPayoutRatio ?? null,
+    settledAt: item.settled_at || item.settledAt || null,
+    createdAt: item.created_at || item.createdAt || "",
+    blockNumber: item.block_number || item.blockNumber || 0,
+    txHash: item.tx_hash || item.txHash || ""
+  };
+}
 async function getMarkets(indexerUrl, params) {
   const url = new URL(`${indexerUrl}/api/markets`);
   if (params?.status) url.searchParams.set("status", params.status);
@@ -19035,12 +19061,13 @@ async function getMarkets(indexerUrl, params) {
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`Failed to fetch markets: ${res.statusText}`);
   const data = await res.json();
-  return data.markets || [];
+  return (data.markets || []).map(mapMarketFromDB);
 }
 async function getMarket(indexerUrl, address) {
   const res = await fetch(`${indexerUrl}/api/markets/${address.toLowerCase()}`);
   if (!res.ok) throw new Error(`Market not found: ${address}`);
-  return res.json();
+  const data = await res.json();
+  return mapMarketFromDB(data);
 }
 async function getMarketPositions(indexerUrl, marketAddress) {
   const res = await fetch(`${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions`);
@@ -19050,11 +19077,31 @@ async function getMarketPositions(indexerUrl, marketAddress) {
 }
 
 // src/reads/positions.ts
+function mapPositionFromDB(item) {
+  if (!item) return item;
+  return {
+    id: item.id || "",
+    marketAddress: item.market_address || item.marketAddress || "",
+    tokenId: item.token_id || item.tokenId || "",
+    holderAddress: item.holder_address || item.holderAddress || "",
+    side: item.side || "LONG",
+    collateralAsset: item.collateral_asset || item.collateralAsset || "usdt",
+    collateralAmount: item.collateral_amount || item.collateralAmount || "0",
+    mintedAt: item.minted_at || item.mintedAt || "",
+    blockNumber: item.block_number || item.blockNumber || 0,
+    txHash: item.tx_hash || item.txHash || "",
+    redeemed: !!item.redeemed,
+    redeemedAmount: item.redeemed_amount || item.redeemedAmount || null,
+    redeemedAt: item.redeemed_at || item.redeemedAt || null,
+    redeemTxHash: item.redeem_tx_hash || item.redeemTxHash || null,
+    market: item.markets ? mapMarketFromDB(item.markets) : item.market ? mapMarketFromDB(item.market) : void 0
+  };
+}
 async function getUserPositions(indexerUrl, walletAddress) {
   const res = await fetch(`${indexerUrl}/api/users/${walletAddress.toLowerCase()}/positions`);
   if (!res.ok) throw new Error(`Failed to fetch positions for user: ${walletAddress}`);
   const data = await res.json();
-  return data.positions || [];
+  return (data.positions || []).map(mapPositionFromDB);
 }
 
 // src/reads/weather.ts
