@@ -1,0 +1,17 @@
+{
+  "network": "Coston2",
+  "chainId": 114,
+  "rpcUrl": "https://coston2-api.flare.network/ext/C/rpc",
+  "blockExplorer": "https://coston2-explorer.flare.network",
+  "deployer": "0xE9D7B6576581AD0A712B5DBC83cD27378c494503",
+  "deployedAtTimestamp": "2026-07-24T08:32:08Z",
+  "contracts": {
+    "MockUSDT": "0x61bB87822841428249405Cc77bcBF004C217fc64",
+    "MockWeatherOracle": "0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab",
+    "PositionToken": "0x611653F531D6c584801449548728290EbE298d28",
+    "BreezeMarketFactory": "0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A",
+    "FtsoWeatherAdapter": "0x112E2Cd1Bd31874E2b24Eb7c75A3bA1408c67b5A",
+    "FdcWeatherAdapter": "0xA2EF417a007A6E199F757809A7B56Db45c54861b",
+    "FAssetsCollateralAdapter": "0xf84c832Ca8fdfb9FFCE433A359d959ED6f37Bc7B"
+  }
+}

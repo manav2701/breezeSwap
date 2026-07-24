@@ -1,0 +1,2209 @@
+{
+  "timestamp": "2026-07-24T08:28:09.460Z",
+  "network": "Coston2",
+  "oracleAddress": "MockOraclePendingDeploy",
+  "regionsCount": 5,
+  "totalReadings": 220,
+  "readings": [
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-06-24",
+      "timestamp": 1782259200,
+      "precipitation_mm": 11.3,
+      "precipitation_scaled": "11300000",
+      "temp_max_c": 25.2,
+      "temp_max_scaled": "25200000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-06-25",
+      "timestamp": 1782345600,
+      "precipitation_mm": 14.6,
+      "precipitation_scaled": "14600000",
+      "temp_max_c": 20.9,
+      "temp_max_scaled": "20900000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-06-26",
+      "timestamp": 1782432000,
+      "precipitation_mm": 56.9,
+      "precipitation_scaled": "56900000",
+      "temp_max_c": 25.3,
+      "temp_max_scaled": "25300000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-06-27",
+      "timestamp": 1782518400,
+      "precipitation_mm": 23.7,
+      "precipitation_scaled": "23700000",
+      "temp_max_c": 22.9,
+      "temp_max_scaled": "22900000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-06-28",
+      "timestamp": 1782604800,
+      "precipitation_mm": 9.5,
+      "precipitation_scaled": "9500000",
+      "temp_max_c": 23,
+      "temp_max_scaled": "23000000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-06-29",
+      "timestamp": 1782691200,
+      "precipitation_mm": 0.1,
+      "precipitation_scaled": "100000",
+      "temp_max_c": 25.7,
+      "temp_max_scaled": "25700000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-06-30",
+      "timestamp": 1782777600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.1,
+      "temp_max_scaled": "28100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-01",
+      "timestamp": 1782864000,
+      "precipitation_mm": 40.8,
+      "precipitation_scaled": "40800000",
+      "temp_max_c": 27.4,
+      "temp_max_scaled": "27400000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-02",
+      "timestamp": 1782950400,
+      "precipitation_mm": 10.2,
+      "precipitation_scaled": "10200000",
+      "temp_max_c": 23.4,
+      "temp_max_scaled": "23400000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-03",
+      "timestamp": 1783036800,
+      "precipitation_mm": 0.1,
+      "precipitation_scaled": "100000",
+      "temp_max_c": 26.1,
+      "temp_max_scaled": "26100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-04",
+      "timestamp": 1783123200,
+      "precipitation_mm": 5.7,
+      "precipitation_scaled": "5700000",
+      "temp_max_c": 26.1,
+      "temp_max_scaled": "26100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-05",
+      "timestamp": 1783209600,
+      "precipitation_mm": 7.6,
+      "precipitation_scaled": "7600000",
+      "temp_max_c": 24.2,
+      "temp_max_scaled": "24200000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-06",
+      "timestamp": 1783296000,
+      "precipitation_mm": 1.9,
+      "precipitation_scaled": "1900000",
+      "temp_max_c": 23.5,
+      "temp_max_scaled": "23500000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-07",
+      "timestamp": 1783382400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 24.8,
+      "temp_max_scaled": "24800000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-08",
+      "timestamp": 1783468800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.4,
+      "temp_max_scaled": "28400000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-09",
+      "timestamp": 1783555200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29.8,
+      "temp_max_scaled": "29800000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-10",
+      "timestamp": 1783641600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 30.5,
+      "temp_max_scaled": "30500000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-11",
+      "timestamp": 1783728000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 30.8,
+      "temp_max_scaled": "30800000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "precipitation_mm": 10.2,
+      "precipitation_scaled": "10200000",
+      "temp_max_c": 28.9,
+      "temp_max_scaled": "28900000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "precipitation_mm": 3.7,
+      "precipitation_scaled": "3700000",
+      "temp_max_c": 28.2,
+      "temp_max_scaled": "28200000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 33.2,
+      "temp_max_scaled": "33200000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32.6,
+      "temp_max_scaled": "32600000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "precipitation_mm": 0.1,
+      "precipitation_scaled": "100000",
+      "temp_max_c": 33.1,
+      "temp_max_scaled": "33100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "precipitation_mm": 6,
+      "precipitation_scaled": "6000000",
+      "temp_max_c": 29.7,
+      "temp_max_scaled": "29700000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "precipitation_mm": 0.3,
+      "precipitation_scaled": "300000",
+      "temp_max_c": 28.3,
+      "temp_max_scaled": "28300000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.5,
+      "temp_max_scaled": "31500000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 34.5,
+      "temp_max_scaled": "34500000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 35.1,
+      "temp_max_scaled": "35100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 35.6,
+      "temp_max_scaled": "35600000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 35.1,
+      "temp_max_scaled": "35100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "precipitation_mm": 22.3,
+      "precipitation_scaled": "22300000",
+      "temp_max_c": 32.1,
+      "temp_max_scaled": "32100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "precipitation_mm": 8.5,
+      "precipitation_scaled": "8500000",
+      "temp_max_c": 34.4,
+      "temp_max_scaled": "34400000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "precipitation_mm": 24.8,
+      "precipitation_scaled": "24800000",
+      "temp_max_c": 29.7,
+      "temp_max_scaled": "29700000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "precipitation_mm": 17.03,
+      "precipitation_scaled": "17030000",
+      "temp_max_c": 31.1,
+      "temp_max_scaled": "31100000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "precipitation_mm": 0.6,
+      "precipitation_scaled": "600000",
+      "temp_max_c": 29.8,
+      "temp_max_scaled": "29800000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32.2,
+      "temp_max_scaled": "32200000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "precipitation_mm": 17,
+      "precipitation_scaled": "17000000",
+      "temp_max_c": 33.8,
+      "temp_max_scaled": "33800000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "precipitation_mm": 1.6,
+      "precipitation_scaled": "1600000",
+      "temp_max_c": 28.4,
+      "temp_max_scaled": "28400000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.8,
+      "temp_max_scaled": "31800000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "precipitation_mm": 15,
+      "precipitation_scaled": "15000000",
+      "temp_max_c": 32.9,
+      "temp_max_scaled": "32900000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 26.2,
+      "temp_max_scaled": "26200000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.7,
+      "temp_max_scaled": "27700000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.5,
+      "temp_max_scaled": "28500000"
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "precipitation_mm": 10.6,
+      "precipitation_scaled": "10600000",
+      "temp_max_c": 28.6,
+      "temp_max_scaled": "28600000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-06-24",
+      "timestamp": 1782259200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.9,
+      "temp_max_scaled": "28900000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-06-25",
+      "timestamp": 1782345600,
+      "precipitation_mm": 2.6,
+      "precipitation_scaled": "2600000",
+      "temp_max_c": 23.4,
+      "temp_max_scaled": "23400000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-06-26",
+      "timestamp": 1782432000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.5,
+      "temp_max_scaled": "27500000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-06-27",
+      "timestamp": 1782518400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.2,
+      "temp_max_scaled": "31200000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-06-28",
+      "timestamp": 1782604800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31,
+      "temp_max_scaled": "31000000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-06-29",
+      "timestamp": 1782691200,
+      "precipitation_mm": 0.1,
+      "precipitation_scaled": "100000",
+      "temp_max_c": 30.7,
+      "temp_max_scaled": "30700000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-06-30",
+      "timestamp": 1782777600,
+      "precipitation_mm": 0.2,
+      "precipitation_scaled": "200000",
+      "temp_max_c": 29.1,
+      "temp_max_scaled": "29100000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-01",
+      "timestamp": 1782864000,
+      "precipitation_mm": 0.5,
+      "precipitation_scaled": "500000",
+      "temp_max_c": 29.4,
+      "temp_max_scaled": "29400000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-02",
+      "timestamp": 1782950400,
+      "precipitation_mm": 1.3,
+      "precipitation_scaled": "1300000",
+      "temp_max_c": 26.6,
+      "temp_max_scaled": "26600000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-03",
+      "timestamp": 1783036800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.3,
+      "temp_max_scaled": "27300000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-04",
+      "timestamp": 1783123200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.9,
+      "temp_max_scaled": "27900000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-05",
+      "timestamp": 1783209600,
+      "precipitation_mm": 11.8,
+      "precipitation_scaled": "11800000",
+      "temp_max_c": 28.1,
+      "temp_max_scaled": "28100000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-06",
+      "timestamp": 1783296000,
+      "precipitation_mm": 17.5,
+      "precipitation_scaled": "17500000",
+      "temp_max_c": 26.6,
+      "temp_max_scaled": "26600000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-07",
+      "timestamp": 1783382400,
+      "precipitation_mm": 23.1,
+      "precipitation_scaled": "23100000",
+      "temp_max_c": 29,
+      "temp_max_scaled": "29000000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-08",
+      "timestamp": 1783468800,
+      "precipitation_mm": 21.1,
+      "precipitation_scaled": "21100000",
+      "temp_max_c": 27.2,
+      "temp_max_scaled": "27200000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-09",
+      "timestamp": 1783555200,
+      "precipitation_mm": 34.1,
+      "precipitation_scaled": "34100000",
+      "temp_max_c": 26.6,
+      "temp_max_scaled": "26600000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-10",
+      "timestamp": 1783641600,
+      "precipitation_mm": 8.1,
+      "precipitation_scaled": "8100000",
+      "temp_max_c": 27.4,
+      "temp_max_scaled": "27400000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-11",
+      "timestamp": 1783728000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32,
+      "temp_max_scaled": "32000000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 34.6,
+      "temp_max_scaled": "34600000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32.2,
+      "temp_max_scaled": "32200000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "precipitation_mm": 59.9,
+      "precipitation_scaled": "59900000",
+      "temp_max_c": 31.5,
+      "temp_max_scaled": "31500000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "precipitation_mm": 0.1,
+      "precipitation_scaled": "100000",
+      "temp_max_c": 27.7,
+      "temp_max_scaled": "27700000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29.5,
+      "temp_max_scaled": "29500000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "precipitation_mm": 97.6,
+      "precipitation_scaled": "97600000",
+      "temp_max_c": 28.7,
+      "temp_max_scaled": "28700000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "precipitation_mm": 2.7,
+      "precipitation_scaled": "2700000",
+      "temp_max_c": 27.2,
+      "temp_max_scaled": "27200000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "precipitation_mm": 8.1,
+      "precipitation_scaled": "8100000",
+      "temp_max_c": 28.3,
+      "temp_max_scaled": "28300000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "precipitation_mm": 26.1,
+      "precipitation_scaled": "26100000",
+      "temp_max_c": 25,
+      "temp_max_scaled": "25000000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "precipitation_mm": 16.5,
+      "precipitation_scaled": "16500000",
+      "temp_max_c": 26.5,
+      "temp_max_scaled": "26500000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "precipitation_mm": 4.9,
+      "precipitation_scaled": "4900000",
+      "temp_max_c": 29.1,
+      "temp_max_scaled": "29100000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "precipitation_mm": 4.7,
+      "precipitation_scaled": "4700000",
+      "temp_max_c": 29,
+      "temp_max_scaled": "29000000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.1,
+      "temp_max_scaled": "31100000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "precipitation_mm": 8.1,
+      "precipitation_scaled": "8100000",
+      "temp_max_c": 29.4,
+      "temp_max_scaled": "29400000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "precipitation_mm": 1.3,
+      "precipitation_scaled": "1300000",
+      "temp_max_c": 29.6,
+      "temp_max_scaled": "29600000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "precipitation_mm": 4.25,
+      "precipitation_scaled": "4250000",
+      "temp_max_c": 30.8,
+      "temp_max_scaled": "30800000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "precipitation_mm": 2.6,
+      "precipitation_scaled": "2600000",
+      "temp_max_c": 30.3,
+      "temp_max_scaled": "30300000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "precipitation_mm": 3.4,
+      "precipitation_scaled": "3400000",
+      "temp_max_c": 30.4,
+      "temp_max_scaled": "30400000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "precipitation_mm": 1.3,
+      "precipitation_scaled": "1300000",
+      "temp_max_c": 30.9,
+      "temp_max_scaled": "30900000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "precipitation_mm": 0.1,
+      "precipitation_scaled": "100000",
+      "temp_max_c": 30.9,
+      "temp_max_scaled": "30900000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "precipitation_mm": 1.8,
+      "precipitation_scaled": "1800000",
+      "temp_max_c": 31.7,
+      "temp_max_scaled": "31700000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "precipitation_mm": 0.6,
+      "precipitation_scaled": "600000",
+      "temp_max_c": 32.5,
+      "temp_max_scaled": "32500000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32.7,
+      "temp_max_scaled": "32700000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 33.9,
+      "temp_max_scaled": "33900000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 34.5,
+      "temp_max_scaled": "34500000"
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 36.2,
+      "temp_max_scaled": "36200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-06-24",
+      "timestamp": 1782259200,
+      "precipitation_mm": 29,
+      "precipitation_scaled": "29000000",
+      "temp_max_c": 30.3,
+      "temp_max_scaled": "30300000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-06-25",
+      "timestamp": 1782345600,
+      "precipitation_mm": 2.2,
+      "precipitation_scaled": "2200000",
+      "temp_max_c": 31.1,
+      "temp_max_scaled": "31100000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-06-26",
+      "timestamp": 1782432000,
+      "precipitation_mm": 1,
+      "precipitation_scaled": "1000000",
+      "temp_max_c": 31.9,
+      "temp_max_scaled": "31900000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-06-27",
+      "timestamp": 1782518400,
+      "precipitation_mm": 0.3,
+      "precipitation_scaled": "300000",
+      "temp_max_c": 32.3,
+      "temp_max_scaled": "32300000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-06-28",
+      "timestamp": 1782604800,
+      "precipitation_mm": 1.1,
+      "precipitation_scaled": "1100000",
+      "temp_max_c": 32,
+      "temp_max_scaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-06-29",
+      "timestamp": 1782691200,
+      "precipitation_mm": 12.7,
+      "precipitation_scaled": "12700000",
+      "temp_max_c": 32,
+      "temp_max_scaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-06-30",
+      "timestamp": 1782777600,
+      "precipitation_mm": 2.1,
+      "precipitation_scaled": "2100000",
+      "temp_max_c": 29.9,
+      "temp_max_scaled": "29900000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-01",
+      "timestamp": 1782864000,
+      "precipitation_mm": 3.5,
+      "precipitation_scaled": "3500000",
+      "temp_max_c": 31.3,
+      "temp_max_scaled": "31300000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-02",
+      "timestamp": 1782950400,
+      "precipitation_mm": 0.6,
+      "precipitation_scaled": "600000",
+      "temp_max_c": 30,
+      "temp_max_scaled": "30000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-03",
+      "timestamp": 1783036800,
+      "precipitation_mm": 4.9,
+      "precipitation_scaled": "4900000",
+      "temp_max_c": 30.7,
+      "temp_max_scaled": "30700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-04",
+      "timestamp": 1783123200,
+      "precipitation_mm": 1.5,
+      "precipitation_scaled": "1500000",
+      "temp_max_c": 32.5,
+      "temp_max_scaled": "32500000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-05",
+      "timestamp": 1783209600,
+      "precipitation_mm": 9.3,
+      "precipitation_scaled": "9300000",
+      "temp_max_c": 31.7,
+      "temp_max_scaled": "31700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-06",
+      "timestamp": 1783296000,
+      "precipitation_mm": 10.9,
+      "precipitation_scaled": "10900000",
+      "temp_max_c": 31.6,
+      "temp_max_scaled": "31600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-07",
+      "timestamp": 1783382400,
+      "precipitation_mm": 10.7,
+      "precipitation_scaled": "10700000",
+      "temp_max_c": 31.4,
+      "temp_max_scaled": "31400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-08",
+      "timestamp": 1783468800,
+      "precipitation_mm": 7.9,
+      "precipitation_scaled": "7900000",
+      "temp_max_c": 30.8,
+      "temp_max_scaled": "30800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-09",
+      "timestamp": 1783555200,
+      "precipitation_mm": 11.8,
+      "precipitation_scaled": "11800000",
+      "temp_max_c": 29.6,
+      "temp_max_scaled": "29600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-10",
+      "timestamp": 1783641600,
+      "precipitation_mm": 1.9,
+      "precipitation_scaled": "1900000",
+      "temp_max_c": 31.8,
+      "temp_max_scaled": "31800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-11",
+      "timestamp": 1783728000,
+      "precipitation_mm": 5.1,
+      "precipitation_scaled": "5100000",
+      "temp_max_c": 31.1,
+      "temp_max_scaled": "31100000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "precipitation_mm": 1.3,
+      "precipitation_scaled": "1300000",
+      "temp_max_c": 30.6,
+      "temp_max_scaled": "30600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "precipitation_mm": 1.2,
+      "precipitation_scaled": "1200000",
+      "temp_max_c": 31.8,
+      "temp_max_scaled": "31800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "precipitation_mm": 1.4,
+      "precipitation_scaled": "1400000",
+      "temp_max_c": 32.2,
+      "temp_max_scaled": "32200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "precipitation_mm": 5.6,
+      "precipitation_scaled": "5600000",
+      "temp_max_c": 32.2,
+      "temp_max_scaled": "32200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "precipitation_mm": 1.8,
+      "precipitation_scaled": "1800000",
+      "temp_max_c": 32.8,
+      "temp_max_scaled": "32800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "precipitation_mm": 5.4,
+      "precipitation_scaled": "5400000",
+      "temp_max_c": 30,
+      "temp_max_scaled": "30000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "precipitation_mm": 3.7,
+      "precipitation_scaled": "3700000",
+      "temp_max_c": 32.5,
+      "temp_max_scaled": "32500000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "precipitation_mm": 0.2,
+      "precipitation_scaled": "200000",
+      "temp_max_c": 32.7,
+      "temp_max_scaled": "32700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "precipitation_mm": 7,
+      "precipitation_scaled": "7000000",
+      "temp_max_c": 32,
+      "temp_max_scaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "precipitation_mm": 3.3,
+      "precipitation_scaled": "3300000",
+      "temp_max_c": 32.6,
+      "temp_max_scaled": "32600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "precipitation_mm": 18.4,
+      "precipitation_scaled": "18400000",
+      "temp_max_c": 29.7,
+      "temp_max_scaled": "29700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "precipitation_mm": 3.6,
+      "precipitation_scaled": "3600000",
+      "temp_max_c": 29.4,
+      "temp_max_scaled": "29400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "precipitation_mm": 13.6,
+      "precipitation_scaled": "13600000",
+      "temp_max_c": 31.4,
+      "temp_max_scaled": "31400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "precipitation_mm": 22.6,
+      "precipitation_scaled": "22600000",
+      "temp_max_c": 28.2,
+      "temp_max_scaled": "28200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "precipitation_mm": 8,
+      "precipitation_scaled": "8000000",
+      "temp_max_c": 29.1,
+      "temp_max_scaled": "29100000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "precipitation_mm": 3.9,
+      "precipitation_scaled": "3900000",
+      "temp_max_c": 30.6,
+      "temp_max_scaled": "30600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "precipitation_mm": 6,
+      "precipitation_scaled": "6000000",
+      "temp_max_c": 29.4,
+      "temp_max_scaled": "29400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "precipitation_mm": 1.7,
+      "precipitation_scaled": "1700000",
+      "temp_max_c": 30.5,
+      "temp_max_scaled": "30500000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "precipitation_mm": 7.3,
+      "precipitation_scaled": "7300000",
+      "temp_max_c": 28.8,
+      "temp_max_scaled": "28800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "precipitation_mm": 2.4,
+      "precipitation_scaled": "2400000",
+      "temp_max_c": 31.9,
+      "temp_max_scaled": "31900000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "precipitation_mm": 7.7,
+      "precipitation_scaled": "7700000",
+      "temp_max_c": 28.4,
+      "temp_max_scaled": "28400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "precipitation_mm": 13.8,
+      "precipitation_scaled": "13800000",
+      "temp_max_c": 28.2,
+      "temp_max_scaled": "28200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "precipitation_mm": 7.3,
+      "precipitation_scaled": "7300000",
+      "temp_max_c": 29.8,
+      "temp_max_scaled": "29800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "precipitation_mm": 0.6,
+      "precipitation_scaled": "600000",
+      "temp_max_c": 30.6,
+      "temp_max_scaled": "30600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "precipitation_mm": 0.6,
+      "precipitation_scaled": "600000",
+      "temp_max_c": 31.2,
+      "temp_max_scaled": "31200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "precipitation_mm": 4.8,
+      "precipitation_scaled": "4800000",
+      "temp_max_c": 29.7,
+      "temp_max_scaled": "29700000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-06-24",
+      "timestamp": 1782259200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.8,
+      "temp_max_scaled": "41800000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-06-25",
+      "timestamp": 1782345600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.2,
+      "temp_max_scaled": "38200000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-06-26",
+      "timestamp": 1782432000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.5,
+      "temp_max_scaled": "38500000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-06-27",
+      "timestamp": 1782518400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 35.8,
+      "temp_max_scaled": "35800000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-06-28",
+      "timestamp": 1782604800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 39,
+      "temp_max_scaled": "39000000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-06-29",
+      "timestamp": 1782691200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.4,
+      "temp_max_scaled": "38400000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-06-30",
+      "timestamp": 1782777600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37,
+      "temp_max_scaled": "37000000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-01",
+      "timestamp": 1782864000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 36.9,
+      "temp_max_scaled": "36900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-02",
+      "timestamp": 1782950400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37.9,
+      "temp_max_scaled": "37900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-03",
+      "timestamp": 1783036800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.3,
+      "temp_max_scaled": "41300000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-04",
+      "timestamp": 1783123200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38,
+      "temp_max_scaled": "38000000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-05",
+      "timestamp": 1783209600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37.2,
+      "temp_max_scaled": "37200000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-06",
+      "timestamp": 1783296000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.4,
+      "temp_max_scaled": "38400000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-07",
+      "timestamp": 1783382400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.5,
+      "temp_max_scaled": "38500000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-08",
+      "timestamp": 1783468800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37.8,
+      "temp_max_scaled": "37800000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-09",
+      "timestamp": 1783555200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37.7,
+      "temp_max_scaled": "37700000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-10",
+      "timestamp": 1783641600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.9,
+      "temp_max_scaled": "38900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-11",
+      "timestamp": 1783728000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 39,
+      "temp_max_scaled": "39000000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.6,
+      "temp_max_scaled": "38600000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 36.8,
+      "temp_max_scaled": "36800000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 40.4,
+      "temp_max_scaled": "40400000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 44.2,
+      "temp_max_scaled": "44200000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 45.2,
+      "temp_max_scaled": "45200000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.4,
+      "temp_max_scaled": "41400000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 39.9,
+      "temp_max_scaled": "39900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 39.9,
+      "temp_max_scaled": "39900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 40.4,
+      "temp_max_scaled": "40400000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 40.5,
+      "temp_max_scaled": "40500000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.5,
+      "temp_max_scaled": "38500000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 39.8,
+      "temp_max_scaled": "39800000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.3,
+      "temp_max_scaled": "41300000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.9,
+      "temp_max_scaled": "38900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37.9,
+      "temp_max_scaled": "37900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 36.8,
+      "temp_max_scaled": "36800000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37,
+      "temp_max_scaled": "37000000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 38.9,
+      "temp_max_scaled": "38900000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.3,
+      "temp_max_scaled": "41300000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 42.7,
+      "temp_max_scaled": "42700000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.5,
+      "temp_max_scaled": "41500000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.3,
+      "temp_max_scaled": "41300000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 41.3,
+      "temp_max_scaled": "41300000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 39.6,
+      "temp_max_scaled": "39600000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 37.8,
+      "temp_max_scaled": "37800000"
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 39.2,
+      "temp_max_scaled": "39200000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-06-24",
+      "timestamp": 1782259200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 35.9,
+      "temp_max_scaled": "35900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-06-25",
+      "timestamp": 1782345600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.1,
+      "temp_max_scaled": "31100000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-06-26",
+      "timestamp": 1782432000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 35.9,
+      "temp_max_scaled": "35900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-06-27",
+      "timestamp": 1782518400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32,
+      "temp_max_scaled": "32000000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-06-28",
+      "timestamp": 1782604800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 25.8,
+      "temp_max_scaled": "25800000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-06-29",
+      "timestamp": 1782691200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 23.9,
+      "temp_max_scaled": "23900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-06-30",
+      "timestamp": 1782777600,
+      "precipitation_mm": 0.7,
+      "precipitation_scaled": "700000",
+      "temp_max_c": 24.5,
+      "temp_max_scaled": "24500000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-01",
+      "timestamp": 1782864000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 26.1,
+      "temp_max_scaled": "26100000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-02",
+      "timestamp": 1782950400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 26,
+      "temp_max_scaled": "26000000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-03",
+      "timestamp": 1783036800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.1,
+      "temp_max_scaled": "27100000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-04",
+      "timestamp": 1783123200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.2,
+      "temp_max_scaled": "28200000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-05",
+      "timestamp": 1783209600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.8,
+      "temp_max_scaled": "28800000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-06",
+      "timestamp": 1783296000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.9,
+      "temp_max_scaled": "31900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-07",
+      "timestamp": 1783382400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.6,
+      "temp_max_scaled": "31600000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-08",
+      "timestamp": 1783468800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32.5,
+      "temp_max_scaled": "32500000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-09",
+      "timestamp": 1783555200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 34.1,
+      "temp_max_scaled": "34100000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-10",
+      "timestamp": 1783641600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 30,
+      "temp_max_scaled": "30000000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-11",
+      "timestamp": 1783728000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29.9,
+      "temp_max_scaled": "29900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29.9,
+      "temp_max_scaled": "29900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.5,
+      "temp_max_scaled": "27500000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 30.3,
+      "temp_max_scaled": "30300000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.3,
+      "temp_max_scaled": "28300000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.9,
+      "temp_max_scaled": "28900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.9,
+      "temp_max_scaled": "28900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 22.7,
+      "temp_max_scaled": "22700000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 22.6,
+      "temp_max_scaled": "22600000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 25.6,
+      "temp_max_scaled": "25600000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 23.1,
+      "temp_max_scaled": "23100000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 26.6,
+      "temp_max_scaled": "26600000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 26.6,
+      "temp_max_scaled": "26600000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.5,
+      "temp_max_scaled": "28500000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29.2,
+      "temp_max_scaled": "29200000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "precipitation_mm": 0.55,
+      "precipitation_scaled": "550000",
+      "temp_max_c": 24.9,
+      "temp_max_scaled": "24900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 26,
+      "temp_max_scaled": "26000000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29,
+      "temp_max_scaled": "29000000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.4,
+      "temp_max_scaled": "31400000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29.2,
+      "temp_max_scaled": "29200000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29,
+      "temp_max_scaled": "29000000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 31.9,
+      "temp_max_scaled": "31900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 32.3,
+      "temp_max_scaled": "32300000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 28.8,
+      "temp_max_scaled": "28800000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.9,
+      "temp_max_scaled": "27900000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 29.1,
+      "temp_max_scaled": "29100000"
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "precipitation_mm": 0,
+      "precipitation_scaled": "0",
+      "temp_max_c": 27.5,
+      "temp_max_scaled": "27500000"
+    }
+  ]
+}

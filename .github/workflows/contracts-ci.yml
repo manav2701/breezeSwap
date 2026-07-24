@@ -17,3 +17,5 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@v1
       - run: forge build
       - run: forge test -vvv
+      - run: FOUNDRY_FUZZ_RUNS=10000 forge test --match-contract "Fuzz" -vv
+      - run: forge coverage --report summary
