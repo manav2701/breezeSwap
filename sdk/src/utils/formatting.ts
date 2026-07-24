@@ -19,24 +19,41 @@ export function formatPayoutRatio(ratio: number | null): string {
 }
 
 // Format collateral amount — handles both 6-decimal (USDT) and 18-decimal (FXRP)
-export function formatCollateral(raw: string | bigint, decimals: number, symbol: string): string {
-  const display = Number(BigInt(raw)) / Math.pow(10, decimals)
-  return `${display.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${symbol}`
+export function formatCollateral(raw: string | bigint | number | undefined | null, decimals: number, symbol: string): string {
+  try {
+    if (raw === undefined || raw === null || raw === '' || raw === 'NaN') return `0 ${symbol}`
+    const num = Number(raw)
+    if (isNaN(num)) return `0 ${symbol}`
+    const display = num / Math.pow(10, decimals)
+    return `${display.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${symbol}`
+  } catch {
+    return `0 ${symbol}`
+  }
 }
 
 // Format a unix timestamp or ISO string as a human-readable date
 export function formatExpiry(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-  })
+  try {
+    if (!isoString) return 'Invalid Date'
+    return new Date(isoString).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    })
+  } catch {
+    return 'Invalid Date'
+  }
 }
 
 // How long until expiry
 export function timeUntilExpiry(isoString: string): string {
-  const diff = new Date(isoString).getTime() - Date.now()
-  if (diff < 0) return 'Expired'
-  const days = Math.floor(diff / 86400000)
-  const hours = Math.floor((diff % 86400000) / 3600000)
-  if (days > 0) return `${days}d ${hours}h remaining`
-  return `${hours}h remaining`
+  try {
+    if (!isoString) return 'Invalid Date'
+    const diff = new Date(isoString).getTime() - Date.now()
+    if (diff < 0) return 'Expired'
+    const days = Math.floor(diff / 86400000)
+    const hours = Math.floor((diff % 86400000) / 3600000)
+    if (days > 0) return `${days}d ${hours}h remaining`
+    return `${hours}h remaining`
+  } catch {
+    return 'Invalid Date'
+  }
 }

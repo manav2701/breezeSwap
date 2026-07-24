@@ -20150,25 +20150,42 @@ function formatPayoutRatio(ratio) {
   return `${(ratio * 100).toFixed(1)}%`;
 }
 function formatCollateral(raw, decimals, symbol) {
-  const display = Number(BigInt(raw)) / Math.pow(10, decimals);
-  return `${display.toLocaleString(void 0, { maximumFractionDigits: 2 })} ${symbol}`;
+  try {
+    if (raw === void 0 || raw === null || raw === "" || raw === "NaN") return `0 ${symbol}`;
+    const num2 = Number(raw);
+    if (isNaN(num2)) return `0 ${symbol}`;
+    const display = num2 / Math.pow(10, decimals);
+    return `${display.toLocaleString(void 0, { maximumFractionDigits: 2 })} ${symbol}`;
+  } catch {
+    return `0 ${symbol}`;
+  }
 }
 function formatExpiry(isoString) {
-  return new Date(isoString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+  try {
+    if (!isoString) return "Invalid Date";
+    return new Date(isoString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  } catch {
+    return "Invalid Date";
+  }
 }
 function timeUntilExpiry(isoString) {
-  const diff = new Date(isoString).getTime() - Date.now();
-  if (diff < 0) return "Expired";
-  const days = Math.floor(diff / 864e5);
-  const hours = Math.floor(diff % 864e5 / 36e5);
-  if (days > 0) return `${days}d ${hours}h remaining`;
-  return `${hours}h remaining`;
+  try {
+    if (!isoString) return "Invalid Date";
+    const diff = new Date(isoString).getTime() - Date.now();
+    if (diff < 0) return "Expired";
+    const days = Math.floor(diff / 864e5);
+    const hours = Math.floor(diff % 864e5 / 36e5);
+    if (days > 0) return `${days}d ${hours}h remaining`;
+    return `${hours}h remaining`;
+  } catch {
+    return "Invalid Date";
+  }
 }
 
 // src/utils/regions.ts

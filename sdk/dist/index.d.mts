@@ -15144,7 +15144,7 @@ declare function settle(walletClient: WalletClient, publicClient: PublicClient, 
 declare function formatOracleValue(raw: bigint | number, variable: 'RAINFALL' | 'TEMPERATURE'): string;
 declare function toOracleUnits(display: number): bigint;
 declare function formatPayoutRatio(ratio: number | null): string;
-declare function formatCollateral(raw: string | bigint, decimals: number, symbol: string): string;
+declare function formatCollateral(raw: string | bigint | number | undefined | null, decimals: number, symbol: string): string;
 declare function formatExpiry(isoString: string): string;
 declare function timeUntilExpiry(isoString: string): string;
 

@@ -62,6 +62,27 @@ function ensureMarketMapped(m: any): Market {
   }
 }
 
+function ensurePositionMapped(p: any): Position {
+  if (!p) return p
+  return {
+    id: p.id || '',
+    marketAddress: p.marketAddress || p.market_address || '',
+    tokenId: p.tokenId || p.token_id || '',
+    holderAddress: p.holderAddress || p.holder_address || p.userAddress || p.user_address || '',
+    side: p.side || 'LONG',
+    collateralAsset: p.collateralAsset || p.collateral_asset || '',
+    collateralAmount: p.collateralAmount || p.collateral_amount || '0',
+    mintedAt: p.mintedAt || p.minted_at || p.createdAt || p.created_at || '',
+    blockNumber: p.blockNumber || p.block_number || 0,
+    txHash: p.txHash || p.tx_hash || '',
+    redeemed: p.redeemed ?? false,
+    redeemedAmount: p.redeemedAmount || p.redeemed_amount || null,
+    redeemedAt: p.redeemedAt || p.redeemed_at || null,
+    redeemTxHash: p.redeemTxHash || p.redeem_tx_hash || null,
+    market: p.market
+  }
+}
+
 export default function MarketDetailPage({ params }: { params: Promise<{ address: string }> }) {
   const resolvedParams = use(params)
   const marketAddress = resolvedParams.address.toLowerCase()
@@ -108,7 +129,8 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
 
     try {
       const pos = await getMarketPositions(indexerUrl, marketAddress)
-      setPositions(pos)
+      const mappedPos = (pos ?? []).map(ensurePositionMapped)
+      setPositions(mappedPos)
     } catch (err) {
       console.warn('Failed loading market positions:', err)
       setPositions([])
@@ -235,7 +257,10 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
 
   const isRainfall = market.weatherVariable === 'RAINFALL'
   const unit = isRainfall ? 'mm' : '°C'
-  const totalCollateral = positions.reduce((acc, p) => acc + Number(p.collateralAmount), 0)
+  const totalCollateral = positions.reduce((acc, p) => {
+    const val = Number(p.collateralAmount || 0)
+    return acc + (isNaN(val) ? 0 : val)
+  }, 0)
   const longCount = positions.filter((p) => p.side === 'LONG').length
   const shortCount = positions.filter((p) => p.side === 'SHORT').length
   const isExpired = new Date(market.expiryTimestamp).getTime() <= Date.now()
