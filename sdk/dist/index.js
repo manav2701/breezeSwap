@@ -19941,9 +19941,35 @@ var BreezeMarket_default = [
     inputs: []
   },
   {
+    type: "function",
+    name: "vault",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract CollateralVault"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
     type: "error",
-    name: "ZeroAmount",
-    inputs: []
+    name: "ERC20InsufficientAllowance",
+    inputs: [
+      {
+        name: "spender",
+        type: "address"
+      },
+      {
+        name: "currentAllowance",
+        type: "uint256"
+      },
+      {
+        name: "neededAllowance",
+        type: "uint256"
+      }
+    ]
   }
 ];
 
