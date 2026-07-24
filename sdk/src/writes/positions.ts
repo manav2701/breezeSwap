@@ -10,15 +10,47 @@ export async function approveCollateral(
   tokenAddress: `0x${string}`,
   spenderAddress: `0x${string}`,
   amount: bigint
-): Promise<`0x${string}`> {
+): Promise<`0x${string}` | null> {
   const [account] = await walletClient.getAddresses()
   if (!account) throw new Error('No wallet connected')
+
+  // Check if spender is a BreezeMarket and get its CollateralVault address
+  let targetSpender = spenderAddress
+  try {
+    const vaultAddress = await publicClient.readContract({
+      address: spenderAddress,
+      abi: MarketABI,
+      functionName: 'vault'
+    }) as `0x${string}`
+    if (vaultAddress && vaultAddress !== '0x0000000000000000000000000000000000000000') {
+      targetSpender = vaultAddress
+    }
+  } catch {
+    // If not a market or vault query fails, fall back to spenderAddress
+  }
+
+  // Check existing allowance
+  try {
+    const allowance = await publicClient.readContract({
+      address: tokenAddress,
+      abi: ERC20ABI,
+      functionName: 'allowance',
+      args: [account, targetSpender]
+    }) as bigint
+
+    if (allowance >= amount) {
+      console.log('Collateral allowance already sufficient for vault:', targetSpender)
+      return null
+    }
+  } catch {
+    // If allowance check fails, proceed with approve
+  }
 
   const { request } = await publicClient.simulateContract({
     address: tokenAddress,
     abi: ERC20ABI,
     functionName: 'approve',
-    args: [spenderAddress, amount],
+    args: [targetSpender, amount],
     account
   })
   return walletClient.writeContract(request)

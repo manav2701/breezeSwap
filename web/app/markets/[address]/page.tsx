@@ -139,13 +139,19 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
 
       console.log('Approving collateral token...', { tokenAddress, spenderAddress, amount: amountBigInt.toString() })
       // 1. Approve collateral
-      await approveCollateral(
+      const approveTxHash = await approveCollateral(
         walletClient as any,
         publicClient as any,
         tokenAddress,
         spenderAddress,
         amountBigInt
       )
+
+      if (approveTxHash) {
+        console.log('Approval transaction submitted, waiting for receipt...', approveTxHash)
+        await publicClient.waitForTransactionReceipt({ hash: approveTxHash })
+        console.log('Approval transaction mined on Coston2!')
+      }
 
       console.log('Minting position...', { marketAddress: spenderAddress, side, amount: amountBigInt.toString() })
       // 2. Mint position

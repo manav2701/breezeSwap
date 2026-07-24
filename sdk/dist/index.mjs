@@ -19979,11 +19979,36 @@ var ERC20_default = [
 async function approveCollateral(walletClient, publicClient, tokenAddress, spenderAddress, amount) {
   const [account] = await walletClient.getAddresses();
   if (!account) throw new Error("No wallet connected");
+  let targetSpender = spenderAddress;
+  try {
+    const vaultAddress = await publicClient.readContract({
+      address: spenderAddress,
+      abi: BreezeMarket_default,
+      functionName: "vault"
+    });
+    if (vaultAddress && vaultAddress !== "0x0000000000000000000000000000000000000000") {
+      targetSpender = vaultAddress;
+    }
+  } catch {
+  }
+  try {
+    const allowance = await publicClient.readContract({
+      address: tokenAddress,
+      abi: ERC20_default,
+      functionName: "allowance",
+      args: [account, targetSpender]
+    });
+    if (allowance >= amount) {
+      console.log("Collateral allowance already sufficient for vault:", targetSpender);
+      return null;
+    }
+  } catch {
+  }
   const { request } = await publicClient.simulateContract({
     address: tokenAddress,
     abi: ERC20_default,
     functionName: "approve",
-    args: [spenderAddress, amount],
+    args: [targetSpender, amount],
     account
   });
   return walletClient.writeContract(request);

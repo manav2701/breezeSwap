@@ -15136,7 +15136,7 @@ declare function createMarket(walletClient: WalletClient, publicClient: PublicCl
     marketAddress: string;
 }>;
 
-declare function approveCollateral(walletClient: WalletClient, publicClient: PublicClient, tokenAddress: `0x${string}`, spenderAddress: `0x${string}`, amount: bigint): Promise<`0x${string}`>;
+declare function approveCollateral(walletClient: WalletClient, publicClient: PublicClient, tokenAddress: `0x${string}`, spenderAddress: `0x${string}`, amount: bigint): Promise<`0x${string}` | null>;
 declare function mintPosition(walletClient: WalletClient, publicClient: PublicClient, params: MintPositionParams): Promise<`0x${string}`>;
 declare function redeem(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, tokenId: bigint, amount: bigint): Promise<`0x${string}`>;
 declare function settle(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`): Promise<`0x${string}`>;
