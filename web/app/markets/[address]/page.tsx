@@ -83,16 +83,23 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
   }, [indexerUrl, marketAddress])
 
   async function handleApproveAndMint() {
-    if (!walletClient || !publicClient || !market) return
     setMintLoading(true)
     setMintError(null)
     setMintTxHash(null)
+
+    if (!walletClient || !publicClient || !market) {
+      console.error('Wallet/public client or market not ready', { walletClient, publicClient, market })
+      setMintError('Wallet not connected or network mismatch. Please connect your wallet to Flare Coston2 Testnet.')
+      setMintLoading(false)
+      return
+    }
 
     try {
       const amountBigInt = BigInt(Math.round(Number(collateralInput) * 1e6))
       const tokenAddress = market.collateralToken as `0x${string}`
       const spenderAddress = market.contractAddress as `0x${string}`
 
+      console.log('Approving collateral token...', { tokenAddress, spenderAddress, amount: amountBigInt.toString() })
       // 1. Approve collateral
       await approveCollateral(
         walletClient as any,
@@ -102,6 +109,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
         amountBigInt
       )
 
+      console.log('Minting position...', { marketAddress: spenderAddress, side, amount: amountBigInt.toString() })
       // 2. Mint position
       const hash = await mintPosition(
         walletClient as any,
@@ -116,16 +124,21 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       setMintTxHash(hash)
       loadData()
     } catch (err: any) {
-      setMintError(err.message || 'Minting position failed')
+      console.error('Mint position error:', err)
+      setMintError(err?.shortMessage || err?.message || 'Minting position failed')
     } finally {
       setMintLoading(false)
     }
   }
 
   async function handleSettle() {
-    if (!walletClient || !publicClient || !market) return
+    if (!walletClient || !publicClient || !market) {
+      alert('Wallet is not connected or ready. Please connect to Flare Coston2 Testnet.')
+      return
+    }
     setSettleLoading(true)
     try {
+      console.log('Settling market on-chain...', market.contractAddress)
       const hash = await settle(
         walletClient as any,
         publicClient as any,
@@ -134,7 +147,8 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       setSettleTxHash(hash)
       loadData()
     } catch (err: any) {
-      alert(err.message || 'Settlement failed')
+      console.error('Settle error:', err)
+      alert(err?.shortMessage || err?.message || 'Settlement failed')
     } finally {
       setSettleLoading(false)
     }

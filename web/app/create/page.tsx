@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { PayoffChart } from '../../components/PayoffChart'
 import { TxLink } from '../../components/TxLink'
-import { PlusCircle, Layers, CheckCircle2, AlertCircle, Sparkles, UserCheck } from 'lucide-react'
+import { PlusCircle, Layers, CheckCircle2, AlertCircle, Sparkles, UserCheck, AlertTriangle } from 'lucide-react'
 import {
   createMarket,
   encodeRegionId,
@@ -18,7 +18,7 @@ import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
 
 export default function CreateMarketPage() {
   const router = useRouter()
-  const { walletClient, publicClient, isConnected } = useBreezeSDK()
+  const { walletClient, publicClient, isConnected, isWrongNetwork, switchNetwork } = useBreezeSDK()
 
   const [regionName, setRegionName] = useState<string>('Tokyo')
   const [weatherVariable, setWeatherVariable] = useState<WeatherVariable>('RAINFALL')
@@ -43,18 +43,40 @@ export default function CreateMarketPage() {
 
   async function handleCreateMarket(e: React.FormEvent) {
     e.preventDefault()
-    if (!walletClient || !publicClient) return
-
     setLoading(true)
     setError(null)
     setTxHash(null)
     setNewMarketAddress(null)
 
+    if (isWrongNetwork) {
+      setError('Your wallet is on the wrong network. Please click "Switch to Flare Coston2" above.')
+      setLoading(false)
+      return
+    }
+
+    if (!walletClient || !publicClient) {
+      console.error('Wallet or public client unavailable', { walletClient, publicClient, isConnected })
+      setError('Wallet client is not connected or ready. Please check your Web3 wallet extension.')
+      setLoading(false)
+      return
+    }
+
     try {
+      console.log('Building market creation parameters...')
       const regionId = encodeRegionId(regionName)
       const thresholdLow = toOracleUnits(thresholdLowDisplay)
       const thresholdHigh = payoffType === 'CAPPED' ? toOracleUnits(thresholdHighDisplay) : BigInt(0)
       const expiryTimestamp = BigInt(Math.floor(Date.now() / 1000) + expiryDays * 86400)
+
+      console.log('Sending createMarket transaction to Coston2...', {
+        regionId,
+        weatherVariable,
+        payoffType,
+        thresholdLow: thresholdLow.toString(),
+        thresholdHigh: thresholdHigh.toString(),
+        expiryTimestamp: expiryTimestamp.toString(),
+        collateralToken
+      })
 
       const result = await createMarket(
         walletClient as any,
@@ -70,6 +92,7 @@ export default function CreateMarketPage() {
         }
       )
 
+      console.log('Market created successfully!', result)
       setTxHash(result.txHash)
       if (result.marketAddress) {
         setNewMarketAddress(result.marketAddress)
@@ -78,7 +101,8 @@ export default function CreateMarketPage() {
         }, 2000)
       }
     } catch (err: any) {
-      setError(err.message || 'Market creation failed')
+      console.error('Error creating market:', err)
+      setError(err?.shortMessage || err?.message || 'Market creation failed. Please check wallet approval.')
     } finally {
       setLoading(false)
     }
@@ -94,6 +118,25 @@ export default function CreateMarketPage() {
         <h1 className="text-3xl font-extrabold text-white tracking-tight">Create Weather Derivative Market</h1>
         <p className="text-xs text-slate-400">Deploy a new weather contract on Coston2 with customized thresholds and payoff math.</p>
       </div>
+
+      {isWrongNetwork && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
+            <div>
+              <p className="text-xs font-bold text-amber-200">Wrong Wallet Network</p>
+              <p className="text-[11px] text-amber-300/80">Your wallet is connected to a different network. Please switch to Flare Coston2 Testnet.</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={switchNetwork}
+            className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-colors shrink-0"
+          >
+            Switch to Coston2
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Form Column */}
@@ -210,7 +253,7 @@ export default function CreateMarketPage() {
           {isConnected ? (
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || isWrongNetwork}
               className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-bold text-sm hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
             >
               <PlusCircle className="w-4 h-4" />
@@ -234,7 +277,7 @@ export default function CreateMarketPage() {
 
           {error && (
             <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-800/50 text-xs text-rose-300 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 text-balance" />
               <span>{error}</span>
             </div>
           )}
