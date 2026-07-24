@@ -1,7 +1,7 @@
 name: Contracts CI
 on:
   push:
-    paths: ["contracts/**"]
+    paths: ["contracts/**", ".github/workflows/**"]
   pull_request:
     paths: ["contracts/**"]
 jobs:
@@ -12,10 +12,17 @@ jobs:
         working-directory: contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - uses: foundry-rs/foundry-toolchain@v1
-      - run: forge build
-      - run: forge test -vvv
-      - run: FOUNDRY_FUZZ_RUNS=10000 forge test --match-contract "Fuzz" -vv
-      - run: forge coverage --report summary
+      - name: Install Foundry dependencies
+        run: |
+          mkdir -p lib
+          git clone --depth 1 https://github.com/OpenZeppelin/openzeppelin-contracts lib/openzeppelin-contracts
+          git clone --depth 1 https://github.com/foundry-rs/forge-std lib/forge-std
+      - name: Build contracts
+        run: forge build
+      - name: Run unit & integration tests
+        run: forge test -vvv
+      - name: Run fuzzing tests (10,000 runs)
+        run: FOUNDRY_FUZZ_RUNS=10000 forge test --match-contract "Fuzz" -vv
+      - name: Coverage summary
+        run: forge coverage --report summary
