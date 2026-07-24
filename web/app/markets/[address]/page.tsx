@@ -84,23 +84,32 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
 
   async function loadData() {
     setLoading(true)
+    let m: Market | null = null
+
     try {
       const rawM = await getMarket(indexerUrl, marketAddress)
-      const m = ensureMarketMapped(rawM)
+      m = ensureMarketMapped(rawM)
       setMarket(m)
+    } catch (err) {
+      console.error('Failed loading market metadata:', err)
+      setMarket(null)
+    }
 
-      if (m.regionId) {
+    if (m && m.regionId) {
+      try {
         const readings = await getWeatherReadings(indexerUrl, m.regionId)
         setWeatherReadings(readings)
+      } catch (err) {
+        console.warn('Failed loading weather readings:', err)
+        setWeatherReadings([])
       }
-    } catch {
-      setMarket(null)
     }
 
     try {
       const pos = await getMarketPositions(indexerUrl, marketAddress)
       setPositions(pos)
-    } catch {
+    } catch (err) {
+      console.warn('Failed loading market positions:', err)
       setPositions([])
     } finally {
       setLoading(false)
