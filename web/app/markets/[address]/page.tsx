@@ -137,8 +137,8 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       const tokenAddress = market.collateralToken as `0x${string}`
       const spenderAddress = market.contractAddress as `0x${string}`
 
-      console.log('Approving collateral token...', { tokenAddress, spenderAddress, amount: amountBigInt.toString() })
-      // 1. Approve collateral
+      console.log('Approving collateral token for vault...', { tokenAddress, spenderAddress, amount: amountBigInt.toString() })
+      // 1. Approve collateral (SDK automatically resolves vault address and checks allowance)
       const approveTxHash = await approveCollateral(
         walletClient as any,
         publicClient as any,
