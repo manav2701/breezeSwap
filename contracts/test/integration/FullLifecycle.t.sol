@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/core/BreezeMarketFactory.sol";
 import "../../src/core/BreezeMarket.sol";
 import "../../src/core/PositionToken.sol";
@@ -20,6 +21,7 @@ contract MockUSDT is ERC20 {
 }
 
 contract FullLifecycleIntegrationTest is Test {
+    BreezeAccessControl public accessControl;
     BreezeMarketFactory public factory;
     PositionToken public positionToken;
     MockWeatherOracle public oracle;
@@ -35,12 +37,13 @@ contract FullLifecycleIntegrationTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 14 days;
+        accessControl = new BreezeAccessControl(address(this));
 
         positionToken = new PositionToken("https://breezeswap.io/metadata/");
-        oracle = new MockWeatherOracle();
+        oracle = new MockWeatherOracle(address(accessControl));
         usdt = new MockUSDT();
 
-        factory = new BreezeMarketFactory(address(positionToken));
+        factory = new BreezeMarketFactory(address(positionToken), address(accessControl));
         positionToken.transferOwnership(address(factory));
 
         usdt.mint(alice, 10_000 * 1e18);

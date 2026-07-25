@@ -2,9 +2,12 @@ export const COSTON2_CHAIN_ID = 114
 
 export const CONTRACT_ADDRESSES = {
   [COSTON2_CHAIN_ID]: {
+    accessControl: '0x0000000000000000000000000000000000000000' as `0x${string}`,
     factory: '0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A' as `0x${string}`,
+    marketFactory: '0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A' as `0x${string}`,
     positionToken: '0x611653F531D6c584801449548728290EbE298d28' as `0x${string}`,
     mockWeatherOracle: '0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab' as `0x${string}`,
+    oracle: '0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab' as `0x${string}`,
     mockUsdt: '0x61bB87822841428249405Cc77bcBF004C217fc64' as `0x${string}`,
     fTestXrp: '0x0b6a8e49F600B4676570c99a38e6a68d5d813DC7' as `0x${string}`,
     ftsoWeatherAdapter: '0x112E2Cd1Bd31874E2b24Eb7c75A3bA1408c67b5A' as `0x${string}`,

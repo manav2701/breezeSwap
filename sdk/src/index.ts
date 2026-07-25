@@ -17,10 +17,15 @@ export { coston2Chain, createBreezePublicClient, createBreezeWalletClient } from
 export { getMarkets, getMarket, getMarketPositions } from './reads/markets'
 export { getUserPositions } from './reads/positions'
 export { getWeatherReadings, getRegions } from './reads/weather'
+export { checkRole, type BreezeRole } from './reads/access'
 
 // Writes
 export { createMarket } from './writes/markets'
 export { approveCollateral, mintPosition, redeem, settle } from './writes/positions'
+export {
+  setOracleReading, pauseMarket, unpauseMarket,
+  pauseFactory, unpauseFactory, grantRole, revokeRole
+} from './writes/admin'
 
 // Utilities
 export {

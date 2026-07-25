@@ -2,13 +2,15 @@
 pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../access/BreezeAccessControl.sol";
 
 /**
  * @title FAssetsCollateralAdapter
  * @notice Normalizes FXRP (FTestXRP) collateral to USD equivalent value using Flare FTSOv2 price feeds.
+ * Retrofitted in Phase 7 to use BreezeAccessControl.
  */
-contract FAssetsCollateralAdapter is Ownable {
+contract FAssetsCollateralAdapter {
+    BreezeAccessControl public immutable accessControl;
     IERC20 public immutable fxrpToken;
     address public immutable ftsoRegistry;
     bytes21 public immutable fxrpUsdFeedId;
@@ -18,16 +20,22 @@ contract FAssetsCollateralAdapter is Ownable {
 
     event PriceUpdated(uint256 newPrice);
 
-    constructor(address fxrpToken_, address ftsoRegistry_, bytes21 fxrpUsdFeedId_) Ownable(msg.sender) {
+    modifier onlyRole(bytes32 role) {
+        require(accessControl.hasRole(role, msg.sender), "BreezeSwap: unauthorized");
+        _;
+    }
+
+    constructor(address fxrpToken_, address ftsoRegistry_, bytes21 fxrpUsdFeedId_, address accessControl_) {
         fxrpToken = IERC20(fxrpToken_);
         ftsoRegistry = ftsoRegistry_;
         fxrpUsdFeedId = fxrpUsdFeedId_;
+        accessControl = BreezeAccessControl(accessControl_);
     }
 
     /**
-     * @notice Set mock / fallback FXRP/USD price for testnet environments.
+     * @notice Set mock / fallback FXRP/USD price for testnet environments. Restricted to ADMIN_ROLE.
      */
-    function setFallbackPrice(uint256 priceUsd) external onlyOwner {
+    function setFallbackPrice(uint256 priceUsd) external onlyRole(accessControl.ADMIN_ROLE()) {
         fallbackFxrpPriceUsd = priceUsd;
         emit PriceUpdated(priceUsd);
     }

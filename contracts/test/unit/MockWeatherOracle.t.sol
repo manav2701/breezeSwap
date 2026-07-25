@@ -2,15 +2,18 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
 
 contract MockWeatherOracleTest is Test {
+    BreezeAccessControl public accessControl;
     MockWeatherOracle public oracle;
     bytes32 public regionId = keccak256("SEOUL_RAINFALL");
     address public alice = address(0x2222);
 
     function setUp() public {
-        oracle = new MockWeatherOracle();
+        accessControl = new BreezeAccessControl(address(this));
+        oracle = new MockWeatherOracle(address(accessControl));
     }
 
     function test_SetAndGetReading() public {
@@ -54,7 +57,7 @@ contract MockWeatherOracleTest is Test {
 
     function test_UnauthorizedCannotSetReading() public {
         vm.prank(alice);
-        vm.expectRevert();
+        vm.expectRevert("BreezeSwap: unauthorized");
         oracle.setReading(regionId, block.timestamp, 100);
     }
 }

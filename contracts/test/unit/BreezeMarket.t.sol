@@ -3,6 +3,7 @@ pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/core/BreezeMarket.sol";
 import "../../src/core/PositionToken.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
@@ -19,6 +20,7 @@ contract MockERC20Token is ERC20 {
 }
 
 contract BreezeMarketTest is Test {
+    BreezeAccessControl public accessControl;
     BreezeMarket public market;
     PositionToken public positionToken;
     MockWeatherOracle public oracle;
@@ -34,9 +36,10 @@ contract BreezeMarketTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 7 days;
+        accessControl = new BreezeAccessControl(address(this));
         
         positionToken = new PositionToken("https://breezeswap.io/api/");
-        oracle = new MockWeatherOracle();
+        oracle = new MockWeatherOracle(address(accessControl));
         collateral = new MockERC20Token();
 
         market = new BreezeMarket(
@@ -48,7 +51,8 @@ contract BreezeMarketTest is Test {
             address(oracle),
             address(collateral),
             address(positionToken),
-            PayoffCalculator.PayoffType.CAPPED
+            PayoffCalculator.PayoffType.CAPPED,
+            address(accessControl)
         );
 
         positionToken.setMinter(address(market), true);

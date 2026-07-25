@@ -9872,6 +9872,7 @@ __export(index_exports, {
   WAD: () => WAD,
   WEATHER_VARIABLES: () => WEATHER_VARIABLES,
   approveCollateral: () => approveCollateral,
+  checkRole: () => checkRole,
   coston2Chain: () => coston2Chain,
   createBreezePublicClient: () => createBreezePublicClient,
   createBreezeWalletClient: () => createBreezeWalletClient,
@@ -9888,11 +9889,18 @@ __export(index_exports, {
   getRegions: () => getRegions,
   getUserPositions: () => getUserPositions,
   getWeatherReadings: () => getWeatherReadings,
+  grantRole: () => grantRole,
   mintPosition: () => mintPosition,
+  pauseFactory: () => pauseFactory,
+  pauseMarket: () => pauseMarket,
   redeem: () => redeem,
+  revokeRole: () => revokeRole,
+  setOracleReading: () => setOracleReading,
   settle: () => settle,
   timeUntilExpiry: () => timeUntilExpiry,
-  toOracleUnits: () => toOracleUnits
+  toOracleUnits: () => toOracleUnits,
+  unpauseFactory: () => unpauseFactory,
+  unpauseMarket: () => unpauseMarket
 });
 module.exports = __toCommonJS(index_exports);
 
@@ -9900,9 +9908,12 @@ module.exports = __toCommonJS(index_exports);
 var COSTON2_CHAIN_ID = 114;
 var CONTRACT_ADDRESSES = {
   [COSTON2_CHAIN_ID]: {
+    accessControl: "0x0000000000000000000000000000000000000000",
     factory: "0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A",
+    marketFactory: "0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A",
     positionToken: "0x611653F531D6c584801449548728290EbE298d28",
     mockWeatherOracle: "0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab",
+    oracle: "0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab",
     mockUsdt: "0x61bB87822841428249405Cc77bcBF004C217fc64",
     fTestXrp: "0x0b6a8e49F600B4676570c99a38e6a68d5d813DC7",
     ftsoWeatherAdapter: "0x112E2Cd1Bd31874E2b24Eb7c75A3bA1408c67b5A",
@@ -19183,6 +19194,140 @@ async function getRegions(indexerUrl) {
   return data.regions || [];
 }
 
+// src/abis/BreezeAccessControl.json
+var BreezeAccessControl_default = [
+  {
+    inputs: [
+      { internalType: "bytes32", name: "role", type: "bytes32" }
+    ],
+    name: "getRoleAdmin",
+    outputs: [
+      { internalType: "bytes32", name: "", type: "bytes32" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      { internalType: "bytes32", name: "role", type: "bytes32" },
+      { internalType: "address", name: "account", type: "address" }
+    ],
+    name: "grantRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      { internalType: "bytes32", name: "role", type: "bytes32" },
+      { internalType: "address", name: "account", type: "address" }
+    ],
+    name: "hasRole",
+    outputs: [
+      { internalType: "bool", name: "", type: "bool" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      { internalType: "bytes32", name: "role", type: "bytes32" },
+      { internalType: "address", name: "account", type: "address" }
+    ],
+    name: "renounceRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      { internalType: "bytes32", name: "role", type: "bytes32" },
+      { internalType: "address", name: "account", type: "address" }
+    ],
+    name: "revokeRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "ADMIN_ROLE",
+    outputs: [
+      { internalType: "bytes32", name: "", type: "bytes32" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "MARKET_CREATOR_ROLE",
+    outputs: [
+      { internalType: "bytes32", name: "", type: "bytes32" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "PAUSER_ROLE",
+    outputs: [
+      { internalType: "bytes32", name: "", type: "bytes32" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "ORACLE_UPDATER_ROLE",
+    outputs: [
+      { internalType: "bytes32", name: "", type: "bytes32" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "bytes32", name: "role", type: "bytes32" },
+      { indexed: true, internalType: "address", name: "account", type: "address" },
+      { indexed: true, internalType: "address", name: "sender", type: "address" }
+    ],
+    name: "RoleGranted",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "bytes32", name: "role", type: "bytes32" },
+      { indexed: true, internalType: "address", name: "account", type: "address" },
+      { indexed: true, internalType: "address", name: "sender", type: "address" }
+    ],
+    name: "RoleRevoked",
+    type: "event"
+  }
+];
+
+// src/reads/access.ts
+async function checkRole(publicClient, accessControlAddress, role, account) {
+  if (!accessControlAddress || !account || accessControlAddress === "0x0000000000000000000000000000000000000000") return false;
+  try {
+    const roleHash = await publicClient.readContract({
+      address: accessControlAddress,
+      abi: BreezeAccessControl_default,
+      functionName: role
+    });
+    const has = await publicClient.readContract({
+      address: accessControlAddress,
+      abi: BreezeAccessControl_default,
+      functionName: "hasRole",
+      args: [roleHash, account]
+    });
+    return has;
+  } catch (err) {
+    return false;
+  }
+}
+
 // src/abis/BreezeMarketFactory.json
 var BreezeMarketFactory_default = [
   {
@@ -20136,6 +20281,352 @@ async function settle(walletClient, publicClient, marketAddress) {
   return walletClient.writeContract(request);
 }
 
+// src/abis/MockWeatherOracle.json
+var MockWeatherOracle_default = [
+  {
+    type: "constructor",
+    inputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "getReading",
+    inputs: [
+      {
+        name: "regionId",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "atOrAfterTimestamp",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        internalType: "struct IWeatherOracle.Reading",
+        components: [
+          {
+            name: "value",
+            type: "int256",
+            internalType: "int256"
+          },
+          {
+            name: "timestamp",
+            type: "uint256",
+            internalType: "uint256"
+          },
+          {
+            name: "isValid",
+            type: "bool",
+            internalType: "bool"
+          }
+        ]
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "isStale",
+    inputs: [
+      {
+        name: "regionId",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "maxAge",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "latestTimestamp",
+    inputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "readings",
+    inputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "value",
+        type: "int256",
+        internalType: "int256"
+      },
+      {
+        name: "timestamp",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "isValid",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "renounceOwnership",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setReading",
+    inputs: [
+      {
+        name: "regionId",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "timestamp",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "value",
+        type: "int256",
+        internalType: "int256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "transferOwnership",
+    inputs: [
+      {
+        name: "newOwner",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "event",
+    name: "OwnershipTransferred",
+    inputs: [
+      {
+        name: "previousOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "newOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "ReadingSet",
+    inputs: [
+      {
+        name: "regionId",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "timestamp",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "value",
+        type: "int256",
+        indexed: false,
+        internalType: "int256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "OwnableInvalidOwner",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "OwnableUnauthorizedAccount",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "Unauthorized",
+    inputs: []
+  }
+];
+
+// src/writes/admin.ts
+async function setOracleReading(walletClient, publicClient, oracleAddress, regionId, timestamp, value) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: oracleAddress,
+    abi: MockWeatherOracle_default,
+    functionName: "setReading",
+    args: [regionId, timestamp, value],
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function pauseMarket(walletClient, publicClient, marketAddress) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: marketAddress,
+    abi: BreezeMarket_default,
+    functionName: "pauseMarket",
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function unpauseMarket(walletClient, publicClient, marketAddress) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: marketAddress,
+    abi: BreezeMarket_default,
+    functionName: "unpauseMarket",
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function pauseFactory(walletClient, publicClient, factoryAddress) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: factoryAddress,
+    abi: BreezeMarketFactory_default,
+    functionName: "pauseFactory",
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function unpauseFactory(walletClient, publicClient, factoryAddress) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: factoryAddress,
+    abi: BreezeMarketFactory_default,
+    functionName: "unpauseFactory",
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function grantRole(walletClient, publicClient, accessControlAddress, role, targetAccount) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const roleHash = await publicClient.readContract({
+    address: accessControlAddress,
+    abi: BreezeAccessControl_default,
+    functionName: role
+  });
+  const { request } = await publicClient.simulateContract({
+    address: accessControlAddress,
+    abi: BreezeAccessControl_default,
+    functionName: "grantRole",
+    args: [roleHash, targetAccount],
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function revokeRole(walletClient, publicClient, accessControlAddress, role, targetAccount) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const roleHash = await publicClient.readContract({
+    address: accessControlAddress,
+    abi: BreezeAccessControl_default,
+    functionName: role
+  });
+  const { request } = await publicClient.simulateContract({
+    address: accessControlAddress,
+    abi: BreezeAccessControl_default,
+    functionName: "revokeRole",
+    args: [roleHash, targetAccount],
+    account
+  });
+  return walletClient.writeContract(request);
+}
+
 // src/utils/formatting.ts
 function formatOracleValue(raw, variable) {
   const display = Number(raw) / Number(ORACLE_SCALAR);
@@ -20219,6 +20710,7 @@ function decodeRegionId(regionId) {
   WAD,
   WEATHER_VARIABLES,
   approveCollateral,
+  checkRole,
   coston2Chain,
   createBreezePublicClient,
   createBreezeWalletClient,
@@ -20235,11 +20727,18 @@ function decodeRegionId(regionId) {
   getRegions,
   getUserPositions,
   getWeatherReadings,
+  grantRole,
   mintPosition,
+  pauseFactory,
+  pauseMarket,
   redeem,
+  revokeRole,
+  setOracleReading,
   settle,
   timeUntilExpiry,
-  toOracleUnits
+  toOracleUnits,
+  unpauseFactory,
+  unpauseMarket
 });
 /*! Bundled license information:
 

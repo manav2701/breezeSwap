@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/core/BreezeMarketFactory.sol";
 import "../../src/core/PositionToken.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
@@ -14,6 +15,7 @@ contract MockCollateralToken is ERC20 {
 }
 
 contract BreezeMarketFactoryTest is Test {
+    BreezeAccessControl public accessControl;
     BreezeMarketFactory public factory;
     PositionToken public positionToken;
     MockWeatherOracle public oracle;
@@ -24,11 +26,12 @@ contract BreezeMarketFactoryTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 7 days;
+        accessControl = new BreezeAccessControl(address(this));
         positionToken = new PositionToken("https://breezeswap.io/api/");
-        oracle = new MockWeatherOracle();
+        oracle = new MockWeatherOracle(address(accessControl));
         collateral = new MockCollateralToken();
 
-        factory = new BreezeMarketFactory(address(positionToken));
+        factory = new BreezeMarketFactory(address(positionToken), address(accessControl));
         
         // Transfer PositionToken ownership to Factory so it can set minter status
         positionToken.transferOwnership(address(factory));

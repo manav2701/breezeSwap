@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/periphery/FAssetsCollateralAdapter.sol";
 import "../../src/core/BreezeMarket.sol";
 import "../../src/core/PositionToken.sol";
@@ -9,6 +10,7 @@ import "../../src/oracle/MockWeatherOracle.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract FAssetsLiveForkTest is Test {
+    BreezeAccessControl public accessControl;
     FAssetsCollateralAdapter public adapter;
     PositionToken public positionToken;
     MockWeatherOracle public oracle;
@@ -23,14 +25,16 @@ contract FAssetsLiveForkTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 7 days;
+        accessControl = new BreezeAccessControl(address(this));
         adapter = new FAssetsCollateralAdapter(
             COSTON2_FTEST_XRP,
             COSTON2_FTSO_REGISTRY,
-            fxrpUsdFeedId
+            fxrpUsdFeedId,
+            address(accessControl)
         );
 
         positionToken = new PositionToken("https://breezeswap.io/api/");
-        oracle = new MockWeatherOracle();
+        oracle = new MockWeatherOracle(address(accessControl));
     }
 
     function test_NormalizedCollateralCalculationForFXRP() public view {

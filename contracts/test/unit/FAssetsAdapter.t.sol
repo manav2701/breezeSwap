@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/periphery/FAssetsCollateralAdapter.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -12,17 +13,20 @@ contract MockFTestXRP is ERC20 {
 }
 
 contract FAssetsAdapterTest is Test {
+    BreezeAccessControl public accessControl;
     FAssetsCollateralAdapter public adapter;
     MockFTestXRP public fxrp;
 
     bytes21 public fxrpFeedId = bytes21(keccak256("FXRP/USD"));
 
     function setUp() public {
+        accessControl = new BreezeAccessControl(address(this));
         fxrp = new MockFTestXRP();
         adapter = new FAssetsCollateralAdapter(
             address(fxrp),
             address(0x1111), // FtsoRegistry
-            fxrpFeedId
+            fxrpFeedId,
+            address(accessControl)
         );
     }
 

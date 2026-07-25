@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/oracle/IWeatherOracle.sol";
 import "../../src/oracle/FtsoWeatherAdapter.sol";
 import "../../src/oracle/FdcWeatherAdapter.sol";
@@ -17,6 +18,7 @@ contract MockUSDT0 is ERC20 {
 }
 
 contract OracleAdaptersTest is Test {
+    BreezeAccessControl public accessControl;
     FtsoWeatherAdapter public ftsoAdapter;
     FdcWeatherAdapter public fdcAdapter;
     MockWeatherOracle public mockOracle;
@@ -30,9 +32,10 @@ contract OracleAdaptersTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 7 days;
+        accessControl = new BreezeAccessControl(address(this));
         ftsoAdapter = new FtsoWeatherAdapter(address(0x1111), feedId);
         fdcAdapter = new FdcWeatherAdapter(address(0x2222), attestationType);
-        mockOracle = new MockWeatherOracle();
+        mockOracle = new MockWeatherOracle(address(accessControl));
 
         positionToken = new PositionToken("https://breezeswap.io/api/");
         collateral = new MockUSDT0();
@@ -62,7 +65,8 @@ contract OracleAdaptersTest is Test {
             address(ftsoAdapter),
             address(collateral),
             address(positionToken),
-            PayoffCalculator.PayoffType.CAPPED
+            PayoffCalculator.PayoffType.CAPPED,
+            address(accessControl)
         );
 
         vm.warp(expiryTimestamp + 1);

@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/core/BreezeMarket.sol";
 import "../../src/core/PositionToken.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
@@ -16,6 +17,7 @@ contract MockOMUSDT is ERC20 {
 }
 
 contract OracleManipulationSecurityTest is Test {
+    BreezeAccessControl public accessControl;
     BreezeMarket public market;
     PositionToken public positionToken;
     MockWeatherOracle public oracle;
@@ -26,9 +28,10 @@ contract OracleManipulationSecurityTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 7 days;
+        accessControl = new BreezeAccessControl(address(this));
 
         positionToken = new PositionToken("https://breezeswap.io/api/");
-        oracle = new MockWeatherOracle();
+        oracle = new MockWeatherOracle(address(accessControl));
         usdt = new MockOMUSDT();
 
         market = new BreezeMarket(
@@ -40,7 +43,8 @@ contract OracleManipulationSecurityTest is Test {
             address(oracle),
             address(usdt),
             address(positionToken),
-            PayoffCalculator.PayoffType.CAPPED
+            PayoffCalculator.PayoffType.CAPPED,
+            address(accessControl)
         );
 
         positionToken.setMinter(address(market), true);
@@ -84,7 +88,7 @@ contract OracleManipulationSecurityTest is Test {
 
     function test_fxrp_price_zero_reverts() public {
         bytes21 feedId = bytes21(keccak256("FXRP/USD"));
-        FAssetsCollateralAdapter adapter = new FAssetsCollateralAdapter(address(0x2222), address(0x1111), feedId);
+        FAssetsCollateralAdapter adapter = new FAssetsCollateralAdapter(address(0x2222), address(0x1111), feedId, address(accessControl));
 
         adapter.setFallbackPrice(0);
         uint256 usdValue = adapter.usdValueOf(100 * 1e18);

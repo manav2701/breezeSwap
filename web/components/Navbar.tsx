@@ -1,10 +1,35 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ConnectKitButton } from 'connectkit'
-import { CloudRain, Compass, PieChart, PlusCircle, BookOpen } from 'lucide-react'
+import { CloudRain, Compass, PieChart, PlusCircle, BookOpen, ShieldAlert } from 'lucide-react'
+import { useAccount } from 'wagmi'
+import { checkRole, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
+import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
 
 export function Navbar() {
+  const { address, isConnected } = useAccount()
+  const { publicClient } = useBreezeSDK()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    async function verifyAdmin() {
+      if (!isConnected || !address || !publicClient) {
+        setIsAdmin(false)
+        return
+      }
+      const acAddr = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].accessControl
+      if (acAddr && acAddr !== '0x0000000000000000000000000000000000000000') {
+        const hasAdmin = await checkRole(publicClient as any, acAddr, 'ADMIN_ROLE', address)
+        setIsAdmin(hasAdmin)
+      } else {
+        setIsAdmin(false)
+      }
+    }
+    verifyAdmin()
+  }, [address, isConnected, publicClient])
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -53,6 +78,16 @@ export function Navbar() {
             <BookOpen className="w-4 h-4 text-amber-400" />
             Docs
           </Link>
+
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all border border-rose-500/20"
+            >
+              <ShieldAlert className="w-4 h-4 text-rose-400" />
+              Admin
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-3">

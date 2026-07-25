@@ -7,6 +7,7 @@ import { router } from './api/router'
 import { startFactoryWatcher } from './watchers/factoryWatcher'
 import { startMarketWatcher } from './watchers/marketWatcher'
 import { startOracleWatcher } from './watchers/oracleWatcher'
+import { startAccessControlWatcher } from './watchers/accessControlWatcher'
 import { supabase } from './db/client'
 import { logger } from './utils/logger'
 import { runBackfill } from './scripts/backfill'
@@ -38,6 +39,7 @@ async function main() {
   // 3. Start live watchers
   startFactoryWatcher()
   startOracleWatcher()
+  startAccessControlWatcher()
 
   // 4. Run historical backfill in background
   runBackfill().catch((err) => {

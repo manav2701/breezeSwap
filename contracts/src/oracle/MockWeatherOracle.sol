@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../access/BreezeAccessControl.sol";
 import "./IWeatherOracle.sol";
 
 /**
  * @title MockWeatherOracle
  * @notice Mock implementation of IWeatherOracle for testing and seeding with real Open-Meteo data.
+ * Retrofitted in Phase 7 to use BreezeAccessControl instead of single-owner Ownable.
  */
-contract MockWeatherOracle is IWeatherOracle, Ownable {
+contract MockWeatherOracle is IWeatherOracle {
+    BreezeAccessControl public immutable accessControl;
+
     // regionId => timestamp => Reading
     mapping(bytes32 => mapping(uint256 => Reading)) public readings;
     
@@ -19,12 +22,23 @@ contract MockWeatherOracle is IWeatherOracle, Ownable {
 
     error Unauthorized();
 
-    constructor() Ownable(msg.sender) {}
+    modifier onlyRole(bytes32 role) {
+        require(accessControl.hasRole(role, msg.sender), "BreezeSwap: unauthorized");
+        _;
+    }
+
+    constructor(address _accessControl) {
+        require(_accessControl != address(0), "Invalid access control");
+        accessControl = BreezeAccessControl(_accessControl);
+    }
 
     /**
-     * @notice Set weather reading for a specific region and timestamp. Restricted to owner/admin.
+     * @notice Set weather reading for a specific region and timestamp. Restricted to ORACLE_UPDATER_ROLE.
      */
-    function setReading(bytes32 regionId, uint256 timestamp, int256 value) external onlyOwner {
+    function setReading(bytes32 regionId, uint256 timestamp, int256 value)
+        external
+        onlyRole(accessControl.ORACLE_UPDATER_ROLE())
+    {
         readings[regionId][timestamp] = Reading({
             value: value,
             timestamp: timestamp,

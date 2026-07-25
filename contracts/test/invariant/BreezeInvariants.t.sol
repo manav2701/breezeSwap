@@ -3,12 +3,14 @@ pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
 import "./BreezeHandler.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/core/BreezeMarketFactory.sol";
 import "../../src/core/BreezeMarket.sol";
 import "../../src/core/PositionToken.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
 
 contract BreezeInvariantsTest is Test {
+    BreezeAccessControl public accessControl;
     BreezeMarketFactory public factory;
     BreezeMarket public market;
     MockWeatherOracle public oracle;
@@ -21,10 +23,11 @@ contract BreezeInvariantsTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 7 days;
+        accessControl = new BreezeAccessControl(address(this));
 
         positionToken = new PositionToken("https://breezeswap.io/api/");
-        factory = new BreezeMarketFactory(address(positionToken));
-        oracle = new MockWeatherOracle();
+        factory = new BreezeMarketFactory(address(positionToken), address(accessControl));
+        oracle = new MockWeatherOracle(address(accessControl));
         usdt = new MockInvUSDT();
 
         positionToken.transferOwnership(address(factory));

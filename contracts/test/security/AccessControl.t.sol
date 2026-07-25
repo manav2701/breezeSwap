@@ -2,6 +2,7 @@
 pragma solidity 0.8.24;
 
 import "forge-std/Test.sol";
+import "../../src/access/BreezeAccessControl.sol";
 import "../../src/core/BreezeMarket.sol";
 import "../../src/core/BreezeMarketFactory.sol";
 import "../../src/core/PositionToken.sol";
@@ -16,6 +17,7 @@ contract MockACUSDT is ERC20 {
 }
 
 contract AccessControlSecurityTest is Test {
+    BreezeAccessControl public accessControl;
     BreezeMarket public market;
     BreezeMarketFactory public factory;
     PositionToken public positionToken;
@@ -30,10 +32,11 @@ contract AccessControlSecurityTest is Test {
 
     function setUp() public {
         expiryTimestamp = block.timestamp + 7 days;
+        accessControl = new BreezeAccessControl(address(this));
 
         positionToken = new PositionToken("https://breezeswap.io/api/");
-        factory = new BreezeMarketFactory(address(positionToken));
-        oracle = new MockWeatherOracle();
+        factory = new BreezeMarketFactory(address(positionToken), address(accessControl));
+        oracle = new MockWeatherOracle(address(accessControl));
         usdt = new MockACUSDT();
 
         positionToken.transferOwnership(address(factory));
@@ -67,7 +70,7 @@ contract AccessControlSecurityTest is Test {
 
     function test_oracle_unauthorized_setreading_reverts() public {
         vm.prank(attacker);
-        vm.expectRevert();
+        vm.expectRevert("BreezeSwap: unauthorized");
         oracle.setReading(regionId, expiryTimestamp, 10000);
     }
 

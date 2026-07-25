@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+import "../access/BreezeAccessControl.sol";
 import "./BreezeMarket.sol";
 import "./PositionToken.sol";
 import "../settlement/PayoffCalculator.sol";
@@ -9,8 +10,10 @@ import "../settlement/PayoffCalculator.sol";
 /**
  * @title BreezeMarketFactory
  * @notice Permissionless factory contract for creating and registering BreezeMarket instances.
+ * Retrofitted in Phase 7 to include PAUSER_ROLE-gated emergency pause functionality.
  */
-contract BreezeMarketFactory is Ownable {
+contract BreezeMarketFactory is Pausable {
+    BreezeAccessControl public immutable accessControl;
     PositionToken public immutable sharedPositionToken;
 
     address[] public allMarkets;
@@ -26,13 +29,30 @@ contract BreezeMarketFactory is Ownable {
 
     error InvalidParameters();
 
-    constructor(address sharedPositionToken_) Ownable(msg.sender) {
-        if (sharedPositionToken_ == address(0)) revert InvalidParameters();
+    modifier onlyRole(bytes32 role) {
+        require(accessControl.hasRole(role, msg.sender), "BreezeSwap: unauthorized");
+        _;
+    }
+
+    constructor(address sharedPositionToken_, address _accessControl) {
+        if (sharedPositionToken_ == address(0) || _accessControl == address(0)) revert InvalidParameters();
         sharedPositionToken = PositionToken(sharedPositionToken_);
+        accessControl = BreezeAccessControl(_accessControl);
+    }
+
+    /// @notice Admin-gated emergency pause for the factory (blocks NEW market creation only).
+    /// Pausing the factory does NOT stop existing markets from minting, settling, or redeeming.
+    function pauseFactory() external onlyRole(accessControl.PAUSER_ROLE()) {
+        _pause();
+    }
+
+    /// @notice Unpause factory market creation.
+    function unpauseFactory() external onlyRole(accessControl.PAUSER_ROLE()) {
+        _unpause();
     }
 
     /**
-     * @notice Create a new parametric weather market.
+     * @notice Create a new parametric weather market. Stays permissionless for Classic Markets.
      */
     function createMarket(
         bytes32 regionId,
@@ -43,7 +63,7 @@ contract BreezeMarketFactory is Ownable {
         address oracleAddress,
         address collateralToken,
         PayoffCalculator.PayoffType payoffType
-    ) external returns (address marketAddress) {
+    ) external whenNotPaused returns (address marketAddress) {
         // Input validation
         if (
             expiryTimestamp <= block.timestamp ||
@@ -57,7 +77,7 @@ contract BreezeMarketFactory is Ownable {
             if (thresholdLow >= thresholdHigh) revert InvalidParameters();
         }
 
-        // 1. Deploy new BreezeMarket contract
+        // 1. Deploy new BreezeMarket contract (passing accessControl reference)
         BreezeMarket market = new BreezeMarket(
             regionId,
             weatherVariable,
@@ -67,7 +87,8 @@ contract BreezeMarketFactory is Ownable {
             oracleAddress,
             collateralToken,
             address(sharedPositionToken),
-            payoffType
+            payoffType,
+            address(accessControl)
         );
 
         marketAddress = address(market);

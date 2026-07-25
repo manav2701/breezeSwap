@@ -3,7 +3,9 @@ pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
+import "../access/BreezeAccessControl.sol";
 import "../oracle/IWeatherOracle.sol";
 import "../vault/CollateralVault.sol";
 import "../settlement/PayoffCalculator.sol";
@@ -12,11 +14,13 @@ import "./PositionToken.sol";
 /**
  * @title BreezeMarket
  * @notice Individual parametric weather derivative market instance.
+ * Retrofitted in Phase 7 to include PAUSER_ROLE-gated emergency pause functionality.
  */
-contract BreezeMarket is ReentrancyGuard {
+contract BreezeMarket is ReentrancyGuard, Pausable {
     enum WeatherVariable { RAINFALL, TEMPERATURE }
     enum Status { OPEN, SETTLED }
 
+    BreezeAccessControl public immutable accessControl;
     bytes32 public immutable regionId;
     WeatherVariable public immutable weatherVariable;
     int256 public immutable thresholdLow;
@@ -53,6 +57,11 @@ contract BreezeMarket is ReentrancyGuard {
     error InvalidParameters();
     error Unauthorized();
 
+    modifier onlyRole(bytes32 role) {
+        require(accessControl.hasRole(role, msg.sender), "BreezeSwap: unauthorized");
+        _;
+    }
+
     constructor(
         bytes32 regionId_,
         WeatherVariable weatherVariable_,
@@ -62,13 +71,15 @@ contract BreezeMarket is ReentrancyGuard {
         address oracleAddress_,
         address collateralToken_,
         address positionTokenAddress_,
-        PayoffCalculator.PayoffType payoffType_
+        PayoffCalculator.PayoffType payoffType_,
+        address accessControl_
     ) {
         if (
             expiryTimestamp_ <= block.timestamp ||
             oracleAddress_ == address(0) ||
             collateralToken_ == address(0) ||
-            positionTokenAddress_ == address(0)
+            positionTokenAddress_ == address(0) ||
+            accessControl_ == address(0)
         ) {
             revert InvalidParameters();
         }
@@ -82,15 +93,26 @@ contract BreezeMarket is ReentrancyGuard {
         collateralToken = IERC20(collateralToken_);
         positionToken = PositionToken(positionTokenAddress_);
         payoffType = payoffType_;
+        accessControl = BreezeAccessControl(accessControl_);
 
         vault = new CollateralVault(collateralToken_, address(this));
         status = Status.OPEN;
     }
 
+    /// @notice Pause new position minting on this specific market.
+    function pauseMarket() external onlyRole(accessControl.PAUSER_ROLE()) {
+        _pause();
+    }
+
+    /// @notice Unpause position minting on this market.
+    function unpauseMarket() external onlyRole(accessControl.PAUSER_ROLE()) {
+        _unpause();
+    }
+
     /**
      * @notice Mint Long or Short position tokens prior to expiry by depositing collateral.
      */
-    function mintPosition(PositionToken.Side side, uint256 collateralAmount) external nonReentrant returns (uint256 tokenId) {
+    function mintPosition(PositionToken.Side side, uint256 collateralAmount) external nonReentrant whenNotPaused returns (uint256 tokenId) {
         if (block.timestamp >= expiryTimestamp) revert MarketExpired();
         if (status != Status.OPEN) revert MarketAlreadySettled();
         if (collateralAmount == 0) revert ZeroAmount();
@@ -112,6 +134,7 @@ contract BreezeMarket is ReentrancyGuard {
         emit PositionMinted(msg.sender, side, collateralAmount, tokenId);
     }
 
+    // DO NOT add whenNotPaused here — see SECURITY.md "Pause never traps funds"
     /**
      * @notice Permissionlessly settle the market after expiryTimestamp using weather oracle readings.
      */
@@ -150,6 +173,7 @@ contract BreezeMarket is ReentrancyGuard {
         emit MarketSettled(finalOracleValue, longPayoutPerToken, shortPayoutPerToken);
     }
 
+    // DO NOT add whenNotPaused here — see SECURITY.md "Pause never traps funds"
     /**
      * @notice Redeem position tokens for collateral after settlement.
      */
