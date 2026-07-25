@@ -2,17 +2,17 @@ export const COSTON2_CHAIN_ID = 114
 
 export const CONTRACT_ADDRESSES = {
   [COSTON2_CHAIN_ID]: {
-    accessControl: '0x0000000000000000000000000000000000000000' as `0x${string}`,
-    factory: '0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A' as `0x${string}`,
-    marketFactory: '0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A' as `0x${string}`,
-    positionToken: '0x611653F531D6c584801449548728290EbE298d28' as `0x${string}`,
-    mockWeatherOracle: '0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab' as `0x${string}`,
-    oracle: '0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab' as `0x${string}`,
-    mockUsdt: '0x61bB87822841428249405Cc77bcBF004C217fc64' as `0x${string}`,
+    accessControl: '0x3788420AB4Ef4D2c2dd22c151fd6CB93d2543853' as `0x${string}`,
+    factory: '0x699fd810EC7C0620a9BF01Cd73356770Ae0aBbaf' as `0x${string}`,
+    marketFactory: '0x699fd810EC7C0620a9BF01Cd73356770Ae0aBbaf' as `0x${string}`,
+    positionToken: '0x1A3C38499020a733C1534E8f43FBbF3afAf01e15' as `0x${string}`,
+    mockWeatherOracle: '0x17EEF37738887b2a6f7149aA3af047D6144D6139' as `0x${string}`,
+    oracle: '0x17EEF37738887b2a6f7149aA3af047D6144D6139' as `0x${string}`,
+    mockUsdt: '0x639b6b2a0195271557e543F51c0FA417265B2FAC' as `0x${string}`,
     fTestXrp: '0x0b6a8e49F600B4676570c99a38e6a68d5d813DC7' as `0x${string}`,
-    ftsoWeatherAdapter: '0x112E2Cd1Bd31874E2b24Eb7c75A3bA1408c67b5A' as `0x${string}`,
-    fdcWeatherAdapter: '0xA2EF417a007A6E199F757809A7B56Db45c54861b' as `0x${string}`,
-    fAssetsCollateralAdapter: '0xf84c832Ca8fdfb9FFCE433A359d959ED6f37Bc7B' as `0x${string}`,
+    ftsoWeatherAdapter: '0x9cd4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c' as `0x${string}`,
+    fdcWeatherAdapter: '0x341A6C8AA41A70c11803Cb67dd56E7F62c1fb18A' as `0x${string}`,
+    fAssetsCollateralAdapter: '0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54' as `0x${string}`,
   }
 } as const
 
