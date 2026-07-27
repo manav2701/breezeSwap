@@ -15,6 +15,7 @@ out/
 contracts/out/
 contracts/cache/
 contracts/broadcast/
+contracts/lib/
 
 # OS / IDE
 .DS_Store
