@@ -12,8 +12,7 @@ export async function getAuditLog(req: Request, res: Response) {
       .limit(limit)
 
     if (error) {
-      // If table doesn't exist yet or DB error occurs, return empty list gracefully
-      logger.warn('Audit log query returned error:', error.message)
+      logger.warn(`Audit log query returned error: ${error.message}`)
       return res.json({ events: [] })
     }
 

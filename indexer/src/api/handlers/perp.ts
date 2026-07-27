@@ -16,7 +16,7 @@ export async function getPerpMarkets(req: Request, res: Response) {
 
 export async function getPerpMarket(req: Request, res: Response) {
   try {
-    const address = req.params.address?.toLowerCase()
+    const address = String(req.params.address || '').toLowerCase()
     const chainId = Number(req.query.chainId ?? 114)
     const { data, error } = await supabase.from('perp_markets').select('*').eq('contract_address', address).eq('chain_id', chainId).single()
     if (error) return res.status(404).json({ error: 'Perp market not found' })
@@ -28,7 +28,7 @@ export async function getPerpMarket(req: Request, res: Response) {
 
 export async function getPerpMarketPositions(req: Request, res: Response) {
   try {
-    const address = req.params.address?.toLowerCase()
+    const address = String(req.params.address || '').toLowerCase()
     const { data, error } = await supabase
       .from('perp_positions')
       .select('*')
@@ -43,7 +43,7 @@ export async function getPerpMarketPositions(req: Request, res: Response) {
 
 export async function getFundingHistory(req: Request, res: Response) {
   try {
-    const address = req.params.address?.toLowerCase()
+    const address = String(req.params.address || '').toLowerCase()
     const { data, error } = await supabase
       .from('funding_history')
       .select('*')
@@ -59,7 +59,7 @@ export async function getFundingHistory(req: Request, res: Response) {
 
 export async function getMarkPriceHistory(req: Request, res: Response) {
   try {
-    const address = req.params.address?.toLowerCase()
+    const address = String(req.params.address || '').toLowerCase()
     const minutes = Number(req.query.minutes) || 60
     const since = new Date(Date.now() - minutes * 60 * 1000).toISOString()
 
@@ -79,7 +79,7 @@ export async function getMarkPriceHistory(req: Request, res: Response) {
 
 export async function getUserPerpPositions(req: Request, res: Response) {
   try {
-    const address = req.params.address?.toLowerCase()
+    const address = String(req.params.address || '').toLowerCase()
     const { data, error } = await supabase
       .from('perp_positions')
       .select('*')
