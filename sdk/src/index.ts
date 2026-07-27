@@ -2,7 +2,7 @@
 export type {
   Market, Position, WeatherReading, Side, MarketStatus,
   WeatherVariable, PayoffType, CreateMarketParams, MintPositionParams,
-  BreezeSwapConfig
+  BreezeSwapConfig, PerpMarket, PerpPosition, FundingHistoryItem, MarkPriceHistoryItem
 } from './types'
 
 // Constants
@@ -18,6 +18,10 @@ export { getMarkets, getMarket, getMarketPositions } from './reads/markets'
 export { getUserPositions } from './reads/positions'
 export { getWeatherReadings, getRegions } from './reads/weather'
 export { checkRole, type BreezeRole } from './reads/access'
+export {
+  getPerpMarkets, getPerpMarket, getPerpMarketPositions, getUserPerpPositions,
+  getFundingHistory, getMarkPriceHistory
+} from './reads/perp'
 
 // Writes
 export { createMarket } from './writes/markets'
@@ -26,6 +30,9 @@ export {
   setOracleReading, pauseMarket, unpauseMarket,
   pauseFactory, unpauseFactory, grantRole, revokeRole
 } from './writes/admin'
+export {
+  openPerpPosition, closePerpPosition, liquidatePerpPosition, settleFunding
+} from './writes/perp'
 
 // Utilities
 export {
@@ -33,3 +40,4 @@ export {
   formatCollateral, formatExpiry, timeUntilExpiry
 } from './utils/formatting'
 export { encodeRegionId, decodeRegionId, KNOWN_REGIONS } from './utils/regions'
+export { calculatePerpQuote, calculateMarkPrice, type Reserves } from './utils/perpQuote'

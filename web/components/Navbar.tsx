@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ConnectKitButton } from 'connectkit'
-import { CloudRain, Compass, PieChart, PlusCircle, BookOpen, ShieldAlert } from 'lucide-react'
+import { CloudRain, Compass, PieChart, PlusCircle, BookOpen, ShieldAlert, TrendingUp } from 'lucide-react'
 import { useAccount } from 'wagmi'
 import { checkRole, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
@@ -55,7 +55,14 @@ export function Navbar() {
             className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all"
           >
             <Compass className="w-4 h-4 text-cyan-400" />
-            Markets
+            Classic
+          </Link>
+          <Link
+            href="/perp-markets"
+            className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all"
+          >
+            <TrendingUp className="w-4 h-4 text-emerald-400" />
+            Perps
           </Link>
           <Link
             href="/portfolio"

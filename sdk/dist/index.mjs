@@ -9851,7 +9851,12 @@ var CONTRACT_ADDRESSES = {
     fTestXrp: "0x0b6a8e49F600B4676570c99a38e6a68d5d813DC7",
     ftsoWeatherAdapter: "0x9cd4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c",
     fdcWeatherAdapter: "0x341A6C8AA41A70c11803Cb67dd56E7F62c1fb18A",
-    fAssetsCollateralAdapter: "0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54"
+    fAssetsCollateralAdapter: "0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54",
+    insuranceFund: "0x007375dB309067a236a8d580cBd81b2AE002Ca56",
+    perpFactory: "0x4870Ab8ec5967aeAcC7317B5Cb95a449E2629131",
+    tokyoPerpMarket: "0x7b98AEC7379422F079dEB6b0fFd569d2bEBb3cA5",
+    seoulPerpMarket: "0xf1583f45754b3e128A8520Dcd3317A8b85b7423e",
+    dubaiPerpMarket: "0x671f64c3Aa907503D4EC3A4a4c5bdE66Bd7Af21A"
   }
 };
 var ORACLE_DECIMALS = 6n;
@@ -19261,6 +19266,68 @@ async function checkRole(publicClient, accessControlAddress, role, account) {
   }
 }
 
+// src/reads/perp.ts
+async function getPerpMarkets(indexerUrl) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets`);
+    if (!res.ok) throw new Error("Failed to fetch perp markets");
+    const data = await res.json();
+    return data.markets || [];
+  } catch (err) {
+    console.warn("getPerpMarkets error:", err);
+    return [];
+  }
+}
+async function getPerpMarket(indexerUrl, address) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    return null;
+  }
+}
+async function getPerpMarketPositions(indexerUrl, address) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}/positions`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.positions || [];
+  } catch (err) {
+    return [];
+  }
+}
+async function getUserPerpPositions(indexerUrl, userAddress) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/users/${userAddress}/perp-positions`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.positions || [];
+  } catch (err) {
+    return [];
+  }
+}
+async function getFundingHistory(indexerUrl, marketAddress) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/funding-history`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.history || [];
+  } catch (err) {
+    return [];
+  }
+}
+async function getMarkPriceHistory(indexerUrl, marketAddress, minutes = 60) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/mark-price-history?minutes=${minutes}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.history || [];
+  } catch (err) {
+    return [];
+  }
+}
+
 // src/abis/BreezeMarketFactory.json
 var BreezeMarketFactory_default = [
   {
@@ -20560,6 +20627,140 @@ async function revokeRole(walletClient, publicClient, accessControlAddress, role
   return walletClient.writeContract(request);
 }
 
+// src/abis/BreezePerpMarket.json
+var BreezePerpMarket_default = [
+  {
+    inputs: [],
+    name: "getMarkPrice",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      { internalType: "bool", name: "isLong", type: "bool" },
+      { internalType: "uint256", name: "collateral", type: "uint256" },
+      { internalType: "uint256", name: "leverage", type: "uint256" }
+    ],
+    name: "openPosition",
+    outputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    name: "closePosition",
+    outputs: [{ internalType: "int256", name: "pnl", type: "int256" }],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    name: "liquidate",
+    outputs: [{ internalType: "uint256", name: "reward", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "settleFunding",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    name: "calculateUnrealizedPnl",
+    outputs: [{ internalType: "int256", name: "totalPnl", type: "int256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    name: "isLiquidatable",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "totalLongOpenInterest",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "totalShortOpenInterest",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "cumulativeFundingIndex",
+    outputs: [{ internalType: "int256", name: "", type: "int256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "lastFundingSettledAt",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  }
+];
+
+// src/writes/perp.ts
+async function openPerpPosition(walletClient, publicClient, marketAddress, isLong, collateralAmount, leverage) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: marketAddress,
+    abi: BreezePerpMarket_default,
+    functionName: "openPosition",
+    args: [isLong, collateralAmount, leverage],
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function closePerpPosition(walletClient, publicClient, marketAddress, positionId) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: marketAddress,
+    abi: BreezePerpMarket_default,
+    functionName: "closePosition",
+    args: [positionId],
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function liquidatePerpPosition(walletClient, publicClient, marketAddress, positionId) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: marketAddress,
+    abi: BreezePerpMarket_default,
+    functionName: "liquidate",
+    args: [positionId],
+    account
+  });
+  return walletClient.writeContract(request);
+}
+async function settleFunding(walletClient, publicClient, marketAddress) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: marketAddress,
+    abi: BreezePerpMarket_default,
+    functionName: "settleFunding",
+    account
+  });
+  return walletClient.writeContract(request);
+}
+
 // src/utils/formatting.ts
 function formatOracleValue(raw, variable) {
   const display = Number(raw) / Number(ORACLE_SCALAR);
@@ -20631,6 +20832,34 @@ var KNOWN_REGIONS = {
 function decodeRegionId(regionId) {
   return KNOWN_REGIONS[regionId.toLowerCase()] ?? KNOWN_REGIONS[regionId] ?? "Unknown Region";
 }
+
+// src/utils/perpQuote.ts
+function calculateMarkPrice(reserves) {
+  if (reserves.weatherReserve === 0n) return 0;
+  return Number(reserves.collateralReserve * 10n ** 18n / reserves.weatherReserve) / 1e18;
+}
+function calculatePerpQuote(reserves, collateralIn, leverage, isLong) {
+  const notional = collateralIn * BigInt(leverage);
+  const currentPrice = calculateMarkPrice(reserves);
+  const k = reserves.collateralReserve * reserves.weatherReserve;
+  let newCollateralReserve;
+  let newWeatherReserve;
+  let exposureOut;
+  if (isLong) {
+    newCollateralReserve = reserves.collateralReserve + notional;
+    newWeatherReserve = k / newCollateralReserve;
+    exposureOut = reserves.weatherReserve - newWeatherReserve;
+  } else {
+    newCollateralReserve = reserves.collateralReserve - notional;
+    newWeatherReserve = k / newCollateralReserve;
+    exposureOut = newWeatherReserve - reserves.weatherReserve;
+  }
+  const newReserves = { collateralReserve: newCollateralReserve, weatherReserve: newWeatherReserve };
+  const newMarkPrice = calculateMarkPrice(newReserves);
+  const entryPrice = exposureOut > 0n ? Number(notional * 10n ** 18n / exposureOut) / 1e18 : newMarkPrice;
+  const priceImpactBps = currentPrice > 0 ? Math.round(Math.abs((newMarkPrice - currentPrice) / currentPrice) * 1e4) : 0;
+  return { exposureOut, newMarkPrice, priceImpactBps, entryPrice };
+}
 export {
   CONTRACT_ADDRESSES,
   COSTON2_CHAIN_ID,
@@ -20642,7 +20871,10 @@ export {
   WAD,
   WEATHER_VARIABLES,
   approveCollateral,
+  calculateMarkPrice,
+  calculatePerpQuote,
   checkRole,
+  closePerpPosition,
   coston2Chain,
   createBreezePublicClient,
   createBreezeWalletClient,
@@ -20653,20 +20885,29 @@ export {
   formatExpiry,
   formatOracleValue,
   formatPayoutRatio,
+  getFundingHistory,
+  getMarkPriceHistory,
   getMarket,
   getMarketPositions,
   getMarkets,
+  getPerpMarket,
+  getPerpMarketPositions,
+  getPerpMarkets,
   getRegions,
+  getUserPerpPositions,
   getUserPositions,
   getWeatherReadings,
   grantRole,
+  liquidatePerpPosition,
   mintPosition,
+  openPerpPosition,
   pauseFactory,
   pauseMarket,
   redeem,
   revokeRole,
   setOracleReading,
   settle,
+  settleFunding,
   timeUntilExpiry,
   toOracleUnits,
   unpauseFactory,

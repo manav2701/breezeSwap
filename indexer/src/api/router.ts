@@ -3,6 +3,10 @@ import { getMarkets, getMarket, getMarketPositions } from './handlers/markets'
 import { getUserPositions } from './handlers/positions'
 import { getWeatherReadings, getRegions } from './handlers/weather'
 import { getAuditLog } from './handlers/admin'
+import {
+  getPerpMarkets, getPerpMarket, getPerpMarketPositions,
+  getFundingHistory, getMarkPriceHistory, getUserPerpPositions
+} from './handlers/perp'
 import { healthHandler } from './handlers/health'
 
 export const router = Router()
@@ -15,3 +19,11 @@ router.get('/users/:address/positions', getUserPositions)
 router.get('/weather/regions', getRegions)
 router.get('/weather/:regionId', getWeatherReadings)
 router.get('/admin/audit-log', getAuditLog)
+
+// Perp routes
+router.get('/perp-markets', getPerpMarkets)
+router.get('/perp-markets/:address', getPerpMarket)
+router.get('/perp-markets/:address/positions', getPerpMarketPositions)
+router.get('/perp-markets/:address/funding-history', getFundingHistory)
+router.get('/perp-markets/:address/mark-price-history', getMarkPriceHistory)
+router.get('/users/:address/perp-positions', getUserPerpPositions)

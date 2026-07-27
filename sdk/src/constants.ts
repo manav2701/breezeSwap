@@ -13,6 +13,11 @@ export const CONTRACT_ADDRESSES = {
     ftsoWeatherAdapter: '0x9cd4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c' as `0x${string}`,
     fdcWeatherAdapter: '0x341A6C8AA41A70c11803Cb67dd56E7F62c1fb18A' as `0x${string}`,
     fAssetsCollateralAdapter: '0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54' as `0x${string}`,
+    insuranceFund: '0x007375dB309067a236a8d580cBd81b2AE002Ca56' as `0x${string}`,
+    perpFactory: '0x4870Ab8ec5967aeAcC7317B5Cb95a449E2629131' as `0x${string}`,
+    tokyoPerpMarket: '0x7b98AEC7379422F079dEB6b0fFd569d2bEBb3cA5' as `0x${string}`,
+    seoulPerpMarket: '0xf1583f45754b3e128A8520Dcd3317A8b85b7423e' as `0x${string}`,
+    dubaiPerpMarket: '0x671f64c3Aa907503D4EC3A4a4c5bdE66Bd7Af21A' as `0x${string}`,
   }
 } as const
 

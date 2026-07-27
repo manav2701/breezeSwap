@@ -39,8 +39,63 @@ export interface Position {
   redeemedAmount: string | null
   redeemedAt: string | null
   redeemTxHash: string | null
-  // Joined from markets table when fetching user positions
   market?: Pick<Market, 'regionName' | 'weatherVariable' | 'expiryTimestamp' | 'status'>
+}
+
+export interface PerpMarket {
+  contractAddress: string
+  chainId: number
+  regionId: string
+  regionName: string | null
+  collateralToken: string
+  status: 'ACTIVE' | 'PAUSED'
+  createdAt: string
+  blockNumber: number
+  txHash: string
+  markPrice?: number
+  oraclePrice?: number
+  fundingRate?: number
+  totalLongOpenInterest?: string
+  totalShortOpenInterest?: string
+}
+
+export interface PerpPosition {
+  id: string
+  marketAddress: string
+  positionId: string
+  traderAddress: string
+  isLong: boolean
+  collateral: string
+  leverage: number
+  virtualSize: string
+  entryMarkPrice: string
+  openedAt: string
+  openTxHash: string
+  isOpen: boolean
+  closedAt: string | null
+  closeTxHash: string | null
+  realizedPnl: string | null
+  wasLiquidated: boolean
+  market?: Pick<PerpMarket, 'regionName' | 'status'>
+}
+
+export interface FundingHistoryItem {
+  id: string
+  marketAddress: string
+  fundingRate: string
+  cumulativeIndex: string
+  markPrice: string
+  oraclePrice: string
+  settledAt: string
+  blockNumber: number
+  txHash: string
+}
+
+export interface MarkPriceHistoryItem {
+  id: string
+  marketAddress: string
+  markPrice: string
+  snapshottedAt: string
 }
 
 export interface WeatherReading {
