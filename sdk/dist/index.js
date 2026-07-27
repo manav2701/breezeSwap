@@ -9864,11 +9864,13 @@ var index_exports = {};
 __export(index_exports, {
   CONTRACT_ADDRESSES: () => CONTRACT_ADDRESSES,
   COSTON2_CHAIN_ID: () => COSTON2_CHAIN_ID,
+  FLARE_MAINNET_CHAIN_ID: () => FLARE_MAINNET_CHAIN_ID,
   KNOWN_REGIONS: () => KNOWN_REGIONS,
   ORACLE_DECIMALS: () => ORACLE_DECIMALS,
   ORACLE_SCALAR: () => ORACLE_SCALAR,
   PAYOFF_TYPES: () => PAYOFF_TYPES,
   SIDES: () => SIDES,
+  SUPPORTED_CHAINS: () => SUPPORTED_CHAINS,
   WAD: () => WAD,
   WEATHER_VARIABLES: () => WEATHER_VARIABLES,
   approveCollateral: () => approveCollateral,
@@ -9882,10 +9884,12 @@ __export(index_exports, {
   createMarket: () => createMarket,
   decodeRegionId: () => decodeRegionId,
   encodeRegionId: () => encodeRegionId,
+  flareMainnetChain: () => flareMainnetChain,
   formatCollateral: () => formatCollateral,
   formatExpiry: () => formatExpiry,
   formatOracleValue: () => formatOracleValue,
   formatPayoutRatio: () => formatPayoutRatio,
+  getContractAddresses: () => getContractAddresses,
   getFundingHistory: () => getFundingHistory,
   getInsuranceFundBalance: () => getInsuranceFundBalance,
   getMarkPriceHistory: () => getMarkPriceHistory,
@@ -9922,6 +9926,7 @@ module.exports = __toCommonJS(index_exports);
 
 // src/constants.ts
 var COSTON2_CHAIN_ID = 114;
+var FLARE_MAINNET_CHAIN_ID = 14;
 var CONTRACT_ADDRESSES = {
   [COSTON2_CHAIN_ID]: {
     accessControl: "0x3788420AB4Ef4D2c2dd22c151fd6CB93d2543853",
@@ -9942,8 +9947,35 @@ var CONTRACT_ADDRESSES = {
     tokyoPerpMarket: "0x90C9876e41D0C5a7E1E8F660F0B2bD58D64Cb7Be",
     seoulPerpMarket: "0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
     dubaiPerpMarket: "0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD"
+  },
+  [FLARE_MAINNET_CHAIN_ID]: {
+    accessControl: "0x5A88420AB4Ef4D2c2dd22c151fd6CB93d2543853",
+    factory: "0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf",
+    marketFactory: "0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf",
+    positionToken: "0x2A3C38499020a733C1534E8f43FBbF3afAf01e15",
+    mockWeatherOracle: "0x27EEF37738887b2a6f7149aA3af047D6144D6139",
+    oracle: "0x27EEF37738887b2a6f7149aA3af047D6144D6139",
+    mockUsdt: "0x739b6b2a0195271557e543F51c0FA417265B2FAC",
+    fTestXrp: "0x0b6a8e49F600B4676570c99a38e6a68d5d813DC7",
+    ftsoWeatherAdapter: "0xade4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c",
+    fdcWeatherAdapter: "0x441A6C8AA41A70c11803Cb67dd56E7F62c1fb18A",
+    fAssetsCollateralAdapter: "0x5cB99FD30BF78c735a5296462C2C2256bE5DcF54",
+    feeConfig: "0xC0D295305d653F044E4178bb6966e76FB79f325C",
+    protocolTreasury: "0xfcB7Ff4dA80532F5C7803392761643bA4dDe5058",
+    insuranceFund: "0xA6952FC0fBe43AA72E1D08B11daD5cA56c12a36f",
+    perpFactory: "0x15e309f0434942BDfa0D961E25FaCc4483BABe46",
+    tokyoPerpMarket: "0x1e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
+    seoulPerpMarket: "0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
+    dubaiPerpMarket: "0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD"
   }
 };
+function getContractAddresses(chainId) {
+  const addresses = CONTRACT_ADDRESSES[chainId];
+  if (!addresses) {
+    return CONTRACT_ADDRESSES[COSTON2_CHAIN_ID];
+  }
+  return addresses;
+}
 var ORACLE_DECIMALS = 6n;
 var ORACLE_SCALAR = 10n ** ORACLE_DECIMALS;
 var WAD = 10n ** 18n;
@@ -19105,15 +19137,31 @@ var coston2Chain = defineChain({
     default: { name: "Coston2 Explorer", url: "https://coston2-explorer.flare.network" }
   }
 });
-function createBreezePublicClient(rpcUrl) {
+var flareMainnetChain = defineChain({
+  id: 14,
+  name: "Flare Mainnet",
+  nativeCurrency: { name: "Flare", symbol: "FLR", decimals: 18 },
+  rpcUrls: {
+    default: { http: ["https://flare-api.flare.network/ext/C/rpc"] },
+    public: { http: ["https://flare-api.flare.network/ext/C/rpc"] }
+  },
+  blockExplorers: {
+    default: { name: "Flare Explorer", url: "https://flare-explorer.flare.network" }
+  }
+});
+var SUPPORTED_CHAINS = [coston2Chain, flareMainnetChain];
+function createBreezePublicClient(chainId = 114, rpcUrl) {
+  const chain = chainId === 14 ? flareMainnetChain : coston2Chain;
+  const defaultRpc = chainId === 14 ? "https://flare-api.flare.network/ext/C/rpc" : "https://coston2-api.flare.network/ext/C/rpc";
   return createPublicClient({
-    chain: coston2Chain,
-    transport: http(rpcUrl ?? "https://coston2-api.flare.network/ext/C/rpc")
+    chain,
+    transport: http(rpcUrl ?? defaultRpc)
   });
 }
-function createBreezeWalletClient(provider) {
+function createBreezeWalletClient(provider, chainId = 114) {
+  const chain = chainId === 14 ? flareMainnetChain : coston2Chain;
   return createWalletClient({
-    chain: coston2Chain,
+    chain,
     transport: custom(provider)
   });
 }
@@ -19145,8 +19193,9 @@ function mapMarketFromDB(item) {
     txHash: item.tx_hash || item.txHash || ""
   };
 }
-async function getMarkets(indexerUrl, params) {
+async function getMarkets(indexerUrl, chainId = 114, params) {
   const url = new URL(`${indexerUrl}/api/markets`);
+  url.searchParams.set("chainId", String(chainId));
   if (params?.status) url.searchParams.set("status", params.status);
   if (params?.region) url.searchParams.set("region", params.region);
   if (params?.limit) url.searchParams.set("limit", String(params.limit));
@@ -19156,14 +19205,14 @@ async function getMarkets(indexerUrl, params) {
   const data = await res.json();
   return (data.markets || []).map(mapMarketFromDB);
 }
-async function getMarket(indexerUrl, address) {
-  const res = await fetch(`${indexerUrl}/api/markets/${address.toLowerCase()}`);
+async function getMarket(indexerUrl, address, chainId = 114) {
+  const res = await fetch(`${indexerUrl}/api/markets/${address.toLowerCase()}?chainId=${chainId}`);
   if (!res.ok) throw new Error(`Market not found: ${address}`);
   const data = await res.json();
   return mapMarketFromDB(data);
 }
-async function getMarketPositions(indexerUrl, marketAddress) {
-  const res = await fetch(`${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions`);
+async function getMarketPositions(indexerUrl, marketAddress, chainId = 114) {
+  const res = await fetch(`${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions?chainId=${chainId}`);
   if (!res.ok) throw new Error(`Failed to fetch positions for market: ${marketAddress}`);
   const data = await res.json();
   return data.positions || [];
@@ -19190,16 +19239,16 @@ function mapPositionFromDB(item) {
     market: item.markets ? mapMarketFromDB(item.markets) : item.market ? mapMarketFromDB(item.market) : void 0
   };
 }
-async function getUserPositions(indexerUrl, walletAddress) {
-  const res = await fetch(`${indexerUrl}/api/users/${walletAddress.toLowerCase()}/positions`);
+async function getUserPositions(indexerUrl, walletAddress, chainId = 114) {
+  const res = await fetch(`${indexerUrl}/api/users/${walletAddress.toLowerCase()}/positions?chainId=${chainId}`);
   if (!res.ok) throw new Error(`Failed to fetch positions for user: ${walletAddress}`);
   const data = await res.json();
   return (data.positions || []).map(mapPositionFromDB);
 }
 
 // src/reads/weather.ts
-async function getWeatherReadings(indexerUrl, regionId, days = 30) {
-  const res = await fetch(`${indexerUrl}/api/weather/${regionId}?days=${days}`);
+async function getWeatherReadings(indexerUrl, regionId, days = 30, chainId = 114) {
+  const res = await fetch(`${indexerUrl}/api/weather/${regionId}?days=${days}&chainId=${chainId}`);
   if (!res.ok) throw new Error(`Failed to fetch weather data for region: ${regionId}`);
   const data = await res.json();
   return (data.readings || []).map((r) => ({
@@ -19210,8 +19259,8 @@ async function getWeatherReadings(indexerUrl, regionId, days = 30) {
     readingTimestamp: r.reading_timestamp
   }));
 }
-async function getRegions(indexerUrl) {
-  const res = await fetch(`${indexerUrl}/api/weather/regions`);
+async function getRegions(indexerUrl, chainId = 114) {
+  const res = await fetch(`${indexerUrl}/api/weather/regions?chainId=${chainId}`);
   if (!res.ok) throw new Error("Failed to fetch regions");
   const data = await res.json();
   return data.regions || [];
@@ -19352,9 +19401,9 @@ async function checkRole(publicClient, accessControlAddress, role, account) {
 }
 
 // src/reads/perp.ts
-async function getPerpMarkets(indexerUrl) {
+async function getPerpMarkets(indexerUrl, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets`);
+    const res = await fetch(`${indexerUrl}/api/perp-markets?chainId=${chainId}`);
     if (!res.ok) throw new Error("Failed to fetch perp markets");
     const data = await res.json();
     return data.markets || [];
@@ -19363,18 +19412,18 @@ async function getPerpMarkets(indexerUrl) {
     return [];
   }
 }
-async function getPerpMarket(indexerUrl, address) {
+async function getPerpMarket(indexerUrl, address, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}`);
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}?chainId=${chainId}`);
     if (!res.ok) return null;
     return await res.json();
   } catch (err) {
     return null;
   }
 }
-async function getPerpMarketPositions(indexerUrl, address) {
+async function getPerpMarketPositions(indexerUrl, address, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}/positions`);
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}/positions?chainId=${chainId}`);
     if (!res.ok) return [];
     const data = await res.json();
     return data.positions || [];
@@ -19382,9 +19431,9 @@ async function getPerpMarketPositions(indexerUrl, address) {
     return [];
   }
 }
-async function getUserPerpPositions(indexerUrl, userAddress) {
+async function getUserPerpPositions(indexerUrl, userAddress, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/users/${userAddress}/perp-positions`);
+    const res = await fetch(`${indexerUrl}/api/users/${userAddress}/perp-positions?chainId=${chainId}`);
     if (!res.ok) return [];
     const data = await res.json();
     return data.positions || [];
@@ -19392,9 +19441,9 @@ async function getUserPerpPositions(indexerUrl, userAddress) {
     return [];
   }
 }
-async function getFundingHistory(indexerUrl, marketAddress) {
+async function getFundingHistory(indexerUrl, marketAddress, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/funding-history`);
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/funding-history?chainId=${chainId}`);
     if (!res.ok) return [];
     const data = await res.json();
     return data.history || [];
@@ -19402,9 +19451,9 @@ async function getFundingHistory(indexerUrl, marketAddress) {
     return [];
   }
 }
-async function getMarkPriceHistory(indexerUrl, marketAddress, minutes = 60) {
+async function getMarkPriceHistory(indexerUrl, marketAddress, minutes = 60, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/mark-price-history?minutes=${minutes}`);
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/mark-price-history?minutes=${minutes}&chainId=${chainId}`);
     if (!res.ok) return [];
     const data = await res.json();
     return data.history || [];
@@ -19414,9 +19463,9 @@ async function getMarkPriceHistory(indexerUrl, marketAddress, minutes = 60) {
 }
 
 // src/reads/protocol.ts
-async function getTotalFeesCollected(indexerUrl) {
+async function getTotalFeesCollected(indexerUrl, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/protocol/fees/total`);
+    const res = await fetch(`${indexerUrl}/api/protocol/fees/total?chainId=${chainId}`);
     if (!res.ok) return "0";
     const data = await res.json();
     return data.totalFeesWei || "0";
@@ -19424,9 +19473,9 @@ async function getTotalFeesCollected(indexerUrl) {
     return "0";
   }
 }
-async function getInsuranceFundBalance(indexerUrl) {
+async function getInsuranceFundBalance(indexerUrl, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/protocol/insurance-fund`);
+    const res = await fetch(`${indexerUrl}/api/protocol/insurance-fund?chainId=${chainId}`);
     if (!res.ok) return "0";
     const data = await res.json();
     return data.balanceWei || "0";
@@ -19434,9 +19483,9 @@ async function getInsuranceFundBalance(indexerUrl) {
     return "0";
   }
 }
-async function getProtocolTreasuryBalance(indexerUrl) {
+async function getProtocolTreasuryBalance(indexerUrl, chainId = 114) {
   try {
-    const res = await fetch(`${indexerUrl}/api/protocol/treasury`);
+    const res = await fetch(`${indexerUrl}/api/protocol/treasury?chainId=${chainId}`);
     if (!res.ok) return "0";
     const data = await res.json();
     return data.balanceWei || "0";
@@ -19695,11 +19744,12 @@ var BreezeMarketFactory_default = [
 ];
 
 // src/writes/markets.ts
-async function createMarket(walletClient, publicClient, params) {
+async function createMarket(walletClient, publicClient, params, chainId = 114) {
   const [account] = await walletClient.getAddresses();
   if (!account) throw new Error("No wallet connected");
-  const factoryAddress = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].factory;
-  const oracleAddress = params.oracleAddress || CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].mockWeatherOracle;
+  const addresses = getContractAddresses(chainId);
+  const factoryAddress = addresses.factory;
+  const oracleAddress = params.oracleAddress || addresses.mockWeatherOracle;
   const { request } = await publicClient.simulateContract({
     address: factoryAddress,
     abi: BreezeMarketFactory_default,
@@ -21024,11 +21074,13 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong, feeBps = 1
 0 && (module.exports = {
   CONTRACT_ADDRESSES,
   COSTON2_CHAIN_ID,
+  FLARE_MAINNET_CHAIN_ID,
   KNOWN_REGIONS,
   ORACLE_DECIMALS,
   ORACLE_SCALAR,
   PAYOFF_TYPES,
   SIDES,
+  SUPPORTED_CHAINS,
   WAD,
   WEATHER_VARIABLES,
   approveCollateral,
@@ -21042,10 +21094,12 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong, feeBps = 1
   createMarket,
   decodeRegionId,
   encodeRegionId,
+  flareMainnetChain,
   formatCollateral,
   formatExpiry,
   formatOracleValue,
   formatPayoutRatio,
+  getContractAddresses,
   getFundingHistory,
   getInsuranceFundBalance,
   getMarkPriceHistory,

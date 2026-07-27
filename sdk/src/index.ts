@@ -7,11 +7,14 @@ export type {
 
 // Constants
 export {
-  COSTON2_CHAIN_ID, CONTRACT_ADDRESSES, ORACLE_DECIMALS, ORACLE_SCALAR, WAD, WEATHER_VARIABLES, PAYOFF_TYPES, SIDES
+  COSTON2_CHAIN_ID, FLARE_MAINNET_CHAIN_ID, CONTRACT_ADDRESSES, getContractAddresses,
+  ORACLE_DECIMALS, ORACLE_SCALAR, WAD, WEATHER_VARIABLES, PAYOFF_TYPES, SIDES
 } from './constants'
 
 // Chain
-export { coston2Chain, createBreezePublicClient, createBreezeWalletClient } from './chain'
+export {
+  coston2Chain, flareMainnetChain, SUPPORTED_CHAINS, createBreezePublicClient, createBreezeWalletClient
+} from './chain'
 
 // Reads
 export { getMarkets, getMarket, getMarketPositions } from './reads/markets'

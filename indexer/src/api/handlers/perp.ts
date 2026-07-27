@@ -4,7 +4,8 @@ import { logger } from '../../utils/logger'
 
 export async function getPerpMarkets(req: Request, res: Response) {
   try {
-    const { data, error } = await supabase.from('perp_markets').select('*').order('created_at', { ascending: false })
+    const chainId = Number(req.query.chainId ?? 114)
+    const { data, error } = await supabase.from('perp_markets').select('*').eq('chain_id', chainId).order('created_at', { ascending: false })
     if (error) throw error
     return res.json({ markets: data || [] })
   } catch (err: any) {
@@ -16,7 +17,8 @@ export async function getPerpMarkets(req: Request, res: Response) {
 export async function getPerpMarket(req: Request, res: Response) {
   try {
     const address = req.params.address?.toLowerCase()
-    const { data, error } = await supabase.from('perp_markets').select('*').eq('contract_address', address).single()
+    const chainId = Number(req.query.chainId ?? 114)
+    const { data, error } = await supabase.from('perp_markets').select('*').eq('contract_address', address).eq('chain_id', chainId).single()
     if (error) return res.status(404).json({ error: 'Perp market not found' })
     return res.json(data)
   } catch (err: any) {

@@ -17,9 +17,11 @@ import {
 } from 'lucide-react'
 import { getMarkets, type Market } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
+import { useBreezeNetwork } from '../lib/hooks/useNetwork'
 
 export default function HomePage() {
   const { indexerUrl } = useBreezeSDK()
+  const { chainId } = useBreezeNetwork()
   const [markets, setMarkets] = useState<Market[]>([])
   const [health, setHealth] = useState<{ lastIndexedBlock: number } | null>(null)
   const [loading, setLoading] = useState(true)
@@ -27,7 +29,7 @@ export default function HomePage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await getMarkets(indexerUrl, { limit: 6 })
+        const data = await getMarkets(indexerUrl, chainId, { limit: 6 })
         setMarkets(data)
       } catch {
         setMarkets([])
@@ -46,7 +48,7 @@ export default function HomePage() {
       }
     }
     loadData()
-  }, [indexerUrl])
+  }, [indexerUrl, chainId])
 
   const openMarketsCount = markets.filter((m) => m.status === 'OPEN').length
 

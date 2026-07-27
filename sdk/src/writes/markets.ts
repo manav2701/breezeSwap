@@ -1,18 +1,20 @@
 import { type WalletClient, type PublicClient, decodeEventLog } from 'viem'
 import FactoryABI from '../abis/BreezeMarketFactory.json'
-import { CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, WEATHER_VARIABLES, PAYOFF_TYPES } from '../constants'
+import { getContractAddresses, WEATHER_VARIABLES, PAYOFF_TYPES } from '../constants'
 import type { CreateMarketParams } from '../types'
 
 export async function createMarket(
   walletClient: WalletClient,
   publicClient: PublicClient,
-  params: CreateMarketParams
+  params: CreateMarketParams,
+  chainId: number = 114
 ): Promise<{ txHash: `0x${string}`; marketAddress: string }> {
   const [account] = await walletClient.getAddresses()
   if (!account) throw new Error('No wallet connected')
 
-  const factoryAddress = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].factory
-  const oracleAddress = params.oracleAddress || CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].mockWeatherOracle
+  const addresses = getContractAddresses(chainId)
+  const factoryAddress = addresses.factory
+  const oracleAddress = params.oracleAddress || addresses.mockWeatherOracle
 
   const { request } = await publicClient.simulateContract({
     address: factoryAddress,
@@ -33,7 +35,6 @@ export async function createMarket(
 
   const txHash = await walletClient.writeContract(request)
 
-  // Wait for the transaction and extract the new market address from logs
   const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash })
   let marketAddress = ''
 
@@ -49,7 +50,7 @@ export async function createMarket(
         break
       }
     } catch {
-      // Ignore logs from other contracts
+      // Ignore non-matching logs
     }
   }
 

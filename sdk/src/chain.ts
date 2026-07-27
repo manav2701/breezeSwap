@@ -13,18 +13,34 @@ export const coston2Chain = defineChain({
   }
 })
 
-export function createBreezePublicClient(rpcUrl?: string) {
+export const flareMainnetChain = defineChain({
+  id: 14,
+  name: 'Flare Mainnet',
+  nativeCurrency: { name: 'Flare', symbol: 'FLR', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://flare-api.flare.network/ext/C/rpc'] },
+    public: { http: ['https://flare-api.flare.network/ext/C/rpc'] }
+  },
+  blockExplorers: {
+    default: { name: 'Flare Explorer', url: 'https://flare-explorer.flare.network' }
+  }
+})
+
+export const SUPPORTED_CHAINS = [coston2Chain, flareMainnetChain] as const
+
+export function createBreezePublicClient(chainId: number = 114, rpcUrl?: string) {
+  const chain = chainId === 14 ? flareMainnetChain : coston2Chain
+  const defaultRpc = chainId === 14 ? 'https://flare-api.flare.network/ext/C/rpc' : 'https://coston2-api.flare.network/ext/C/rpc'
   return createPublicClient({
-    chain: coston2Chain,
-    transport: http(rpcUrl ?? 'https://coston2-api.flare.network/ext/C/rpc')
+    chain,
+    transport: http(rpcUrl ?? defaultRpc)
   })
 }
 
-// Wallet client — takes a window.ethereum provider (browser wallet)
-// Call this only client-side in Next.js (no SSR)
-export function createBreezeWalletClient(provider: any) {
+export function createBreezeWalletClient(provider: any, chainId: number = 114) {
+  const chain = chainId === 14 ? flareMainnetChain : coston2Chain
   return createWalletClient({
-    chain: coston2Chain,
+    chain,
     transport: custom(provider)
   })
 }

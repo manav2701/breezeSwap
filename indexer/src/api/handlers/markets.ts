@@ -4,7 +4,8 @@ import { supabase } from '../../db/client'
 // GET /api/markets
 export async function getMarkets(req: Request, res: Response) {
   try {
-    let query = supabase.from('markets').select('*').order('created_at', { ascending: false })
+    const chainId = Number(req.query.chainId ?? 114)
+    let query = supabase.from('markets').select('*').eq('chain_id', chainId).order('created_at', { ascending: false })
 
     if (req.query.status) {
       query = query.eq('status', String(req.query.status).toUpperCase())
@@ -29,10 +30,12 @@ export async function getMarkets(req: Request, res: Response) {
 export async function getMarket(req: Request, res: Response) {
   try {
     const address = String(req.params.address).toLowerCase()
+    const chainId = Number(req.query.chainId ?? 114)
     const { data, error } = await supabase
       .from('markets')
       .select('*, settlements(*)')
       .eq('contract_address', address)
+      .eq('chain_id', chainId)
       .single()
 
     if (error || !data) return res.status(404).json({ error: 'Market not found' })

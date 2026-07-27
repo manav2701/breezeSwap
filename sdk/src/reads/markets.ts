@@ -30,9 +30,11 @@ export function mapMarketFromDB(item: any): Market {
 
 export async function getMarkets(
   indexerUrl: string,
+  chainId: number = 114,
   params?: { status?: 'OPEN' | 'SETTLED'; region?: string; limit?: number; offset?: number }
 ): Promise<Market[]> {
   const url = new URL(`${indexerUrl}/api/markets`)
+  url.searchParams.set('chainId', String(chainId))
   if (params?.status) url.searchParams.set('status', params.status)
   if (params?.region) url.searchParams.set('region', params.region)
   if (params?.limit) url.searchParams.set('limit', String(params.limit))
@@ -44,15 +46,15 @@ export async function getMarkets(
   return (data.markets || []).map(mapMarketFromDB)
 }
 
-export async function getMarket(indexerUrl: string, address: string): Promise<Market> {
-  const res = await fetch(`${indexerUrl}/api/markets/${address.toLowerCase()}`)
+export async function getMarket(indexerUrl: string, address: string, chainId: number = 114): Promise<Market> {
+  const res = await fetch(`${indexerUrl}/api/markets/${address.toLowerCase()}?chainId=${chainId}`)
   if (!res.ok) throw new Error(`Market not found: ${address}`)
   const data = await res.json()
   return mapMarketFromDB(data)
 }
 
-export async function getMarketPositions(indexerUrl: string, marketAddress: string) {
-  const res = await fetch(`${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions`)
+export async function getMarketPositions(indexerUrl: string, marketAddress: string, chainId: number = 114) {
+  const res = await fetch(`${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions?chainId=${chainId}`)
   if (!res.ok) throw new Error(`Failed to fetch positions for market: ${marketAddress}`)
   const data = await res.json()
   return data.positions || []

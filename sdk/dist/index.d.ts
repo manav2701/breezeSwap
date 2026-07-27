@@ -136,6 +136,7 @@ interface BreezeSwapConfig {
 }
 
 declare const COSTON2_CHAIN_ID = 114;
+declare const FLARE_MAINNET_CHAIN_ID = 14;
 declare const CONTRACT_ADDRESSES: {
     readonly 114: {
         readonly accessControl: `0x${string}`;
@@ -157,6 +158,46 @@ declare const CONTRACT_ADDRESSES: {
         readonly seoulPerpMarket: `0x${string}`;
         readonly dubaiPerpMarket: `0x${string}`;
     };
+    readonly 14: {
+        readonly accessControl: `0x${string}`;
+        readonly factory: `0x${string}`;
+        readonly marketFactory: `0x${string}`;
+        readonly positionToken: `0x${string}`;
+        readonly mockWeatherOracle: `0x${string}`;
+        readonly oracle: `0x${string}`;
+        readonly mockUsdt: `0x${string}`;
+        readonly fTestXrp: `0x${string}`;
+        readonly ftsoWeatherAdapter: `0x${string}`;
+        readonly fdcWeatherAdapter: `0x${string}`;
+        readonly fAssetsCollateralAdapter: `0x${string}`;
+        readonly feeConfig: `0x${string}`;
+        readonly protocolTreasury: `0x${string}`;
+        readonly insuranceFund: `0x${string}`;
+        readonly perpFactory: `0x${string}`;
+        readonly tokyoPerpMarket: `0x${string}`;
+        readonly seoulPerpMarket: `0x${string}`;
+        readonly dubaiPerpMarket: `0x${string}`;
+    };
+};
+declare function getContractAddresses(chainId: number): {
+    readonly accessControl: `0x${string}`;
+    readonly factory: `0x${string}`;
+    readonly marketFactory: `0x${string}`;
+    readonly positionToken: `0x${string}`;
+    readonly mockWeatherOracle: `0x${string}`;
+    readonly oracle: `0x${string}`;
+    readonly mockUsdt: `0x${string}`;
+    readonly fTestXrp: `0x${string}`;
+    readonly ftsoWeatherAdapter: `0x${string}`;
+    readonly fdcWeatherAdapter: `0x${string}`;
+    readonly fAssetsCollateralAdapter: `0x${string}`;
+    readonly feeConfig: `0x${string}`;
+    readonly protocolTreasury: `0x${string}`;
+    readonly insuranceFund: `0x${string}`;
+    readonly perpFactory: `0x${string}`;
+    readonly tokyoPerpMarket: `0x${string}`;
+    readonly seoulPerpMarket: `0x${string}`;
+    readonly dubaiPerpMarket: `0x${string}`;
 };
 declare const ORACLE_DECIMALS = 6n;
 declare const ORACLE_SCALAR: bigint;
@@ -242,7 +283,165 @@ declare const coston2Chain: {
     serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
     verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
 };
-declare function createBreezePublicClient(rpcUrl?: string): {
+declare const flareMainnetChain: {
+    blockExplorers: {
+        readonly default: {
+            readonly name: "Flare Explorer";
+            readonly url: "https://flare-explorer.flare.network";
+        };
+    };
+    blockTime?: number | undefined | undefined;
+    contracts?: {
+        [x: string]: viem.ChainContract | {
+            [sourceId: number]: viem.ChainContract | undefined;
+        } | undefined;
+        ensRegistry?: viem.ChainContract | undefined;
+        ensUniversalResolver?: viem.ChainContract | undefined;
+        multicall3?: viem.ChainContract | undefined;
+        erc6492Verifier?: viem.ChainContract | undefined;
+    } | undefined;
+    ensTlds?: readonly string[] | undefined;
+    id: 14;
+    name: "Flare Mainnet";
+    nativeCurrency: {
+        readonly name: "Flare";
+        readonly symbol: "FLR";
+        readonly decimals: 18;
+    };
+    experimental_preconfirmationTime?: number | undefined | undefined;
+    rpcUrls: {
+        readonly default: {
+            readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+        };
+        readonly public: {
+            readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+        };
+    };
+    sourceId?: number | undefined | undefined;
+    supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+    testnet?: boolean | undefined | undefined;
+    custom?: Record<string, unknown> | undefined;
+    extendSchema?: Record<string, unknown> | undefined;
+    fees?: viem.ChainFees<undefined> | undefined;
+    formatters?: undefined;
+    prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+        client: viem.Client;
+        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+    }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+        client: viem.Client;
+        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+    }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+        runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+    }] | undefined;
+    serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+    verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+};
+declare const SUPPORTED_CHAINS: readonly [{
+    blockExplorers: {
+        readonly default: {
+            readonly name: "Coston2 Explorer";
+            readonly url: "https://coston2-explorer.flare.network";
+        };
+    };
+    blockTime?: number | undefined | undefined;
+    contracts?: {
+        [x: string]: viem.ChainContract | {
+            [sourceId: number]: viem.ChainContract | undefined;
+        } | undefined;
+        ensRegistry?: viem.ChainContract | undefined;
+        ensUniversalResolver?: viem.ChainContract | undefined;
+        multicall3?: viem.ChainContract | undefined;
+        erc6492Verifier?: viem.ChainContract | undefined;
+    } | undefined;
+    ensTlds?: readonly string[] | undefined;
+    id: 114;
+    name: "Flare Coston2";
+    nativeCurrency: {
+        readonly name: "Coston2 FLR";
+        readonly symbol: "C2FLR";
+        readonly decimals: 18;
+    };
+    experimental_preconfirmationTime?: number | undefined | undefined;
+    rpcUrls: {
+        readonly default: {
+            readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+        };
+        readonly public: {
+            readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+        };
+    };
+    sourceId?: number | undefined | undefined;
+    supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+    testnet?: boolean | undefined | undefined;
+    custom?: Record<string, unknown> | undefined;
+    extendSchema?: Record<string, unknown> | undefined;
+    fees?: viem.ChainFees<undefined> | undefined;
+    formatters?: undefined;
+    prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+        client: viem.Client;
+        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+    }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+        client: viem.Client;
+        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+    }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+        runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+    }] | undefined;
+    serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+    verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+}, {
+    blockExplorers: {
+        readonly default: {
+            readonly name: "Flare Explorer";
+            readonly url: "https://flare-explorer.flare.network";
+        };
+    };
+    blockTime?: number | undefined | undefined;
+    contracts?: {
+        [x: string]: viem.ChainContract | {
+            [sourceId: number]: viem.ChainContract | undefined;
+        } | undefined;
+        ensRegistry?: viem.ChainContract | undefined;
+        ensUniversalResolver?: viem.ChainContract | undefined;
+        multicall3?: viem.ChainContract | undefined;
+        erc6492Verifier?: viem.ChainContract | undefined;
+    } | undefined;
+    ensTlds?: readonly string[] | undefined;
+    id: 14;
+    name: "Flare Mainnet";
+    nativeCurrency: {
+        readonly name: "Flare";
+        readonly symbol: "FLR";
+        readonly decimals: 18;
+    };
+    experimental_preconfirmationTime?: number | undefined | undefined;
+    rpcUrls: {
+        readonly default: {
+            readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+        };
+        readonly public: {
+            readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+        };
+    };
+    sourceId?: number | undefined | undefined;
+    supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+    testnet?: boolean | undefined | undefined;
+    custom?: Record<string, unknown> | undefined;
+    extendSchema?: Record<string, unknown> | undefined;
+    fees?: viem.ChainFees<undefined> | undefined;
+    formatters?: undefined;
+    prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+        client: viem.Client;
+        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+    }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+        client: viem.Client;
+        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+    }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+        runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+    }] | undefined;
+    serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+    verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+}];
+declare function createBreezePublicClient(chainId?: number, rpcUrl?: string): {
     account: undefined;
     batch?: {
         multicall?: boolean | viem.Prettify<viem.MulticallBatchOptions> | undefined;
@@ -283,6 +482,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -369,6 +620,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }>) => Promise<viem.CallReturnType>;
     createAccessList: (parameters: viem.CreateAccessListParameters<{
         blockExplorers: {
@@ -402,6 +705,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -483,6 +838,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }>) => Promise<viem.EstimateGasReturnType>;
     fillTransaction: <chainOverride extends viem.Chain | undefined = undefined, accountOverride extends viem.Account | viem.Address | undefined = undefined>(args: viem.FillTransactionParameters<{
         blockExplorers: {
@@ -536,6 +943,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, chainOverride, accountOverride>) => Promise<viem.FillTransactionReturnType<{
         blockExplorers: {
             readonly default: {
@@ -568,6 +1027,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -802,6 +1313,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }>>;
     getBlockNumber: (args?: viem.GetBlockNumberParameters | undefined) => Promise<viem.GetBlockNumberReturnType>;
     getBlockTransactionCount: (args?: viem.GetBlockTransactionCountParameters | undefined) => Promise<viem.GetBlockTransactionCountReturnType>;
@@ -849,6 +1412,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -1063,6 +1678,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }>) => Promise<viem.GetTransactionConfirmationsReturnType>;
     getTransactionCount: (args: viem.GetTransactionCountParameters) => Promise<viem.GetTransactionCountReturnType>;
     getTransactionReceipt: (args: viem.GetTransactionReceiptParameters) => Promise<viem.TransactionReceipt>;
@@ -1099,6 +1766,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -1171,6 +1890,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, chainOverride, accountOverride, request>) => Promise<viem.UnionRequiredBy<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -1203,6 +1974,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -1275,6 +2098,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride> extends infer T_1 ? T_1 extends viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -1307,6 +2182,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -1389,6 +2316,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, {
         type?: ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
@@ -1442,6 +2421,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_3 ? T_3 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -1474,6 +2505,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -1548,6 +2631,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_4 ? T_4 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -1580,6 +2715,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -1654,6 +2841,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_5 ? T_5 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -1686,6 +2925,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -1760,6 +3051,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_6 ? T_6 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -1792,6 +3135,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -2028,6 +3423,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_8 ? T_8 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -2060,6 +3507,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -2134,6 +3633,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_9 ? T_9 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -2166,6 +3717,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -2240,6 +3843,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_10 ? T_10 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -2272,6 +3927,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -2346,6 +4053,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_11 ? T_11 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -2378,6 +4137,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -2615,6 +4426,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from">, ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -2667,6 +4530,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_12 ? T_12 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -2699,6 +4614,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -2773,6 +4740,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_13 ? T_13 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -2805,6 +4824,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -2879,6 +4950,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_14 ? T_14 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -2911,6 +5034,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -2985,6 +5160,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_15 ? T_15 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -3017,6 +5244,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -3253,6 +5532,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_17 ? T_17 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -3285,6 +5616,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -3359,6 +5742,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_18 ? T_18 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -3391,6 +5826,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -3465,6 +5952,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_19 ? T_19 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -3497,6 +6036,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -3571,6 +6162,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_20 ? T_20 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -3603,6 +6246,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -3839,6 +6534,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, {
         type?: ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
@@ -3892,6 +6639,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_21 ? T_21 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -3924,6 +6723,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -3998,6 +6849,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_22 ? T_22 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -4030,6 +6933,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -4104,6 +7059,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_23 ? T_23 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -4136,6 +7143,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -4210,6 +7269,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_24 ? T_24 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -4242,6 +7353,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -4478,6 +7641,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_26 ? T_26 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -4510,6 +7725,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -4584,6 +7851,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_27 ? T_27 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -4616,6 +7935,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -4690,6 +8061,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_28 ? T_28 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -4722,6 +8145,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -4796,6 +8271,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_29 ? T_29 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -4828,6 +8355,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -5065,6 +8644,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from">, ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5117,6 +8748,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_30 ? T_30 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5149,6 +8832,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -5223,6 +8958,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_31 ? T_31 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5255,6 +9042,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -5329,6 +9168,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_32 ? T_32 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5361,6 +9252,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -5435,6 +9378,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_33 ? T_33 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5467,6 +9462,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -5703,6 +9750,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_35 ? T_35 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5735,6 +9834,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -5809,6 +9960,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_36 ? T_36 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5841,6 +10044,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -5915,6 +10170,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_37 ? T_37 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -5947,6 +10254,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -6021,6 +10380,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_38 ? T_38 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -6053,6 +10464,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -6302,6 +10765,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride, accountOverride>) => Promise<viem.SimulateContractReturnType<abi, functionName, args_1, {
         blockExplorers: {
             readonly default: {
@@ -6334,6 +10849,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -6412,6 +10979,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }>) => Promise<viem.TransactionReceipt>;
     watchBlockNumber: (args: viem.WatchBlockNumberParameters) => viem.WatchBlockNumberReturnType;
     watchBlocks: <includeTransactions extends boolean = false, blockTag extends viem.BlockTag = "latest">(args: viem.WatchBlocksParameters<viem.HttpTransport<undefined, false>, {
@@ -6446,6 +11065,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -6523,6 +11194,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, undefined>) => Promise<getAllowance.ReturnValue>) & {
             call: (args: getAllowance.Args<{
                 blockExplorers: {
@@ -6556,6 +11279,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                     };
                     readonly public: {
                         readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                     };
                 };
                 sourceId?: number | undefined | undefined;
@@ -6630,6 +11405,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, undefined, undefined>) => Promise<getBalance.ReturnValue>) & {
             call: (args: getBalance.Args<{
                 blockExplorers: {
@@ -6663,6 +11490,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                     };
                     readonly public: {
                         readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                     };
                 };
                 sourceId?: number | undefined | undefined;
@@ -6737,6 +11616,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, undefined>) => Promise<getMetadata.ReturnValue>;
         getTotalSupply: ((parameters: getTotalSupply.Parameters<{
             blockExplorers: {
@@ -6790,6 +11721,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, undefined>) => Promise<getTotalSupply.ReturnValue>) & {
             call: (args: getTotalSupply.Args<{
                 blockExplorers: {
@@ -6823,6 +11806,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
                     };
                     readonly public: {
                         readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                     };
                 };
                 sourceId?: number | undefined | undefined;
@@ -6915,6 +11950,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, undefined>, "prepareTransactionRequest" | "call" | "createContractEventFilter" | "createEventFilter" | "estimateContractGas" | "estimateGas" | "getBlock" | "getBlockNumber" | "getChainId" | "getContractEvents" | "getEnsText" | "getFilterChanges" | "getGasPrice" | "getLogs" | "getTransaction" | "getTransactionCount" | "getTransactionReceipt" | "readContract" | "sendRawTransaction" | "simulateContract" | "uninstallFilter" | "watchBlockNumber" | "watchContractEvent"> & Pick<viem.WalletActions<{
         blockExplorers: {
             readonly default: {
@@ -6947,6 +12034,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -7019,6 +12158,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, viem.PublicRpcSchema, viem.PublicActions<viem.HttpTransport<undefined, false>, {
         blockExplorers: {
             readonly default: {
@@ -7051,6 +12242,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -7123,6 +12366,58 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, viem.PublicRpcSchema, { [K in keyof client]: client[K]; } & viem.PublicActions<viem.HttpTransport<undefined, false>, {
         blockExplorers: {
             readonly default: {
@@ -7175,9 +12470,61 @@ declare function createBreezePublicClient(rpcUrl?: string): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, undefined>, undefined>;
 };
-declare function createBreezeWalletClient(provider: any): {
+declare function createBreezeWalletClient(provider: any, chainId?: number): {
     account: undefined;
     batch?: {
         multicall?: boolean | viem.Prettify<viem.MulticallBatchOptions> | undefined;
@@ -7218,6 +12565,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -7302,6 +12701,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, chainOverride>) => Promise<viem.DeployContractReturnType>;
     fillTransaction: <chainOverride extends viem.Chain | undefined = undefined, accountOverride extends viem.Account | viem.Address | undefined = undefined>(args: viem.FillTransactionParameters<{
         blockExplorers: {
@@ -7355,6 +12806,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, chainOverride, accountOverride>) => Promise<viem.FillTransactionReturnType<{
         blockExplorers: {
             readonly default: {
@@ -7387,6 +12890,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -7466,6 +13021,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, chainOverride extends viem.Chain | undefined = undefined, accountOverride extends viem.Account | viem.Address | undefined = undefined>(args: viem.PrepareTransactionRequestParameters<{
         blockExplorers: {
             readonly default: {
@@ -7498,6 +13105,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -7570,6 +13229,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> & (viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -7622,6 +13333,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride> extends infer T_1 ? T_1 extends viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -7654,6 +13417,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -7736,6 +13551,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, {
         type?: ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
@@ -7789,6 +13656,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_3 ? T_3 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -7821,6 +13740,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -7895,6 +13866,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_4 ? T_4 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -7927,6 +13950,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -8001,6 +14076,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_5 ? T_5 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -8033,6 +14160,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -8107,6 +14286,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_6 ? T_6 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -8139,6 +14370,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -8375,6 +14658,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_8 ? T_8 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -8407,6 +14742,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -8481,6 +14868,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_9 ? T_9 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -8513,6 +14952,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -8587,6 +15078,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_10 ? T_10 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -8619,6 +15162,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -8693,6 +15288,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_11 ? T_11 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -8725,6 +15372,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -8962,6 +15661,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from">, ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9014,6 +15765,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_12 ? T_12 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9046,6 +15849,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -9120,6 +15975,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_13 ? T_13 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9152,6 +16059,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -9226,6 +16185,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_14 ? T_14 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9258,6 +16269,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -9332,6 +16395,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_15 ? T_15 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9364,6 +16479,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -9600,6 +16767,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_17 ? T_17 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9632,6 +16851,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -9706,6 +16977,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_18 ? T_18 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9738,6 +17061,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -9812,6 +17187,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_19 ? T_19 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9844,6 +17271,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -9918,6 +17397,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_20 ? T_20 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -9950,6 +17481,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -10186,6 +17769,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, {
         type?: ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
@@ -10239,6 +17874,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_21 ? T_21 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -10271,6 +17958,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -10345,6 +18084,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_22 ? T_22 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -10377,6 +18168,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -10451,6 +18294,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_23 ? T_23 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -10483,6 +18378,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -10557,6 +18504,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_24 ? T_24 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -10589,6 +18588,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -10825,6 +18876,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_26 ? T_26 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -10857,6 +18960,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -10931,6 +19086,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_27 ? T_27 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -10963,6 +19170,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -11037,6 +19296,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_28 ? T_28 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -11069,6 +19380,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -11143,6 +19506,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_29 ? T_29 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
             blockExplorers: {
                 readonly default: {
@@ -11175,6 +19590,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -11412,6 +19879,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from">, ((request["type"] extends string ? request["type"] : viem.IsNever<viem.IsNever<Extract<viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -11464,6 +19983,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_30 ? T_30 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -11496,6 +20067,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -11570,6 +20193,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_31 ? T_31 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -11602,6 +20277,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -11676,6 +20403,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_32 ? T_32 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -11708,6 +20487,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -11782,6 +20613,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_33 ? T_33 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -11814,6 +20697,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12050,6 +20985,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_35 ? T_35 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -12082,6 +21069,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12156,6 +21195,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_36 ? T_36 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -12188,6 +21279,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12262,6 +21405,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_37 ? T_37 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -12294,6 +21489,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12368,6 +21615,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> extends infer T_38 ? T_38 extends viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -12400,6 +21699,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12645,6 +21996,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, chainOverride, calls>) => Promise<{
         capabilities?: {
             [x: string]: any;
@@ -12683,6 +22086,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12771,6 +22226,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, chainOverride extends viem.Chain | undefined = undefined>(args: viem.SendTransactionParameters<{
         blockExplorers: {
             readonly default: {
@@ -12803,6 +22310,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12876,6 +22435,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, chainOverride extends viem.Chain | undefined = undefined>(args: viem.SendTransactionSyncParameters<{
         blockExplorers: {
             readonly default: {
@@ -12908,6 +22519,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -12984,6 +22647,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from"> = viem.UnionOmit<viem.ExtractChainFormatterParameters<viem.DeriveChain<{
         blockExplorers: {
             readonly default: {
@@ -13036,6 +22751,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, chainOverride>, "transactionRequest", viem.TransactionRequest>, "from">>(args: viem.SignTransactionParameters<{
         blockExplorers: {
             readonly default: {
@@ -13068,6 +22835,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -13987,6 +23806,7 @@ declare function createBreezeWalletClient(provider: any): {
         [x: `address[${string}]`]: undefined;
         [x: `bool[${string}]`]: undefined;
         [x: `bytes[${string}]`]: undefined;
+        [x: `bytes14[${string}]`]: undefined;
         [x: `bytes1[${string}]`]: undefined;
         [x: `bytes2[${string}]`]: undefined;
         [x: `bytes18[${string}]`]: undefined;
@@ -14001,7 +23821,6 @@ declare function createBreezeWalletClient(provider: any): {
         [x: `bytes11[${string}]`]: undefined;
         [x: `bytes12[${string}]`]: undefined;
         [x: `bytes13[${string}]`]: undefined;
-        [x: `bytes14[${string}]`]: undefined;
         [x: `bytes15[${string}]`]: undefined;
         [x: `bytes16[${string}]`]: undefined;
         [x: `bytes17[${string}]`]: undefined;
@@ -14089,6 +23908,7 @@ declare function createBreezeWalletClient(provider: any): {
         address?: undefined;
         bool?: undefined;
         bytes?: undefined;
+        bytes14?: undefined;
         bytes1?: undefined;
         bytes2?: undefined;
         bytes18?: undefined;
@@ -14103,7 +23923,6 @@ declare function createBreezeWalletClient(provider: any): {
         bytes11?: undefined;
         bytes12?: undefined;
         bytes13?: undefined;
-        bytes14?: undefined;
         bytes15?: undefined;
         bytes16?: undefined;
         bytes17?: undefined;
@@ -14243,6 +24062,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, chainOverride>) => Promise<viem.WriteContractReturnType>;
     writeContractSync: <const abi extends viem.Abi | readonly unknown[], functionName extends viem.ContractFunctionName<abi, "nonpayable" | "payable">, args_1 extends viem.ContractFunctionArgs<abi, "nonpayable" | "payable", functionName>, chainOverride extends viem.Chain | undefined = undefined>(args: viem.WriteContractSyncParameters<abi, functionName, args_1, {
         blockExplorers: {
@@ -14276,6 +24147,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -14330,6 +24253,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -14410,6 +24385,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, undefined, undefined>) => Promise<approve.ReturnValue>) & {
             call: (args: approve.Args<{
                 blockExplorers: {
@@ -14463,6 +24490,58 @@ declare function createBreezeWalletClient(provider: any): {
                 }] | undefined;
                 serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
                 verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
             }, undefined>) => ReturnType<typeof approve.call>;
             estimateGas: (parameters: approve.Parameters<{
                 blockExplorers: {
@@ -14496,6 +24575,58 @@ declare function createBreezeWalletClient(provider: any): {
                     };
                     readonly public: {
                         readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                     };
                 };
                 sourceId?: number | undefined | undefined;
@@ -14570,6 +24701,58 @@ declare function createBreezeWalletClient(provider: any): {
                 }] | undefined;
                 serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
                 verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
             }, undefined, undefined>) => ReturnType<typeof approve.simulate>;
         };
         transferSync: (parameters: transferSync.Parameters<{
@@ -14604,6 +24787,58 @@ declare function createBreezeWalletClient(provider: any): {
                 };
                 readonly public: {
                     readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                 };
             };
             sourceId?: number | undefined | undefined;
@@ -14684,6 +24919,58 @@ declare function createBreezeWalletClient(provider: any): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+        } | {
+            blockExplorers: {
+                readonly default: {
+                    readonly name: "Flare Explorer";
+                    readonly url: "https://flare-explorer.flare.network";
+                };
+            };
+            blockTime?: number | undefined | undefined;
+            contracts?: {
+                [x: string]: viem.ChainContract | {
+                    [sourceId: number]: viem.ChainContract | undefined;
+                } | undefined;
+                ensRegistry?: viem.ChainContract | undefined;
+                ensUniversalResolver?: viem.ChainContract | undefined;
+                multicall3?: viem.ChainContract | undefined;
+                erc6492Verifier?: viem.ChainContract | undefined;
+            } | undefined;
+            ensTlds?: readonly string[] | undefined;
+            id: 14;
+            name: "Flare Mainnet";
+            nativeCurrency: {
+                readonly name: "Flare";
+                readonly symbol: "FLR";
+                readonly decimals: 18;
+            };
+            experimental_preconfirmationTime?: number | undefined | undefined;
+            rpcUrls: {
+                readonly default: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+                readonly public: {
+                    readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                };
+            };
+            sourceId?: number | undefined | undefined;
+            supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+            testnet?: boolean | undefined | undefined;
+            custom?: Record<string, unknown> | undefined;
+            extendSchema?: Record<string, unknown> | undefined;
+            fees?: viem.ChainFees<undefined> | undefined;
+            formatters?: undefined;
+            prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                client: viem.Client;
+                phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+            }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+            }] | undefined;
+            serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+            verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
         }, undefined, undefined>) => Promise<transfer.ReturnValue>) & {
             call: (args: transfer.Args<{
                 blockExplorers: {
@@ -14717,6 +25004,58 @@ declare function createBreezeWalletClient(provider: any): {
                     };
                     readonly public: {
                         readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                     };
                 };
                 sourceId?: number | undefined | undefined;
@@ -14790,6 +25129,58 @@ declare function createBreezeWalletClient(provider: any): {
                 }] | undefined;
                 serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
                 verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
             }, undefined, undefined>) => Promise<bigint>;
             extractEvent: typeof transfer.extractEvent;
             simulate: (parameters: transfer.Parameters<{
@@ -14824,6 +25215,58 @@ declare function createBreezeWalletClient(provider: any): {
                     };
                     readonly public: {
                         readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+                    };
+                };
+                sourceId?: number | undefined | undefined;
+                supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+                testnet?: boolean | undefined | undefined;
+                custom?: Record<string, unknown> | undefined;
+                extendSchema?: Record<string, unknown> | undefined;
+                fees?: viem.ChainFees<undefined> | undefined;
+                formatters?: undefined;
+                prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+                    client: viem.Client;
+                    phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+                }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+                    runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+                }] | undefined;
+                serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+                verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+            } | {
+                blockExplorers: {
+                    readonly default: {
+                        readonly name: "Flare Explorer";
+                        readonly url: "https://flare-explorer.flare.network";
+                    };
+                };
+                blockTime?: number | undefined | undefined;
+                contracts?: {
+                    [x: string]: viem.ChainContract | {
+                        [sourceId: number]: viem.ChainContract | undefined;
+                    } | undefined;
+                    ensRegistry?: viem.ChainContract | undefined;
+                    ensUniversalResolver?: viem.ChainContract | undefined;
+                    multicall3?: viem.ChainContract | undefined;
+                    erc6492Verifier?: viem.ChainContract | undefined;
+                } | undefined;
+                ensTlds?: readonly string[] | undefined;
+                id: 14;
+                name: "Flare Mainnet";
+                nativeCurrency: {
+                    readonly name: "Flare";
+                    readonly symbol: "FLR";
+                    readonly decimals: 18;
+                };
+                experimental_preconfirmationTime?: number | undefined | undefined;
+                rpcUrls: {
+                    readonly default: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+                    };
+                    readonly public: {
+                        readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
                     };
                 };
                 sourceId?: number | undefined | undefined;
@@ -14916,6 +25359,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, undefined>, "prepareTransactionRequest" | "call" | "createContractEventFilter" | "createEventFilter" | "estimateContractGas" | "estimateGas" | "getBlock" | "getBlockNumber" | "getChainId" | "getContractEvents" | "getEnsText" | "getFilterChanges" | "getGasPrice" | "getLogs" | "getTransaction" | "getTransactionCount" | "getTransactionReceipt" | "readContract" | "sendRawTransaction" | "simulateContract" | "uninstallFilter" | "watchBlockNumber" | "watchContractEvent"> & Pick<viem.WalletActions<{
         blockExplorers: {
             readonly default: {
@@ -14948,6 +25443,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -15020,6 +25567,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, viem.WalletRpcSchema, viem.WalletActions<{
         blockExplorers: {
             readonly default: {
@@ -15052,6 +25651,58 @@ declare function createBreezeWalletClient(provider: any): {
             };
             readonly public: {
                 readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
             };
         };
         sourceId?: number | undefined | undefined;
@@ -15124,6 +25775,58 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, viem.WalletRpcSchema, { [K in keyof client]: client[K]; } & viem.WalletActions<{
         blockExplorers: {
             readonly default: {
@@ -15176,38 +25879,90 @@ declare function createBreezeWalletClient(provider: any): {
         }] | undefined;
         serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
         verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
+    } | {
+        blockExplorers: {
+            readonly default: {
+                readonly name: "Flare Explorer";
+                readonly url: "https://flare-explorer.flare.network";
+            };
+        };
+        blockTime?: number | undefined | undefined;
+        contracts?: {
+            [x: string]: viem.ChainContract | {
+                [sourceId: number]: viem.ChainContract | undefined;
+            } | undefined;
+            ensRegistry?: viem.ChainContract | undefined;
+            ensUniversalResolver?: viem.ChainContract | undefined;
+            multicall3?: viem.ChainContract | undefined;
+            erc6492Verifier?: viem.ChainContract | undefined;
+        } | undefined;
+        ensTlds?: readonly string[] | undefined;
+        id: 14;
+        name: "Flare Mainnet";
+        nativeCurrency: {
+            readonly name: "Flare";
+            readonly symbol: "FLR";
+            readonly decimals: 18;
+        };
+        experimental_preconfirmationTime?: number | undefined | undefined;
+        rpcUrls: {
+            readonly default: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+            readonly public: {
+                readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
+            };
+        };
+        sourceId?: number | undefined | undefined;
+        supportsTransactionReplacementDetection?: boolean | undefined | undefined;
+        testnet?: boolean | undefined | undefined;
+        custom?: Record<string, unknown> | undefined;
+        extendSchema?: Record<string, unknown> | undefined;
+        fees?: viem.ChainFees<undefined> | undefined;
+        formatters?: undefined;
+        prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
+            client: viem.Client;
+            phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
+        }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
+            runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
+        }] | undefined;
+        serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
+        verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
     }, undefined, undefined>, undefined>;
 };
 
-declare function getMarkets(indexerUrl: string, params?: {
+declare function getMarkets(indexerUrl: string, chainId?: number, params?: {
     status?: 'OPEN' | 'SETTLED';
     region?: string;
     limit?: number;
     offset?: number;
 }): Promise<Market[]>;
-declare function getMarket(indexerUrl: string, address: string): Promise<Market>;
-declare function getMarketPositions(indexerUrl: string, marketAddress: string): Promise<any>;
+declare function getMarket(indexerUrl: string, address: string, chainId?: number): Promise<Market>;
+declare function getMarketPositions(indexerUrl: string, marketAddress: string, chainId?: number): Promise<any>;
 
-declare function getUserPositions(indexerUrl: string, walletAddress: string): Promise<Position[]>;
+declare function getUserPositions(indexerUrl: string, walletAddress: string, chainId?: number): Promise<Position[]>;
 
-declare function getWeatherReadings(indexerUrl: string, regionId: string, days?: number): Promise<WeatherReading[]>;
-declare function getRegions(indexerUrl: string): Promise<any>;
+declare function getWeatherReadings(indexerUrl: string, regionId: string, days?: number, chainId?: number): Promise<WeatherReading[]>;
+declare function getRegions(indexerUrl: string, chainId?: number): Promise<any>;
 
 type BreezeRole = 'ADMIN_ROLE' | 'PAUSER_ROLE' | 'ORACLE_UPDATER_ROLE' | 'MARKET_CREATOR_ROLE';
 declare function checkRole(publicClient: PublicClient, accessControlAddress: string, role: BreezeRole, account: string): Promise<boolean>;
 
-declare function getPerpMarkets(indexerUrl: string): Promise<PerpMarket[]>;
-declare function getPerpMarket(indexerUrl: string, address: string): Promise<PerpMarket | null>;
-declare function getPerpMarketPositions(indexerUrl: string, address: string): Promise<PerpPosition[]>;
-declare function getUserPerpPositions(indexerUrl: string, userAddress: string): Promise<PerpPosition[]>;
-declare function getFundingHistory(indexerUrl: string, marketAddress: string): Promise<FundingHistoryItem[]>;
-declare function getMarkPriceHistory(indexerUrl: string, marketAddress: string, minutes?: number): Promise<MarkPriceHistoryItem[]>;
+declare function getPerpMarkets(indexerUrl: string, chainId?: number): Promise<PerpMarket[]>;
+declare function getPerpMarket(indexerUrl: string, address: string, chainId?: number): Promise<PerpMarket | null>;
+declare function getPerpMarketPositions(indexerUrl: string, address: string, chainId?: number): Promise<PerpPosition[]>;
+declare function getUserPerpPositions(indexerUrl: string, userAddress: string, chainId?: number): Promise<PerpPosition[]>;
+declare function getFundingHistory(indexerUrl: string, marketAddress: string, chainId?: number): Promise<FundingHistoryItem[]>;
+declare function getMarkPriceHistory(indexerUrl: string, marketAddress: string, minutes?: number, chainId?: number): Promise<MarkPriceHistoryItem[]>;
 
-declare function getTotalFeesCollected(indexerUrl: string): Promise<string>;
-declare function getInsuranceFundBalance(indexerUrl: string): Promise<string>;
-declare function getProtocolTreasuryBalance(indexerUrl: string): Promise<string>;
+declare function getTotalFeesCollected(indexerUrl: string, chainId?: number): Promise<string>;
+declare function getInsuranceFundBalance(indexerUrl: string, chainId?: number): Promise<string>;
+declare function getProtocolTreasuryBalance(indexerUrl: string, chainId?: number): Promise<string>;
 
-declare function createMarket(walletClient: WalletClient, publicClient: PublicClient, params: CreateMarketParams): Promise<{
+declare function createMarket(walletClient: WalletClient, publicClient: PublicClient, params: CreateMarketParams, chainId?: number): Promise<{
     txHash: `0x${string}`;
     marketAddress: string;
 }>;
@@ -15256,4 +26011,4 @@ declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, le
     entryPrice: number;
 };
 
-export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpPosition, type Position, type Reserves, SIDES, type Side, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getFundingHistory, getInsuranceFundBalance, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };
+export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getContractAddresses, getFundingHistory, getInsuranceFundBalance, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };

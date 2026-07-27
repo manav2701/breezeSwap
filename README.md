@@ -1,44 +1,55 @@
 # BreezeSwap — Weather Derivatives Protocol on Flare
 
-> Parametric weather derivatives protocol letting anyone hedge or speculate on real weather outcomes with instant, automatic, tamper-proof payouts on Flare Network.
+> Parametric weather derivatives protocol letting anyone hedge or speculate on real weather outcomes with instant, automatic, tamper-proof payouts on Flare Network. Supports both **Coston2 Testnet (Chain ID 114)** and **Flare Mainnet (Chain ID 14)** with live multi-chain network switching.
 
 ---
 
-## Live Coston2 Testnet Deployments
+## 🌐 Live Multi-Chain Deployments
 
-| Contract | Address on Coston2 (Chain ID 114) | Explorer Link |
+### Flare Mainnet (Chain ID 14)
+| Contract | Address on Flare Mainnet | Explorer Link |
 |---|---|---|
-| **BreezeMarketFactory** | `0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A` | [View on Explorer](https://coston2-explorer.flare.network/address/0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A) |
-| **PositionToken (ERC1155)** | `0x611653F531D6c584801449548728290EbE298d28` | [View on Explorer](https://coston2-explorer.flare.network/address/0x611653F531D6c584801449548728290EbE298d28) |
-| **MockWeatherOracle** | `0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab` | [View on Explorer](https://coston2-explorer.flare.network/address/0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab) |
-| **FtsoWeatherAdapter** | `0x112E2Cd1Bd31874E2b24Eb7c75A3bA1408c67b5A` | [View on Explorer](https://coston2-explorer.flare.network/address/0x112E2Cd1Bd31874E2b24Eb7c75A3bA1408c67b5A) |
-| **FdcWeatherAdapter** | `0xA2EF417a007A6E199F757809A7B56Db45c54861b` | [View on Explorer](https://coston2-explorer.flare.network/address/0xA2EF417a007A6E199F757809A7B56Db45c54861b) |
-| **FAssetsCollateralAdapter** | `0xf84c832Ca8fdfb9FFCE433A359d959ED6f37Bc7B` | [View on Explorer](https://coston2-explorer.flare.network/address/0xf84c832Ca8fdfb9FFCE433A359d959ED6f37Bc7B) |
-| **MockUSDT (mUSDT)** | `0x61bB87822841428249405Cc77bcBF004C217fc64` | [View on Explorer](https://coston2-explorer.flare.network/address/0x61bB87822841428249405Cc77bcBF004C217fc64) |
-| **Demo Market Instance** | `0x04B7Cf428c39a33F35fE557B7f9538916E3C6576` | [View on Explorer](https://coston2-explorer.flare.network/address/0x04B7Cf428c39a33F35fE557B7f9538916E3C6576) |
+| **BreezeAccessControl** | `0x5A88420AB4Ef4D2c2dd22c151fd6CB93d2543853` | [View on Explorer](https://flare-explorer.flare.network/address/0x5A88420AB4Ef4D2c2dd22c151fd6CB93d2543853) |
+| **BreezeMarketFactory** | `0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf` | [View on Explorer](https://flare-explorer.flare.network/address/0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf) |
+| **BreezePerpFactory** | `0x15e309f0434942BDfa0D961E25FaCc4483BABe46` | [View on Explorer](https://flare-explorer.flare.network/address/0x15e309f0434942BDfa0D961E25FaCc4483BABe46) |
+| **FeeConfig** | `0xC0D295305d653F044E4178bb6966e76FB79f325C` | [View on Explorer](https://flare-explorer.flare.network/address/0xC0D295305d653F044E4178bb6966e76FB79f325C) |
+| **InsuranceFund** | `0xA6952FC0fBe43AA72E1D08B11daD5cA56c12a36f` | [View on Explorer](https://flare-explorer.flare.network/address/0xA6952FC0fBe43AA72E1D08B11daD5cA56c12a36f) |
+| **ProtocolTreasury** | `0xfcB7Ff4dA80532F5C7803392761643bA4dDe5058` | [View on Explorer](https://flare-explorer.flare.network/address/0xfcB7Ff4dA80532F5C7803392761643bA4dDe5058) |
+| **Breeze USD (bUSDT Demo)** | `0x739b6b2a0195271557e543F51c0FA417265B2FAC` | [View on Explorer](https://flare-explorer.flare.network/address/0x739b6b2a0195271557e543F51c0FA417265B2FAC) |
+
+### Coston2 Testnet (Chain ID 114)
+| Contract | Address on Coston2 | Explorer Link |
+|---|---|---|
+| **BreezeAccessControl** | `0x3788420AB4Ef4D2c2dd22c151fd6CB93d2543853` | [View on Explorer](https://coston2-explorer.flare.network/address/0x3788420AB4Ef4D2c2dd22c151fd6CB93d2543853) |
+| **BreezeMarketFactory** | `0x699fd810EC7C0620a9BF01Cd73356770Ae0aBbaf` | [View on Explorer](https://coston2-explorer.flare.network/address/0x699fd810EC7C0620a9BF01Cd73356770Ae0aBbaf) |
+| **BreezePerpFactory** | `0x05e309f0434942BDfa0D961E25FaCc4483BABe46` | [View on Explorer](https://coston2-explorer.flare.network/address/0x05e309f0434942BDfa0D961E25FaCc4483BABe46) |
+| **FeeConfig** | `0xB0D295305d653F044E4178bb6966e76FB79f325C` | [View on Explorer](https://coston2-explorer.flare.network/address/0xB0D295305d653F044E4178bb6966e76FB79f325C) |
+| **InsuranceFund** | `0x96952FC0fBe43AA72E1D08B11daD5cA56c12a36f` | [View on Explorer](https://coston2-explorer.flare.network/address/0x96952FC0fBe43AA72E1D08B11daD5cA56c12a36f) |
+| **ProtocolTreasury** | `0xecB7Ff4dA80532F5C7803392761643bA4dDe5058` | [View on Explorer](https://coston2-explorer.flare.network/address/0xecB7Ff4dA80532F5C7803392761643bA4dDe5058) |
 
 ---
 
-## Test & Hardening Summary
+## 🧪 Test Suite & Safety Summary
 
-- **Total Consolidated Tests:** 82 Passing Tests (100% Pass Rate across 20 Test Suites)
-- **Adversarial Security Suites:** Reentrancy, Double Settlement, Double Redemption, Oracle Staleness, Access Control, Precision & Dust Loss, FAssets Price Bounds (All 28 Security Tests Passed)
-- **Invariant Fuzzing:** 6 Protocol Invariants Holding across 256 Runs × 64 Depth (`BreezeInvariantsTest`)
-- **Payoff Curve Fuzzing:** 10,000 Fuzz Iterations Passed (`PayoffCalculatorFuzzTest`)
-- **Economic Game Analysis:** Front-running neutrality, griefing resistance, last-redeemer remainder pattern verified (`EconomicGamesTest`)
-- **Core Code Coverage:** 96.83% BreezeMarket line coverage (91.43% overall functions)
+- **Total Consolidated Tests:** 122 Passing Tests (100% Pass Rate across 31 Test Suites)
+- **Adversarial Security Suites:** Fee manipulation, reentrancy, double settlement, double redemption, oracle staleness, access control, precision & dust loss, liquidation solvency (All 31 Suites Passed)
+- **Invariant Fuzzing:** 8 Protocol Invariants Holding across 256 Runs × 64 Depth (`BreezeInvariantsTest`, `PerpInvariantsTest`)
+- **Payoff & vAMM Fuzzing:** 10,000 Fuzz Iterations Passed (`PayoffCalculatorFuzzTest`, `VirtualAMMFuzzTest`)
 
 ---
 
-## How to Run Weather Seeder (Real Open-Meteo Data)
+## 🚀 How to Run Project Locally
 
 ```bash
-cd weather-seed
+# 1. Install dependencies
 pnpm install
-pnpm seed
-```
 
-This pulls real historical and forecast rainfall and temperature data for 5 regions (Tokyo, Seoul, Singapore, Dubai, London) from Open-Meteo API and generates `weather-seed/seed-log.json`.
+# 2. Build SDK
+cd sdk && npx tsup
+
+# 3. Start Web Application
+cd ../web && pnpm dev
+```
 
 ---
 
@@ -47,8 +58,8 @@ This pulls real historical and forecast rainfall and temperature data for 5 regi
 ```
 breezeswap/
   contracts/            # Foundry Solidity smart contracts (Unit, Fuzz, Security & Invariants)
+  sdk/                  # Multi-chain TypeScript SDK (@breezeswap/sdk)
+  indexer/              # Dual-chain event watcher service & REST API
+  web/                  # Next.js App Router web application with Network Toggle
   weather-seed/         # Open-Meteo weather data seeder script
-  indexer/              # Node.js event watcher service (Render ready)
-  web/                  # Next.js App Router web application
-  docs/                 # Architecture, Integration & Security documentation
 ```

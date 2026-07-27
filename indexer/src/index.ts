@@ -11,7 +11,7 @@ import { startAccessControlWatcher } from './watchers/accessControlWatcher'
 import { startPerpMarketWatcher } from './watchers/perpMarketWatcher'
 import { supabase } from './db/client'
 import { logger } from './utils/logger'
-import { publicClient } from './utils/chainClient'
+import { getPublicClient } from './utils/chainClient'
 import { runBackfill } from './scripts/backfill'
 
 const PerpMarketABI = [
@@ -25,7 +25,7 @@ const PerpMarketABI = [
 ] as const
 
 async function main() {
-  logger.info('BreezeSwap indexer starting...')
+  logger.info('BreezeSwap multi-chain indexer starting (Chain IDs: 114, 14)...')
 
   // 1. Start API server with CORS enabled immediately
   const app = express()
@@ -38,45 +38,47 @@ async function main() {
     logger.info(`BreezeSwap Indexer API server listening on port ${PORT}`)
   })
 
-  // 2. Load known Classic and Perp markets from DB
-  let activePerpMarkets: string[] = []
+  // 2. Load known Classic and Perp markets from DB for both chains
+  let activePerpMarkets: { address: string; chainId: number }[] = []
 
   try {
-    const { data: markets } = await supabase.from('markets').select('contract_address')
+    const { data: markets } = await supabase.from('markets').select('contract_address, chain_id')
     for (const market of markets ?? []) {
       startMarketWatcher(market.contract_address)
     }
 
-    const { data: perps } = await supabase.from('perp_markets').select('contract_address')
+    const { data: perps } = await supabase.from('perp_markets').select('contract_address, chain_id')
     for (const perp of perps ?? []) {
-      activePerpMarkets.push(perp.contract_address)
+      const chainId = perp.chain_id || 114
+      activePerpMarkets.push({ address: perp.contract_address, chainId })
       startPerpMarketWatcher(perp.contract_address)
     }
   } catch (err: any) {
     logger.warn('Failed loading existing markets from DB', { error: err.message })
   }
 
-  // 3. Start live watchers
+  // 3. Start live watchers for both chains
   startFactoryWatcher()
   startOracleWatcher()
   startAccessControlWatcher()
 
   // 4. Mark price 60-second snapshot job
   setInterval(async () => {
-    for (const market of activePerpMarkets) {
+    for (const item of activePerpMarkets) {
       try {
-        const markPrice = await publicClient.readContract({
-          address: market as `0x${string}`,
+        const client = getPublicClient(item.chainId)
+        const markPrice = await client.readContract({
+          address: item.address as `0x${string}`,
           abi: PerpMarketABI,
           functionName: 'getMarkPrice'
         })
         await supabase.from('mark_price_history').insert({
-          market_address: market.toLowerCase(),
+          market_address: item.address.toLowerCase(),
           mark_price: markPrice.toString(),
           snapshotted_at: new Date().toISOString()
         })
       } catch (err: any) {
-        logger.warn('Mark price snapshot failed', { market, error: err.message })
+        logger.warn('Mark price snapshot failed', { market: item.address, error: err.message })
       }
     }
   }, 60_000)

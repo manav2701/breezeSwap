@@ -2,10 +2,11 @@
 
 import React from 'react'
 import { BookOpen, ShieldCheck, Terminal, Layers, ExternalLink, Code } from 'lucide-react'
-import { CONTRACT_ADDRESSES, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
+import { CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, FLARE_MAINNET_CHAIN_ID } from '@breezeswap/sdk'
 
 export default function DocsPage() {
-  const contracts = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID]
+  const coston2Contracts = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID]
+  const mainnetContracts = CONTRACT_ADDRESSES[FLARE_MAINNET_CHAIN_ID]
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 py-4">
@@ -17,7 +18,7 @@ export default function DocsPage() {
         </div>
         <h1 className="text-4xl font-extrabold text-white tracking-tight">BreezeSwap Documentation</h1>
         <p className="text-sm text-slate-400 leading-relaxed">
-          Decentralized parametric weather derivatives on Flare Network, settled permissionlessly by real-world weather oracle feeds.
+          Decentralized parametric weather derivatives on Flare Network (Coston2 Testnet & Flare Mainnet), settled permissionlessly by real-world weather oracle feeds.
         </p>
       </div>
 
@@ -68,39 +69,84 @@ export default function DocsPage() {
       </section>
 
       {/* 3. Contract Addresses */}
-      <section className="space-y-4">
+      <section className="space-y-6">
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <Terminal className="w-5 h-5 text-emerald-400" />
-          3. Flare Coston2 Live Contracts (Chain ID 114)
+          3. Multi-Chain Contract Registry
         </h2>
-        <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-950 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
-              <tr>
-                <th className="p-4">Contract Name</th>
-                <th className="p-4">Deployed Address</th>
-                <th className="p-4">Block Explorer</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/80 font-mono">
-              {Object.entries(contracts).map(([name, address]) => (
-                <tr key={name} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="p-4 font-sans font-semibold text-slate-200">{name}</td>
-                  <td className="p-4 text-cyan-400">{address}</td>
-                  <td className="p-4 font-sans">
-                    <a
-                      href={`https://coston2-explorer.flare.network/address/${address}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-slate-400 hover:text-white transition-colors"
-                    >
-                      Explorer <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </td>
+
+        {/* Flare Mainnet */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            Flare Mainnet Deployed Contracts (Chain ID 14)
+          </h3>
+          <div className="overflow-x-auto rounded-2xl border border-emerald-500/20 bg-slate-900/60">
+            <table className="w-full text-left text-xs text-slate-300">
+              <thead className="bg-slate-950 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+                <tr>
+                  <th className="p-4">Contract Name</th>
+                  <th className="p-4">Deployed Address</th>
+                  <th className="p-4">Block Explorer</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-800/80 font-mono">
+                {Object.entries(mainnetContracts).map(([name, address]) => (
+                  <tr key={name} className="hover:bg-slate-800/40 transition-colors">
+                    <td className="p-4 font-sans font-semibold text-slate-200">{name}</td>
+                    <td className="p-4 text-emerald-400">{address}</td>
+                    <td className="p-4 font-sans">
+                      <a
+                        href={`https://flare-explorer.flare.network/address/${address}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-slate-400 hover:text-white transition-colors"
+                      >
+                        Explorer <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Coston2 Testnet */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-bold text-cyan-400 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+            Flare Coston2 Testnet Contracts (Chain ID 114)
+          </h3>
+          <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60">
+            <table className="w-full text-left text-xs text-slate-300">
+              <thead className="bg-slate-950 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+                <tr>
+                  <th className="p-4">Contract Name</th>
+                  <th className="p-4">Deployed Address</th>
+                  <th className="p-4">Block Explorer</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/80 font-mono">
+                {Object.entries(coston2Contracts).map(([name, address]) => (
+                  <tr key={name} className="hover:bg-slate-800/40 transition-colors">
+                    <td className="p-4 font-sans font-semibold text-slate-200">{name}</td>
+                    <td className="p-4 text-cyan-400">{address}</td>
+                    <td className="p-4 font-sans">
+                      <a
+                        href={`https://coston2-explorer.flare.network/address/${address}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-slate-400 hover:text-white transition-colors"
+                      >
+                        Explorer <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -108,25 +154,20 @@ export default function DocsPage() {
       <section className="space-y-4">
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <Code className="w-5 h-5 text-amber-400" />
-          4. SDK Integration Guide
+          4. SDK Multi-Chain Integration Guide
         </h2>
         <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 text-xs font-mono text-slate-300">
           <p className="font-sans text-slate-400">
-            Third-party developers can integrate BreezeSwap weather derivatives directly into their apps using the TypeScript SDK:
+            Third-party developers can integrate BreezeSwap weather derivatives directly into their apps using the multi-chain TypeScript SDK:
           </p>
           <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 overflow-x-auto text-cyan-300">
-{`import { getMarkets, mintPosition, createBreezeWalletClient } from '@breezeswap/sdk'
+{`import { getMarkets, createMarket, FLARE_MAINNET_CHAIN_ID } from '@breezeswap/sdk'
 
-// 1. Fetch live markets from indexer
-const markets = await getMarkets('https://breezeswap-indexer.onrender.com')
+// 1. Fetch live markets for Flare Mainnet (Chain ID 14)
+const markets = await getMarkets('https://breezeswap-indexer.onrender.com', FLARE_MAINNET_CHAIN_ID)
 
-// 2. Mint position token via browser wallet
-const walletClient = createBreezeWalletClient(window.ethereum)
-const txHash = await mintPosition(walletClient, publicClient, {
-  marketAddress: '0x04B7Cf428c39a33F35fE557B7f9538916E3C6576',
-  side: 'LONG',
-  collateralAmount: 10000000n // 10 mUSDT
-})`}
+// 2. Execute multi-chain contract calls
+const txHash = await createMarket(walletClient, publicClient, params, FLARE_MAINNET_CHAIN_ID)`}
           </pre>
         </div>
       </section>
@@ -145,7 +186,7 @@ const txHash = await mintPosition(walletClient, publicClient, {
             <li><strong>Reentrancy Defense:</strong> Guarded with OpenZeppelin ReentrancyGuard on all state-mutating functions.</li>
             <li><strong>Vault Solvency Guarantee:</strong> Global supply tracking ensures collateral vault balance &ge; redeemable liabilities.</li>
             <li><strong>Precision Safety:</strong> Fixed-point 18-decimal payout math ensures 0 rounding loss or vault dust remaining.</li>
-            <li><strong>Test Coverage:</strong> 82/82 passing Foundry test suites across unit, invariant, reentrancy, and economic game properties.</li>
+            <li><strong>Test Coverage:</strong> 122/122 passing Foundry test suites across unit, invariant, reentrancy, and economic game properties.</li>
           </ul>
         </div>
       </section>

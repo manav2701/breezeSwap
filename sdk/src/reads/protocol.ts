@@ -1,6 +1,6 @@
-export async function getTotalFeesCollected(indexerUrl: string): Promise<string> {
+export async function getTotalFeesCollected(indexerUrl: string, chainId: number = 114): Promise<string> {
   try {
-    const res = await fetch(`${indexerUrl}/api/protocol/fees/total`)
+    const res = await fetch(`${indexerUrl}/api/protocol/fees/total?chainId=${chainId}`)
     if (!res.ok) return '0'
     const data = await res.json()
     return data.totalFeesWei || '0'
@@ -9,9 +9,9 @@ export async function getTotalFeesCollected(indexerUrl: string): Promise<string>
   }
 }
 
-export async function getInsuranceFundBalance(indexerUrl: string): Promise<string> {
+export async function getInsuranceFundBalance(indexerUrl: string, chainId: number = 114): Promise<string> {
   try {
-    const res = await fetch(`${indexerUrl}/api/protocol/insurance-fund`)
+    const res = await fetch(`${indexerUrl}/api/protocol/insurance-fund?chainId=${chainId}`)
     if (!res.ok) return '0'
     const data = await res.json()
     return data.balanceWei || '0'
@@ -20,9 +20,9 @@ export async function getInsuranceFundBalance(indexerUrl: string): Promise<strin
   }
 }
 
-export async function getProtocolTreasuryBalance(indexerUrl: string): Promise<string> {
+export async function getProtocolTreasuryBalance(indexerUrl: string, chainId: number = 114): Promise<string> {
   try {
-    const res = await fetch(`${indexerUrl}/api/protocol/treasury`)
+    const res = await fetch(`${indexerUrl}/api/protocol/treasury?chainId=${chainId}`)
     if (!res.ok) return '0'
     const data = await res.json()
     return data.balanceWei || '0'
