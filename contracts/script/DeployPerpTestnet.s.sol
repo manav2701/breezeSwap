@@ -3,6 +3,8 @@ pragma solidity 0.8.24;
 
 import "forge-std/Script.sol";
 import "../src/access/BreezeAccessControl.sol";
+import "../src/fees/FeeConfig.sol";
+import "../src/fees/ProtocolTreasury.sol";
 import "../src/perp/InsuranceFund.sol";
 import "../src/perp/BreezePerpFactory.sol";
 import "../src/perp/BreezePerpMarket.sol";
@@ -31,16 +33,25 @@ contract DeployPerpTestnet is Script {
         BreezeAccessControl ac = BreezeAccessControl(accessControlAddr);
         ac.grantRole(ac.MARKET_CREATOR_ROLE(), deployer);
 
-        // 2. Deploy InsuranceFund
+        // 2. Deploy FeeConfig & ProtocolTreasury
+        FeeConfig feeConfig = new FeeConfig(accessControlAddr);
+        ProtocolTreasury treasury = new ProtocolTreasury(mockUsdtAddr, accessControlAddr);
+
+        // 3. Deploy InsuranceFund
         InsuranceFund insuranceFund = new InsuranceFund(mockUsdtAddr, accessControlAddr);
         console.log("Deployed InsuranceFund:", address(insuranceFund));
 
-        // 2. Deploy BreezePerpFactory
-        BreezePerpFactory perpFactory = new BreezePerpFactory(accessControlAddr, address(insuranceFund));
+        // 4. Deploy BreezePerpFactory
+        BreezePerpFactory perpFactory = new BreezePerpFactory(
+            accessControlAddr,
+            address(insuranceFund),
+            address(feeConfig),
+            address(treasury)
+        );
         console.log("Deployed BreezePerpFactory:", address(perpFactory));
 
-        // 3. Create initial perpetual weather markets
-        // Tokyo Rainfall vAMM: Initial reserves 1,000,000 USD / 40,000 mm (Mark price = 25.0 mm)
+        // 5. Create initial perpetual weather markets
+        // Tokyo Rainfall vAMM
         address tokyoPerp = perpFactory.createPerpMarket(
             REGION_TOKYO,
             1_000_000 * 1e18,
@@ -51,7 +62,7 @@ contract DeployPerpTestnet is Script {
         insuranceFund.setMarketAuthorization(tokyoPerp, true);
         console.log("Deployed Tokyo Perp Market:", tokyoPerp);
 
-        // Seoul Rainfall vAMM: Initial reserves 1,000,000 USD / 50,000 mm (Mark price = 20.0 mm)
+        // Seoul Rainfall vAMM
         address seoulPerp = perpFactory.createPerpMarket(
             REGION_SEOUL,
             1_000_000 * 1e18,
@@ -62,7 +73,7 @@ contract DeployPerpTestnet is Script {
         insuranceFund.setMarketAuthorization(seoulPerp, true);
         console.log("Deployed Seoul Perp Market:", seoulPerp);
 
-        // Dubai Temperature vAMM: Initial reserves 1,000,000 USD / 25,000 deg (Mark price = 40.0 C)
+        // Dubai Temperature vAMM
         address dubaiPerp = perpFactory.createPerpMarket(
             REGION_DUBAI,
             1_000_000 * 1e18,
