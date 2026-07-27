@@ -14,6 +14,7 @@ jobs:
       - name: Install Foundry dependencies
         run: |
           mkdir -p lib
+          rm -rf lib/openzeppelin-contracts lib/forge-std
           git clone --depth 1 https://github.com/OpenZeppelin/openzeppelin-contracts lib/openzeppelin-contracts
           git clone --depth 1 https://github.com/foundry-rs/forge-std lib/forge-std
       - name: Run Coston2 Fork Tests
