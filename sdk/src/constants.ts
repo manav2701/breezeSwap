@@ -13,17 +13,17 @@ export const CONTRACT_ADDRESSES = {
     ftsoWeatherAdapter: '0x9cd4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c' as `0x${string}`,
     fdcWeatherAdapter: '0x341A6C8AA41A70c11803Cb67dd56E7F62c1fb18A' as `0x${string}`,
     fAssetsCollateralAdapter: '0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54' as `0x${string}`,
-    insuranceFund: '0x007375dB309067a236a8d580cBd81b2AE002Ca56' as `0x${string}`,
-    perpFactory: '0x4870Ab8ec5967aeAcC7317B5Cb95a449E2629131' as `0x${string}`,
-    tokyoPerpMarket: '0x7b98AEC7379422F079dEB6b0fFd569d2bEBb3cA5' as `0x${string}`,
-    seoulPerpMarket: '0xf1583f45754b3e128A8520Dcd3317A8b85b7423e' as `0x${string}`,
-    dubaiPerpMarket: '0x671f64c3Aa907503D4EC3A4a4c5bdE66Bd7Af21A' as `0x${string}`,
+    feeConfig: '0xB0D295305d653F044E4178bb6966e76FB79f325C' as `0x${string}`,
+    protocolTreasury: '0xecB7Ff4dA80532F5C7803392761643bA4dDe5058' as `0x${string}`,
+    insuranceFund: '0x96952FC0fBe43AA72E1D08B11daD5cA56c12a36f' as `0x${string}`,
+    perpFactory: '0x05e309f0434942BDfa0D961E25FaCc4483BABe46' as `0x${string}`,
+    tokyoPerpMarket: '0x90C9876e41D0C5a7E1E8F660F0B2bD58D64Cb7Be' as `0x${string}`,
+    seoulPerpMarket: '0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB' as `0x${string}`,
+    dubaiPerpMarket: '0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD' as `0x${string}`,
   }
 } as const
 
 // Decimal precision used in oracle values
-// All oracle values are stored as value * 1e6
-// e.g. 12.5mm rainfall = 12500000n on-chain
 export const ORACLE_DECIMALS = 6n
 export const ORACLE_SCALAR = 10n ** ORACLE_DECIMALS
 

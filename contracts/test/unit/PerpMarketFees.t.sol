@@ -7,11 +7,11 @@ import "../../src/access/BreezeAccessControl.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
 import "../../src/fees/FeeConfig.sol";
 import "../../src/fees/ProtocolTreasury.sol";
-import "../../src/perp/BreezePerpMarket.sol";
 import "../../src/perp/InsuranceFund.sol";
+import "../../src/perp/BreezePerpMarket.sol";
 import "../../src/perp/VirtualAMM.sol";
 
-contract MockPerpUSDTInt is ERC20 {
+contract MockFeeUSDT is ERC20 {
     constructor() ERC20("Mock USDT", "mUSDT") {
         _mint(msg.sender, 10_000_000 * 1e18);
     }
@@ -20,27 +20,25 @@ contract MockPerpUSDTInt is ERC20 {
     }
 }
 
-contract PerpFullLifecycleTest is Test {
+contract PerpMarketFeesTest is Test {
     BreezeAccessControl accessControl;
     MockWeatherOracle oracle;
     FeeConfig feeConfig;
     ProtocolTreasury treasury;
     InsuranceFund insuranceFund;
-    MockPerpUSDTInt collateralToken;
+    MockFeeUSDT collateralToken;
     BreezePerpMarket perpMarket;
 
     address admin = address(this);
-    address alice = address(0x2222);
-    address bob = address(0x3333);
-    address charlie = address(0x4444);
+    address alice = address(0x1111);
+    address bob = address(0x2222);
 
     bytes32 constant REGION_ID = keccak256("TOKYO_RAINFALL");
 
     function setUp() public {
         accessControl = new BreezeAccessControl(admin);
-        accessControl.grantRole(accessControl.ORACLE_UPDATER_ROLE(), admin);
         oracle = new MockWeatherOracle(address(accessControl));
-        collateralToken = new MockPerpUSDTInt();
+        collateralToken = new MockFeeUSDT();
 
         feeConfig = new FeeConfig(address(accessControl));
         treasury = new ProtocolTreasury(address(collateralToken), address(accessControl));
@@ -64,63 +62,50 @@ contract PerpFullLifecycleTest is Test {
 
         insuranceFund.setMarketAuthorization(address(perpMarket), true);
 
-        // Seed insurance fund
-        collateralToken.mint(address(this), 100_000 * 1e18);
-        collateralToken.approve(address(insuranceFund), 100_000 * 1e18);
-        insuranceFund.deposit(100_000 * 1e18);
-
         collateralToken.mint(alice, 100_000 * 1e18);
         collateralToken.mint(bob, 100_000 * 1e18);
-        collateralToken.mint(charlie, 100_000 * 1e18);
 
         vm.prank(alice);
         collateralToken.approve(address(perpMarket), type(uint256).max);
 
         vm.prank(bob);
-        collateralToken.approve(address(perpMarket), type(uint256).max);
-
-        vm.prank(charlie);
         collateralToken.approve(address(perpMarket), type(uint256).max);
     }
 
-    function test_perp_full_lifecycle_end_to_end() public {
-        // 1. Alice opens LONG position (10,000 USD, 2x leverage)
+    function test_fee_deducted_on_open() public {
+        uint256 rawCollateral = 10_000 * 1e18; // 10,000 mUSDT
+        (uint256 feeAmount, uint256 insuranceShare, uint256 treasuryShare) = feeConfig.calculateFeeSplit(rawCollateral);
+
+        uint256 insBalBefore = collateralToken.balanceOf(address(insuranceFund));
+        uint256 treBalBefore = collateralToken.balanceOf(address(treasury));
+
         vm.prank(alice);
-        uint256 alicePos = perpMarket.openPosition(true, 10_000 * 1e18, 2);
+        uint256 posId = perpMarket.openPosition(true, rawCollateral, 2);
 
-        // 2. Bob opens SHORT position (5,000 USD, 3x leverage)
-        vm.prank(bob);
-        uint256 bobPos = perpMarket.openPosition(false, 5_000 * 1e18, 3);
+        (, , uint256 netCollateral, , , , , ) = perpMarket.positions(posId);
 
-        // 3. Fast forward 15 mins for funding settlement & set oracle reading
-        vm.warp(block.timestamp + 15 minutes);
-        vm.prank(admin);
-        oracle.setReading(REGION_ID, block.timestamp, 26_000_000); // 26.0 mm
+        // Assert net collateral recorded = rawCollateral - feeAmount
+        assertEq(netCollateral, rawCollateral - feeAmount);
 
-        perpMarket.settleFunding();
+        // Assert fee split routing
+        assertEq(collateralToken.balanceOf(address(insuranceFund)) - insBalBefore, insuranceShare);
+        assertEq(collateralToken.balanceOf(address(treasury)) - treBalBefore, treasuryShare);
+        assertEq(insuranceShare + treasuryShare, feeAmount);
+    }
 
-        // 4. Charlie opens a large LONG position, pushing price up
-        vm.prank(charlie);
-        uint256 charliePos = perpMarket.openPosition(true, 50_000 * 1e18, 2);
+    function test_fee_deducted_on_close() public {
+        uint256 rawCollateral = 10_000 * 1e18;
 
-        // 5. Alice closes position in profit
-        uint256 aliceBalBefore = collateralToken.balanceOf(alice);
         vm.prank(alice);
-        int256 alicePnl = perpMarket.closePosition(alicePos);
+        uint256 posId = perpMarket.openPosition(true, rawCollateral, 2);
 
-        assertTrue(alicePnl > 0);
-        assertTrue(collateralToken.balanceOf(alice) > aliceBalBefore);
+        uint256 insBalBefore = collateralToken.balanceOf(address(insuranceFund));
+        uint256 treBalBefore = collateralToken.balanceOf(address(treasury));
 
-        // 6. Charlie closes position
-        vm.prank(charlie);
-        perpMarket.closePosition(charliePos);
+        vm.prank(alice);
+        perpMarket.closePosition(posId);
 
-        // 7. Bob closes position
-        vm.prank(bob);
-        perpMarket.closePosition(bobPos);
-
-        // Verify open interest is back to zero
-        assertEq(perpMarket.totalLongOpenInterest(), 0);
-        assertEq(perpMarket.totalShortOpenInterest(), 0);
+        assertTrue(collateralToken.balanceOf(address(insuranceFund)) > insBalBefore);
+        assertTrue(collateralToken.balanceOf(address(treasury)) > treBalBefore);
     }
 }

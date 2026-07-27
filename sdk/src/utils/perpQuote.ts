@@ -12,14 +12,19 @@ export function calculatePerpQuote(
   reserves: Reserves,
   collateralIn: bigint,
   leverage: number,
-  isLong: boolean
+  isLong: boolean,
+  feeBps: number = 10
 ): {
+  feeAmount: bigint
+  netCollateral: bigint
   exposureOut: bigint
   newMarkPrice: number
   priceImpactBps: number
   entryPrice: number
 } {
-  const notional = collateralIn * BigInt(leverage)
+  const feeAmount = (collateralIn * BigInt(feeBps)) / 10000n
+  const netCollateral = collateralIn - feeAmount
+  const notional = netCollateral * BigInt(leverage)
   const currentPrice = calculateMarkPrice(reserves)
   const k = reserves.collateralReserve * reserves.weatherReserve
 
@@ -40,9 +45,8 @@ export function calculatePerpQuote(
   const newReserves: Reserves = { collateralReserve: newCollateralReserve, weatherReserve: newWeatherReserve }
   const newMarkPrice = calculateMarkPrice(newReserves)
 
-  // Average execution price = (notional * 1e18) / exposureOut
   const entryPrice = exposureOut > 0n ? Number((notional * 10n ** 18n) / exposureOut) / 1e18 : newMarkPrice
   const priceImpactBps = currentPrice > 0 ? Math.round(Math.abs((newMarkPrice - currentPrice) / currentPrice) * 10000) : 0
 
-  return { exposureOut, newMarkPrice, priceImpactBps, entryPrice }
+  return { feeAmount, netCollateral, exposureOut, newMarkPrice, priceImpactBps, entryPrice }
 }

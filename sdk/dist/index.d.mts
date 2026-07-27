@@ -149,6 +149,8 @@ declare const CONTRACT_ADDRESSES: {
         readonly ftsoWeatherAdapter: `0x${string}`;
         readonly fdcWeatherAdapter: `0x${string}`;
         readonly fAssetsCollateralAdapter: `0x${string}`;
+        readonly feeConfig: `0x${string}`;
+        readonly protocolTreasury: `0x${string}`;
         readonly insuranceFund: `0x${string}`;
         readonly perpFactory: `0x${string}`;
         readonly tokyoPerpMarket: `0x${string}`;
@@ -15201,6 +15203,10 @@ declare function getUserPerpPositions(indexerUrl: string, userAddress: string): 
 declare function getFundingHistory(indexerUrl: string, marketAddress: string): Promise<FundingHistoryItem[]>;
 declare function getMarkPriceHistory(indexerUrl: string, marketAddress: string, minutes?: number): Promise<MarkPriceHistoryItem[]>;
 
+declare function getTotalFeesCollected(indexerUrl: string): Promise<string>;
+declare function getInsuranceFundBalance(indexerUrl: string): Promise<string>;
+declare function getProtocolTreasuryBalance(indexerUrl: string): Promise<string>;
+
 declare function createMarket(walletClient: WalletClient, publicClient: PublicClient, params: CreateMarketParams): Promise<{
     txHash: `0x${string}`;
     marketAddress: string;
@@ -15211,13 +15217,14 @@ declare function mintPosition(walletClient: WalletClient, publicClient: PublicCl
 declare function redeem(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, tokenId: bigint, amount: bigint): Promise<`0x${string}`>;
 declare function settle(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`): Promise<`0x${string}`>;
 
+declare function setTradingFeeBps(walletClient: WalletClient, publicClient: PublicClient, feeConfigAddress: `0x${string}`, newRateBps: bigint): Promise<`0x${string}`>;
 declare function setOracleReading(walletClient: WalletClient, publicClient: PublicClient, oracleAddress: `0x${string}`, regionId: `0x${string}`, timestamp: bigint, value: bigint): Promise<`0x${string}`>;
 declare function pauseMarket(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`): Promise<`0x${string}`>;
 declare function unpauseMarket(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`): Promise<`0x${string}`>;
 declare function pauseFactory(walletClient: WalletClient, publicClient: PublicClient, factoryAddress: `0x${string}`): Promise<`0x${string}`>;
 declare function unpauseFactory(walletClient: WalletClient, publicClient: PublicClient, factoryAddress: `0x${string}`): Promise<`0x${string}`>;
-declare function grantRole(walletClient: WalletClient, publicClient: PublicClient, accessControlAddress: `0x${string}`, role: BreezeRole, targetAccount: `0x${string}`): Promise<`0x${string}`>;
-declare function revokeRole(walletClient: WalletClient, publicClient: PublicClient, accessControlAddress: `0x${string}`, role: BreezeRole, targetAccount: `0x${string}`): Promise<`0x${string}`>;
+declare function grantRole(walletClient: WalletClient, publicClient: PublicClient, accessControlAddress: `0x${string}`, role: BreezeRole, accountToGrant: `0x${string}`): Promise<`0x${string}`>;
+declare function revokeRole(walletClient: WalletClient, publicClient: PublicClient, accessControlAddress: `0x${string}`, role: BreezeRole, accountToRevoke: `0x${string}`): Promise<`0x${string}`>;
 
 declare function openPerpPosition(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, isLong: boolean, collateralAmount: bigint, leverage: bigint): Promise<`0x${string}`>;
 declare function closePerpPosition(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, positionId: bigint): Promise<`0x${string}`>;
@@ -15240,11 +15247,13 @@ interface Reserves {
     weatherReserve: bigint;
 }
 declare function calculateMarkPrice(reserves: Reserves): number;
-declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, leverage: number, isLong: boolean): {
+declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, leverage: number, isLong: boolean, feeBps?: number): {
+    feeAmount: bigint;
+    netCollateral: bigint;
     exposureOut: bigint;
     newMarkPrice: number;
     priceImpactBps: number;
     entryPrice: number;
 };
 
-export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpPosition, type Position, type Reserves, SIDES, type Side, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getFundingHistory, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarkets, getRegions, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };
+export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpPosition, type Position, type Reserves, SIDES, type Side, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getFundingHistory, getInsuranceFundBalance, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };

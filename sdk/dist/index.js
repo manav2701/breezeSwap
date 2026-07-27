@@ -9887,6 +9887,7 @@ __export(index_exports, {
   formatOracleValue: () => formatOracleValue,
   formatPayoutRatio: () => formatPayoutRatio,
   getFundingHistory: () => getFundingHistory,
+  getInsuranceFundBalance: () => getInsuranceFundBalance,
   getMarkPriceHistory: () => getMarkPriceHistory,
   getMarket: () => getMarket,
   getMarketPositions: () => getMarketPositions,
@@ -9894,7 +9895,9 @@ __export(index_exports, {
   getPerpMarket: () => getPerpMarket,
   getPerpMarketPositions: () => getPerpMarketPositions,
   getPerpMarkets: () => getPerpMarkets,
+  getProtocolTreasuryBalance: () => getProtocolTreasuryBalance,
   getRegions: () => getRegions,
+  getTotalFeesCollected: () => getTotalFeesCollected,
   getUserPerpPositions: () => getUserPerpPositions,
   getUserPositions: () => getUserPositions,
   getWeatherReadings: () => getWeatherReadings,
@@ -9907,6 +9910,7 @@ __export(index_exports, {
   redeem: () => redeem,
   revokeRole: () => revokeRole,
   setOracleReading: () => setOracleReading,
+  setTradingFeeBps: () => setTradingFeeBps,
   settle: () => settle,
   settleFunding: () => settleFunding,
   timeUntilExpiry: () => timeUntilExpiry,
@@ -9931,11 +9935,13 @@ var CONTRACT_ADDRESSES = {
     ftsoWeatherAdapter: "0x9cd4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c",
     fdcWeatherAdapter: "0x341A6C8AA41A70c11803Cb67dd56E7F62c1fb18A",
     fAssetsCollateralAdapter: "0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54",
-    insuranceFund: "0x007375dB309067a236a8d580cBd81b2AE002Ca56",
-    perpFactory: "0x4870Ab8ec5967aeAcC7317B5Cb95a449E2629131",
-    tokyoPerpMarket: "0x7b98AEC7379422F079dEB6b0fFd569d2bEBb3cA5",
-    seoulPerpMarket: "0xf1583f45754b3e128A8520Dcd3317A8b85b7423e",
-    dubaiPerpMarket: "0x671f64c3Aa907503D4EC3A4a4c5bdE66Bd7Af21A"
+    feeConfig: "0xB0D295305d653F044E4178bb6966e76FB79f325C",
+    protocolTreasury: "0xecB7Ff4dA80532F5C7803392761643bA4dDe5058",
+    insuranceFund: "0x96952FC0fBe43AA72E1D08B11daD5cA56c12a36f",
+    perpFactory: "0x05e309f0434942BDfa0D961E25FaCc4483BABe46",
+    tokyoPerpMarket: "0x90C9876e41D0C5a7E1E8F660F0B2bD58D64Cb7Be",
+    seoulPerpMarket: "0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
+    dubaiPerpMarket: "0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD"
   }
 };
 var ORACLE_DECIMALS = 6n;
@@ -19407,6 +19413,38 @@ async function getMarkPriceHistory(indexerUrl, marketAddress, minutes = 60) {
   }
 }
 
+// src/reads/protocol.ts
+async function getTotalFeesCollected(indexerUrl) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/protocol/fees/total`);
+    if (!res.ok) return "0";
+    const data = await res.json();
+    return data.totalFeesWei || "0";
+  } catch {
+    return "0";
+  }
+}
+async function getInsuranceFundBalance(indexerUrl) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/protocol/insurance-fund`);
+    if (!res.ok) return "0";
+    const data = await res.json();
+    return data.balanceWei || "0";
+  } catch {
+    return "0";
+  }
+}
+async function getProtocolTreasuryBalance(indexerUrl) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/protocol/treasury`);
+    if (!res.ok) return "0";
+    const data = await res.json();
+    return data.balanceWei || "0";
+  } catch {
+    return "0";
+  }
+}
+
 // src/abis/BreezeMarketFactory.json
 var BreezeMarketFactory_default = [
   {
@@ -20614,7 +20652,48 @@ var MockWeatherOracle_default = [
   }
 ];
 
+// src/abis/FeeConfig.json
+var FeeConfig_default = [
+  {
+    inputs: [],
+    name: "tradingFeeBps",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "newRateBps", type: "uint256" }],
+    name: "setTradingFeeBps",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "tradeAmount", type: "uint256" }],
+    name: "calculateFeeSplit",
+    outputs: [
+      { internalType: "uint256", name: "feeAmount", type: "uint256" },
+      { internalType: "uint256", name: "insuranceShare", type: "uint256" },
+      { internalType: "uint256", name: "treasuryShare", type: "uint256" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  }
+];
+
 // src/writes/admin.ts
+async function setTradingFeeBps(walletClient, publicClient, feeConfigAddress, newRateBps) {
+  const account = walletClient.account;
+  if (!account) throw new Error("Wallet not connected");
+  const { request } = await publicClient.simulateContract({
+    address: feeConfigAddress,
+    abi: FeeConfig_default,
+    functionName: "setTradingFeeBps",
+    args: [newRateBps],
+    account
+  });
+  return walletClient.writeContract(request);
+}
 async function setOracleReading(walletClient, publicClient, oracleAddress, regionId, timestamp, value) {
   const account = walletClient.account;
   if (!account) throw new Error("Wallet not connected");
@@ -20671,7 +20750,7 @@ async function unpauseFactory(walletClient, publicClient, factoryAddress) {
   });
   return walletClient.writeContract(request);
 }
-async function grantRole(walletClient, publicClient, accessControlAddress, role, targetAccount) {
+async function grantRole(walletClient, publicClient, accessControlAddress, role, accountToGrant) {
   const account = walletClient.account;
   if (!account) throw new Error("Wallet not connected");
   const roleHash = await publicClient.readContract({
@@ -20683,12 +20762,12 @@ async function grantRole(walletClient, publicClient, accessControlAddress, role,
     address: accessControlAddress,
     abi: BreezeAccessControl_default,
     functionName: "grantRole",
-    args: [roleHash, targetAccount],
+    args: [roleHash, accountToGrant],
     account
   });
   return walletClient.writeContract(request);
 }
-async function revokeRole(walletClient, publicClient, accessControlAddress, role, targetAccount) {
+async function revokeRole(walletClient, publicClient, accessControlAddress, role, accountToRevoke) {
   const account = walletClient.account;
   if (!account) throw new Error("Wallet not connected");
   const roleHash = await publicClient.readContract({
@@ -20700,7 +20779,7 @@ async function revokeRole(walletClient, publicClient, accessControlAddress, role
     address: accessControlAddress,
     abi: BreezeAccessControl_default,
     functionName: "revokeRole",
-    args: [roleHash, targetAccount],
+    args: [roleHash, accountToRevoke],
     account
   });
   return walletClient.writeContract(request);
@@ -20917,8 +20996,10 @@ function calculateMarkPrice(reserves) {
   if (reserves.weatherReserve === 0n) return 0;
   return Number(reserves.collateralReserve * 10n ** 18n / reserves.weatherReserve) / 1e18;
 }
-function calculatePerpQuote(reserves, collateralIn, leverage, isLong) {
-  const notional = collateralIn * BigInt(leverage);
+function calculatePerpQuote(reserves, collateralIn, leverage, isLong, feeBps = 10) {
+  const feeAmount = collateralIn * BigInt(feeBps) / 10000n;
+  const netCollateral = collateralIn - feeAmount;
+  const notional = netCollateral * BigInt(leverage);
   const currentPrice = calculateMarkPrice(reserves);
   const k = reserves.collateralReserve * reserves.weatherReserve;
   let newCollateralReserve;
@@ -20937,7 +21018,7 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong) {
   const newMarkPrice = calculateMarkPrice(newReserves);
   const entryPrice = exposureOut > 0n ? Number(notional * 10n ** 18n / exposureOut) / 1e18 : newMarkPrice;
   const priceImpactBps = currentPrice > 0 ? Math.round(Math.abs((newMarkPrice - currentPrice) / currentPrice) * 1e4) : 0;
-  return { exposureOut, newMarkPrice, priceImpactBps, entryPrice };
+  return { feeAmount, netCollateral, exposureOut, newMarkPrice, priceImpactBps, entryPrice };
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
@@ -20966,6 +21047,7 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong) {
   formatOracleValue,
   formatPayoutRatio,
   getFundingHistory,
+  getInsuranceFundBalance,
   getMarkPriceHistory,
   getMarket,
   getMarketPositions,
@@ -20973,7 +21055,9 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong) {
   getPerpMarket,
   getPerpMarketPositions,
   getPerpMarkets,
+  getProtocolTreasuryBalance,
   getRegions,
+  getTotalFeesCollected,
   getUserPerpPositions,
   getUserPositions,
   getWeatherReadings,
@@ -20986,6 +21070,7 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong) {
   redeem,
   revokeRole,
   setOracleReading,
+  setTradingFeeBps,
   settle,
   settleFunding,
   timeUntilExpiry,

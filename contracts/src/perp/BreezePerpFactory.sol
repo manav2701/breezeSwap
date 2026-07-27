@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 import "./BreezePerpMarket.sol";
 import "./InsuranceFund.sol";
 import "./VirtualAMM.sol";
+import "../fees/FeeConfig.sol";
+import "../fees/ProtocolTreasury.sol";
 import "../access/BreezeAccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 
@@ -13,6 +15,8 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
 contract BreezePerpFactory is Pausable {
     BreezeAccessControl public immutable accessControl;
     InsuranceFund public immutable sharedInsuranceFund;
+    FeeConfig public immutable feeConfig;
+    ProtocolTreasury public immutable treasury;
     address[] public allMarkets;
 
     event PerpMarketCreated(
@@ -42,10 +46,23 @@ contract BreezePerpFactory is Pausable {
         _;
     }
 
-    constructor(address _accessControl, address _sharedInsuranceFund) {
-        if (_accessControl == address(0) || _sharedInsuranceFund == address(0)) revert ZeroAddress();
+    constructor(
+        address _accessControl,
+        address _sharedInsuranceFund,
+        address _feeConfig,
+        address _treasury
+    ) {
+        if (
+            _accessControl == address(0) ||
+            _sharedInsuranceFund == address(0) ||
+            _feeConfig == address(0) ||
+            _treasury == address(0)
+        ) revert ZeroAddress();
+
         accessControl = BreezeAccessControl(_accessControl);
         sharedInsuranceFund = InsuranceFund(_sharedInsuranceFund);
+        feeConfig = FeeConfig(_feeConfig);
+        treasury = ProtocolTreasury(_treasury);
     }
 
     function createPerpMarket(
@@ -67,6 +84,8 @@ contract BreezePerpFactory is Pausable {
             initialReserves,
             oracleAddress,
             address(sharedInsuranceFund),
+            address(feeConfig),
+            address(treasury),
             address(accessControl),
             collateralToken,
             regionId
@@ -84,6 +103,8 @@ contract BreezePerpFactory is Pausable {
             collateralToken
         );
     }
+
+    error InvalidInvalidReserves();
 
     function getMarketCount() external view returns (uint256) {
         return allMarkets.length;

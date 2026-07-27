@@ -7,6 +7,7 @@ import {
   getPerpMarkets, getPerpMarket, getPerpMarketPositions,
   getFundingHistory, getMarkPriceHistory, getUserPerpPositions
 } from './handlers/perp'
+import { getTotalFees, getRecentFees, getInsuranceFundBalance, getTreasuryBalance } from './handlers/protocol'
 import { healthHandler } from './handlers/health'
 
 export const router = Router()
@@ -27,3 +28,9 @@ router.get('/perp-markets/:address/positions', getPerpMarketPositions)
 router.get('/perp-markets/:address/funding-history', getFundingHistory)
 router.get('/perp-markets/:address/mark-price-history', getMarkPriceHistory)
 router.get('/users/:address/perp-positions', getUserPerpPositions)
+
+// Protocol Fee routes
+router.get('/protocol/fees/total', getTotalFees)
+router.get('/protocol/fees/recent', getRecentFees)
+router.get('/protocol/insurance-fund', getInsuranceFundBalance)
+router.get('/protocol/treasury', getTreasuryBalance)

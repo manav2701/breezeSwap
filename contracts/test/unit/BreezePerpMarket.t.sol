@@ -5,6 +5,8 @@ import "forge-std/Test.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../../src/access/BreezeAccessControl.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
+import "../../src/fees/FeeConfig.sol";
+import "../../src/fees/ProtocolTreasury.sol";
 import "../../src/perp/BreezePerpMarket.sol";
 import "../../src/perp/InsuranceFund.sol";
 import "../../src/perp/VirtualAMM.sol";
@@ -21,6 +23,8 @@ contract MockPerpUSDT is ERC20 {
 contract BreezePerpMarketTest is Test {
     BreezeAccessControl accessControl;
     MockWeatherOracle oracle;
+    FeeConfig feeConfig;
+    ProtocolTreasury treasury;
     InsuranceFund insuranceFund;
     MockPerpUSDT collateralToken;
     BreezePerpMarket perpMarket;
@@ -38,6 +42,9 @@ contract BreezePerpMarketTest is Test {
 
         oracle = new MockWeatherOracle(address(accessControl));
         collateralToken = new MockPerpUSDT();
+
+        feeConfig = new FeeConfig(address(accessControl));
+        treasury = new ProtocolTreasury(address(collateralToken), address(accessControl));
         insuranceFund = new InsuranceFund(address(collateralToken), address(accessControl));
 
         VirtualAMM.Reserves memory initialReserves = VirtualAMM.Reserves({
@@ -49,6 +56,8 @@ contract BreezePerpMarketTest is Test {
             initialReserves,
             address(oracle),
             address(insuranceFund),
+            address(feeConfig),
+            address(treasury),
             address(accessControl),
             address(collateralToken),
             REGION_ID
@@ -72,12 +81,12 @@ contract BreezePerpMarketTest is Test {
         vm.stopPrank();
 
         assertEq(posId, 0);
-        assertEq(perpMarket.totalLongOpenInterest(), 1_000 * 1e18);
+        assertEq(perpMarket.totalLongOpenInterest(), 999 * 1e18);
 
         (address trader, bool isLong, uint256 collateral, uint256 leverage, uint256 virtualSize, , , bool isOpen) = perpMarket.positions(posId);
         assertEq(trader, alice);
         assertTrue(isLong);
-        assertEq(collateral, 1_000 * 1e18);
+        assertEq(collateral, 999 * 1e18);
         assertEq(leverage, 2);
         assertTrue(virtualSize > 0);
         assertTrue(isOpen);

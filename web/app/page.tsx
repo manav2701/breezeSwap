@@ -91,7 +91,7 @@ export default function HomePage() {
         </div>
 
         {/* Live Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-10 border-t border-slate-800/80 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 pt-10 border-t border-slate-800/80 max-w-4xl mx-auto">
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
             <span className="text-xs text-slate-400 block mb-1">Total Markets</span>
             <span className="text-2xl font-bold text-white font-mono">{loading ? '—' : markets.length}</span>
@@ -100,6 +100,11 @@ export default function HomePage() {
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
             <span className="text-xs text-slate-400 block mb-1">Open Markets</span>
             <span className="text-2xl font-bold text-emerald-400 font-mono">{loading ? '—' : openMarketsCount}</span>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+            <span className="text-xs text-slate-400 block mb-1">Protocol Fees</span>
+            <span className="text-2xl font-bold text-amber-400 font-mono">0.10%</span>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">

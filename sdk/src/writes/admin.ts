@@ -3,7 +3,28 @@ import AccessControlABI from '../abis/BreezeAccessControl.json'
 import OracleABI from '../abis/MockWeatherOracle.json'
 import MarketABI from '../abis/BreezeMarket.json'
 import FactoryABI from '../abis/BreezeMarketFactory.json'
+import FeeConfigABI from '../abis/FeeConfig.json'
 import { BreezeRole } from '../reads/access'
+
+export async function setTradingFeeBps(
+  walletClient: WalletClient,
+  publicClient: PublicClient,
+  feeConfigAddress: `0x${string}`,
+  newRateBps: bigint
+): Promise<`0x${string}`> {
+  const account = walletClient.account
+  if (!account) throw new Error('Wallet not connected')
+
+  const { request } = await publicClient.simulateContract({
+    address: feeConfigAddress,
+    abi: FeeConfigABI,
+    functionName: 'setTradingFeeBps',
+    args: [newRateBps],
+    account
+  })
+
+  return walletClient.writeContract(request)
+}
 
 export async function setOracleReading(
   walletClient: WalletClient,
@@ -104,22 +125,22 @@ export async function grantRole(
   publicClient: PublicClient,
   accessControlAddress: `0x${string}`,
   role: BreezeRole,
-  targetAccount: `0x${string}`
+  accountToGrant: `0x${string}`
 ): Promise<`0x${string}`> {
   const account = walletClient.account
   if (!account) throw new Error('Wallet not connected')
 
-  const roleHash = (await publicClient.readContract({
+  const roleHash = await publicClient.readContract({
     address: accessControlAddress,
     abi: AccessControlABI,
     functionName: role
-  })) as `0x${string}`
+  }) as `0x${string}`
 
   const { request } = await publicClient.simulateContract({
     address: accessControlAddress,
     abi: AccessControlABI,
     functionName: 'grantRole',
-    args: [roleHash, targetAccount],
+    args: [roleHash, accountToGrant],
     account
   })
 
@@ -131,22 +152,22 @@ export async function revokeRole(
   publicClient: PublicClient,
   accessControlAddress: `0x${string}`,
   role: BreezeRole,
-  targetAccount: `0x${string}`
+  accountToRevoke: `0x${string}`
 ): Promise<`0x${string}`> {
   const account = walletClient.account
   if (!account) throw new Error('Wallet not connected')
 
-  const roleHash = (await publicClient.readContract({
+  const roleHash = await publicClient.readContract({
     address: accessControlAddress,
     abi: AccessControlABI,
     functionName: role
-  })) as `0x${string}`
+  }) as `0x${string}`
 
   const { request } = await publicClient.simulateContract({
     address: accessControlAddress,
     abi: AccessControlABI,
     functionName: 'revokeRole',
-    args: [roleHash, targetAccount],
+    args: [roleHash, accountToRevoke],
     account
   })
 

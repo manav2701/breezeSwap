@@ -49,6 +49,18 @@ const PerpMarketABI = [
     ],
     name: "FundingSettled",
     type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "market", type: "address" },
+      { indexed: true, internalType: "address", name: "trader", type: "address" },
+      { indexed: false, internalType: "uint256", name: "feeAmount", type: "uint256" },
+      { indexed: false, internalType: "uint256", name: "insuranceShare", type: "uint256" },
+      { indexed: false, internalType: "uint256", name: "treasuryShare", type: "uint256" }
+    ],
+    name: "FeeCollected",
+    type: "event"
   }
 ] as const
 
@@ -112,6 +124,18 @@ export function startPerpMarketWatcher(marketAddress: string) {
             tx_hash: transactionHash
           })
           logger.info('Perp FundingSettled indexed', { marketAddress, rate: args.fundingRate.toString() })
+        } else if (eventName === 'FeeCollected') {
+          await supabase.from('fee_events').insert({
+            market_address: marketAddress.toLowerCase(),
+            trader_address: args.trader.toLowerCase(),
+            fee_amount: args.feeAmount.toString(),
+            insurance_share: args.insuranceShare.toString(),
+            treasury_share: args.treasuryShare.toString(),
+            block_number: Number(blockNumber),
+            tx_hash: transactionHash,
+            occurred_at: new Date(Number(block.timestamp) * 1000).toISOString()
+          })
+          logger.info('FeeCollected indexed', { marketAddress, feeAmount: args.feeAmount.toString() })
         }
       }
     },

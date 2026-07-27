@@ -22,13 +22,16 @@ export {
   getPerpMarkets, getPerpMarket, getPerpMarketPositions, getUserPerpPositions,
   getFundingHistory, getMarkPriceHistory
 } from './reads/perp'
+export {
+  getTotalFeesCollected, getInsuranceFundBalance, getProtocolTreasuryBalance
+} from './reads/protocol'
 
 // Writes
 export { createMarket } from './writes/markets'
 export { approveCollateral, mintPosition, redeem, settle } from './writes/positions'
 export {
   setOracleReading, pauseMarket, unpauseMarket,
-  pauseFactory, unpauseFactory, grantRole, revokeRole
+  pauseFactory, unpauseFactory, grantRole, revokeRole, setTradingFeeBps
 } from './writes/admin'
 export {
   openPerpPosition, closePerpPosition, liquidatePerpPosition, settleFunding

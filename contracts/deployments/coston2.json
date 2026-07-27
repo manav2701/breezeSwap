@@ -4,7 +4,7 @@
   "rpcUrl": "https://coston2-api.flare.network/ext/C/rpc",
   "blockExplorer": "https://coston2-explorer.flare.network",
   "deployer": "0xE9D7B6576581AD0A712B5DBC83cD27378c494503",
-  "deployedAtTimestamp": "2026-07-27T04:06:29Z",
+  "deployedAtTimestamp": "2026-07-27T10:56:20Z",
   "contracts": {
     "BreezeAccessControl": "0x3788420AB4Ef4D2c2dd22c151fd6CB93d2543853",
     "MockUSDT": "0x639b6b2a0195271557e543F51c0FA417265B2FAC",
@@ -14,10 +14,12 @@
     "FtsoWeatherAdapter": "0x9cd4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c",
     "FdcWeatherAdapter": "0x341A6C8AA41A70c11803Cb67dd56E7F62c1fb18A",
     "FAssetsCollateralAdapter": "0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54",
-    "InsuranceFund": "0x007375dB309067a236a8d580cBd81b2AE002Ca56",
-    "BreezePerpFactory": "0x4870Ab8ec5967aeAcC7317B5Cb95a449E2629131",
-    "TokyoPerpMarket": "0x7b98AEC7379422F079dEB6b0fFd569d2bEBb3cA5",
-    "SeoulPerpMarket": "0xf1583f45754b3e128A8520Dcd3317A8b85b7423e",
-    "DubaiPerpMarket": "0x671f64c3Aa907503D4EC3A4a4c5bdE66Bd7Af21A"
+    "FeeConfig": "0xB0D295305d653F044E4178bb6966e76FB79f325C",
+    "ProtocolTreasury": "0xecB7Ff4dA80532F5C7803392761643bA4dDe5058",
+    "InsuranceFund": "0x96952FC0fBe43AA72E1D08B11daD5cA56c12a36f",
+    "BreezePerpFactory": "0x05e309f0434942BDfa0D961E25FaCc4483BABe46",
+    "TokyoPerpMarket": "0x90C9876e41D0C5a7E1E8F660F0B2bD58D64Cb7Be",
+    "SeoulPerpMarket": "0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
+    "DubaiPerpMarket": "0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD"
   }
 }

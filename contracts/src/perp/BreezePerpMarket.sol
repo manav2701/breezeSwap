@@ -5,6 +5,8 @@ import "./VirtualAMM.sol";
 import "./FundingRateEngine.sol";
 import "./PerpConstants.sol";
 import "./InsuranceFund.sol";
+import "../fees/FeeConfig.sol";
+import "../fees/ProtocolTreasury.sol";
 import "../oracle/IWeatherOracle.sol";
 import "../access/BreezeAccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -12,14 +14,14 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title BreezePerpMarket
-/// @notice Perpetual vAMM weather market contract managing positions, leverage, funding rates, and liquidations.
+/// @notice Perpetual vAMM weather market contract managing positions, leverage, funding rates, liquidations, and fees.
 contract BreezePerpMarket is Pausable, ReentrancyGuard {
     using VirtualAMM for VirtualAMM.Reserves;
 
     struct Position {
         address trader;
         bool isLong;
-        uint256 collateral;
+        uint256 collateral;        // Net collateral posted after fee deduction
         uint256 leverage;
         uint256 virtualSize;       // Weather exposure units from vAMM
         uint256 entryMarkPrice;
@@ -30,6 +32,8 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
     VirtualAMM.Reserves public reserves;
     IWeatherOracle public immutable oracle;
     InsuranceFund public immutable insuranceFund;
+    FeeConfig public immutable feeConfig;
+    ProtocolTreasury public immutable treasury;
     BreezeAccessControl public immutable accessControl;
     IERC20 public immutable collateralToken;
     bytes32 public immutable regionId;
@@ -38,8 +42,8 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
 
     mapping(uint256 => Position) public positions;
     uint256 public nextPositionId;
-    uint256 public totalLongOpenInterest;   // Total collateral backing Longs
-    uint256 public totalShortOpenInterest;  // Total collateral backing Shorts
+    uint256 public totalLongOpenInterest;   // Total net collateral backing Longs
+    uint256 public totalShortOpenInterest;  // Total net collateral backing Shorts
 
     int256 public cumulativeFundingIndex;
     uint256 public lastFundingSettledAt;
@@ -67,6 +71,13 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
         uint256 coveredDebt
     );
     event FundingSettled(int256 fundingRate, int256 newCumulativeIndex, uint256 timestamp);
+    event FeeCollected(
+        address indexed market,
+        address indexed trader,
+        uint256 feeAmount,
+        uint256 insuranceShare,
+        uint256 treasuryShare
+    );
 
     error UnauthorizedCaller();
     error InvalidLeverage();
@@ -85,6 +96,8 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
         VirtualAMM.Reserves memory initialReserves,
         address _oracle,
         address _insuranceFund,
+        address _feeConfig,
+        address _treasury,
         address _accessControl,
         address _collateralToken,
         bytes32 _regionId
@@ -92,6 +105,8 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
         if (
             _oracle == address(0) ||
             _insuranceFund == address(0) ||
+            _feeConfig == address(0) ||
+            _treasury == address(0) ||
             _accessControl == address(0) ||
             _collateralToken == address(0)
         ) revert ZeroAddress();
@@ -99,6 +114,8 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
         reserves = initialReserves;
         oracle = IWeatherOracle(_oracle);
         insuranceFund = InsuranceFund(_insuranceFund);
+        feeConfig = FeeConfig(_feeConfig);
+        treasury = ProtocolTreasury(_treasury);
         accessControl = BreezeAccessControl(_accessControl);
         collateralToken = IERC20(_collateralToken);
         regionId = _regionId;
@@ -123,16 +140,31 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
             "collateral transfer failed"
         );
 
-        uint256 notional = collateral * leverage;
+        // Deduct trading fee from posted margin collateral
+        (uint256 feeAmount, uint256 insuranceShare, uint256 treasuryShare) = feeConfig.calculateFeeSplit(collateral);
+        if (feeAmount > 0) {
+            if (insuranceShare > 0) {
+                collateralToken.approve(address(insuranceFund), insuranceShare);
+                insuranceFund.deposit(insuranceShare);
+            }
+            if (treasuryShare > 0) {
+                collateralToken.transfer(address(treasury), treasuryShare);
+                treasury.receiveFee(treasuryShare);
+            }
+            emit FeeCollected(address(this), msg.sender, feeAmount, insuranceShare, treasuryShare);
+        }
+
+        uint256 netCollateral = collateral - feeAmount;
+        uint256 notional = netCollateral * leverage;
         uint256 exposureOut;
         VirtualAMM.Reserves memory newReserves;
 
         if (isLong) {
             (exposureOut, newReserves) = reserves.quoteOpenLong(notional);
-            totalLongOpenInterest += collateral;
+            totalLongOpenInterest += netCollateral;
         } else {
             (exposureOut, newReserves) = reserves.quoteOpenShort(notional);
-            totalShortOpenInterest += collateral;
+            totalShortOpenInterest += netCollateral;
         }
 
         reserves = newReserves;
@@ -141,7 +173,7 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
         positions[positionId] = Position({
             trader: msg.sender,
             isLong: isLong,
-            collateral: collateral,
+            collateral: netCollateral,
             leverage: leverage,
             virtualSize: exposureOut,
             entryMarkPrice: reserves.markPrice(),
@@ -153,7 +185,7 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
             positionId,
             msg.sender,
             isLong,
-            collateral,
+            netCollateral,
             leverage,
             exposureOut,
             reserves.markPrice()
@@ -248,13 +280,12 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
         returns (int256 totalPnl)
     {
         VirtualAMM.Reserves memory newReserves;
-        uint256 collateralOut;
 
         if (pos.isLong) {
-            (collateralOut, newReserves) = reserves.quoteCloseLong(pos.virtualSize);
+            (, newReserves) = reserves.quoteCloseLong(pos.virtualSize);
             totalLongOpenInterest -= pos.collateral;
         } else {
-            (collateralOut, newReserves) = reserves.quoteCloseShort(pos.virtualSize);
+            (, newReserves) = reserves.quoteCloseShort(pos.virtualSize);
             totalShortOpenInterest -= pos.collateral;
         }
 
@@ -263,16 +294,33 @@ contract BreezePerpMarket is Pausable, ReentrancyGuard {
         pos.isOpen = false;
 
         int256 equity = int256(pos.collateral) + totalPnl;
-        uint256 payout = equity > 0 ? uint256(equity) : 0;
+        uint256 rawPayout = equity > 0 ? uint256(equity) : 0;
 
-        uint256 bal = collateralToken.balanceOf(address(this));
-        if (payout > bal) payout = bal;
-
-        if (payout > 0) {
-            require(collateralToken.transfer(recipient, payout), "payout transfer failed");
+        uint256 netPayout = rawPayout;
+        if (rawPayout > 0) {
+            (uint256 feeAmount, uint256 insuranceShare, uint256 treasuryShare) = feeConfig.calculateFeeSplit(rawPayout);
+            if (feeAmount > 0) {
+                if (insuranceShare > 0) {
+                    collateralToken.approve(address(insuranceFund), insuranceShare);
+                    insuranceFund.deposit(insuranceShare);
+                }
+                if (treasuryShare > 0) {
+                    collateralToken.transfer(address(treasury), treasuryShare);
+                    treasury.receiveFee(treasuryShare);
+                }
+                emit FeeCollected(address(this), recipient, feeAmount, insuranceShare, treasuryShare);
+            }
+            netPayout = rawPayout - feeAmount;
         }
 
-        emit PositionClosed(positionId, recipient, totalPnl, payout);
+        uint256 bal = collateralToken.balanceOf(address(this));
+        if (netPayout > bal) netPayout = bal;
+
+        if (netPayout > 0) {
+            require(collateralToken.transfer(recipient, netPayout), "payout transfer failed");
+        }
+
+        emit PositionClosed(positionId, recipient, totalPnl, netPayout);
     }
 
     function _executeLiquidation(uint256 positionId, Position storage pos, address liquidator)

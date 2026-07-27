@@ -254,8 +254,20 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
             {/* Trade Preview Box */}
             <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2 text-xs font-mono text-slate-400">
               <div className="flex items-center justify-between">
+                <span>Posted Margin Collateral:</span>
+                <span className="text-white font-bold">{parseFloat(collateralInput) || 0} mUSDT</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Trading Fee (0.10%):</span>
+                <span className="text-rose-400 font-bold">-{(Number(quote.feeAmount) / 1e6).toFixed(2)} mUSDT</span>
+              </div>
+              <div className="flex items-center justify-between border-t border-slate-800/80 pt-1.5">
+                <span>Net Position Margin:</span>
+                <span className="text-emerald-400 font-bold">{(Number(quote.netCollateral) / 1e6).toFixed(2)} mUSDT</span>
+              </div>
+              <div className="flex items-center justify-between">
                 <span>Notional Position Size:</span>
-                <span className="text-white font-bold">${(parseFloat(collateralInput) || 0) * leverage} USD</span>
+                <span className="text-white font-bold">${((Number(quote.netCollateral) / 1e6) * leverage).toFixed(2)} USD</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Est. Entry Price:</span>

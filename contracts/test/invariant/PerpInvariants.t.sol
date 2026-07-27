@@ -5,6 +5,8 @@ import "forge-std/Test.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../../src/access/BreezeAccessControl.sol";
 import "../../src/oracle/MockWeatherOracle.sol";
+import "../../src/fees/FeeConfig.sol";
+import "../../src/fees/ProtocolTreasury.sol";
 import "../../src/perp/BreezePerpMarket.sol";
 import "../../src/perp/InsuranceFund.sol";
 import "../../src/perp/VirtualAMM.sol";
@@ -24,6 +26,8 @@ contract PerpInvariantsTest is Test {
 
     BreezeAccessControl accessControl;
     MockWeatherOracle oracle;
+    FeeConfig feeConfig;
+    ProtocolTreasury treasury;
     InsuranceFund insuranceFund;
     MockPerpUSDTInv collateralToken;
     BreezePerpMarket perpMarket;
@@ -37,6 +41,9 @@ contract PerpInvariantsTest is Test {
         accessControl = new BreezeAccessControl(address(this));
         oracle = new MockWeatherOracle(address(accessControl));
         collateralToken = new MockPerpUSDTInv();
+
+        feeConfig = new FeeConfig(address(accessControl));
+        treasury = new ProtocolTreasury(address(collateralToken), address(accessControl));
         insuranceFund = new InsuranceFund(address(collateralToken), address(accessControl));
 
         VirtualAMM.Reserves memory initialReserves = VirtualAMM.Reserves({
@@ -50,6 +57,8 @@ contract PerpInvariantsTest is Test {
             initialReserves,
             address(oracle),
             address(insuranceFund),
+            address(feeConfig),
+            address(treasury),
             address(accessControl),
             address(collateralToken),
             REGION_ID

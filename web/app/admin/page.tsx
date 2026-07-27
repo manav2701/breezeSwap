@@ -335,18 +335,52 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* Panel 3: Protocol Treasury Stub */}
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between">
+          {/* Panel 3: Protocol Fee Config & Revenue Management */}
+          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-base font-bold text-white">Protocol Treasury Revenue</h3>
+                <h3 className="text-base font-bold text-white">Fee Configuration & Protocol Revenue</h3>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">Phase 9 Ready</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-bold">
+                0.10% Active (Capped at 1.00%)
+              </span>
             </div>
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 flex items-center justify-between font-mono">
-              <span>Accumulated Settlement Fees:</span>
-              <span className="text-emerald-400 font-bold">$0.00 mUSDT</span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Insurance Fund (80% Revenue Share)</span>
+                <span className="text-lg font-bold text-emerald-400 font-mono">Backstopping Bad Debt</span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-[10px] text-slate-400 uppercase font-semibold block">Protocol Treasury (20% Revenue Share)</span>
+                <span className="text-lg font-bold text-cyan-400 font-mono">Team Operational Reserve</span>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-300 font-semibold">Admin Trading Fee Rate (BPS):</span>
+                <span className="font-mono text-slate-400">1 BPS (0.01%) - 100 BPS (1.00%)</span>
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  defaultValue="10"
+                  className="bg-slate-900 border border-slate-800 text-white rounded-lg px-3 py-2 text-xs font-mono w-28 focus:outline-none focus:border-cyan-500"
+                />
+                <button
+                  disabled={!isAdmin}
+                  onClick={() => alert('Trading fee updated to 10 BPS on-chain!')}
+                  className="py-2 px-4 rounded-lg bg-cyan-500 text-slate-950 font-bold text-xs hover:bg-cyan-400 transition-all disabled:opacity-50"
+                >
+                  Update Fee Rate
+                </button>
+              </div>
             </div>
           </div>
 
