@@ -4,7 +4,7 @@ import { logger } from '../utils/logger'
 
 const ACCESS_CONTROL_ADDRESS = (process.env.ACCESS_CONTROL_ADDRESS || '0x0000000000000000000000000000000000000000') as `0x${string}`
 
-// Standard OpenZeppelin AccessControl ABI events
+// Staaandard OpenZeppelin AccessControl ABI events
 const AccessControlEventsABI = [
   {
     anonymous: false,
