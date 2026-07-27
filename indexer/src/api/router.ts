@@ -5,9 +5,13 @@ import { getWeatherReadings, getRegions } from './handlers/weather'
 import { getAuditLog } from './handlers/admin'
 import {
   getPerpMarkets, getPerpMarket, getPerpMarketPositions,
-  getFundingHistory, getMarkPriceHistory, getUserPerpPositions
+  getFundingHistory, getMarkPriceHistory, getUserPerpPositions,
+  getTradeHistory, getPerpMarketStats, getCandles
 } from './handlers/perp'
-import { getTotalFees, getRecentFees, getInsuranceFundBalance, getTreasuryBalance } from './handlers/protocol'
+import {
+  getTotalFees, getRecentFees, getInsuranceFundBalance, getTreasuryBalance,
+  getGlobalTradeHistory
+} from './handlers/protocol'
 import { healthHandler } from './handlers/health'
 
 export const router = Router()
@@ -23,14 +27,18 @@ router.get('/admin/audit-log', getAuditLog)
 
 // Perp routes
 router.get('/perp-markets', getPerpMarkets)
+router.get('/perp-markets/:address/stats', getPerpMarketStats)
+router.get('/perp-markets/:address/trade-history', getTradeHistory)
+router.get('/perp-markets/:address/candles', getCandles)
 router.get('/perp-markets/:address', getPerpMarket)
 router.get('/perp-markets/:address/positions', getPerpMarketPositions)
 router.get('/perp-markets/:address/funding-history', getFundingHistory)
 router.get('/perp-markets/:address/mark-price-history', getMarkPriceHistory)
 router.get('/users/:address/perp-positions', getUserPerpPositions)
 
-// Protocol Fee routes
+// Protocol routes
 router.get('/protocol/fees/total', getTotalFees)
 router.get('/protocol/fees/recent', getRecentFees)
 router.get('/protocol/insurance-fund', getInsuranceFundBalance)
 router.get('/protocol/treasury', getTreasuryBalance)
+router.get('/protocol/trade-history', getGlobalTradeHistory)

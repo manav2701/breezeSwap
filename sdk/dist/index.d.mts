@@ -134,6 +134,37 @@ interface BreezeSwapConfig {
     rpcUrl: string;
     chainId: number;
 }
+interface TradeHistoryEntry {
+    id: string;
+    marketAddress?: string;
+    type: 'OPEN' | 'CLOSE' | 'LIQUIDATION';
+    timestamp: string;
+    trader: string;
+    side: 'LONG' | 'SHORT';
+    size: string;
+    price: string;
+    pnl: string | null;
+    txHash: string;
+}
+interface PerpMarketStatsData {
+    markPrice: string;
+    oraclePrice: string;
+    currentFundingRate: string;
+    nextFundingAt: string;
+    fundingInterval: number;
+    openInterestLong: string;
+    openInterestShort: string;
+    oiSkewPercent: number;
+    totalVolume24h: string;
+    tradeCount24h: number;
+}
+interface OHLCCandle {
+    timestamp: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+}
 
 declare const COSTON2_CHAIN_ID = 114;
 declare const FLARE_MAINNET_CHAIN_ID = 14;
@@ -25957,10 +25988,14 @@ declare function getPerpMarketPositions(indexerUrl: string, address: string, cha
 declare function getUserPerpPositions(indexerUrl: string, userAddress: string, chainId?: number): Promise<PerpPosition[]>;
 declare function getFundingHistory(indexerUrl: string, marketAddress: string, chainId?: number): Promise<FundingHistoryItem[]>;
 declare function getMarkPriceHistory(indexerUrl: string, marketAddress: string, minutes?: number, chainId?: number): Promise<MarkPriceHistoryItem[]>;
+declare function getTradeHistory(indexerUrl: string, marketAddress: string, chainId?: number, limit?: number, offset?: number): Promise<TradeHistoryEntry[]>;
+declare function getPerpMarketStats(indexerUrl: string, marketAddress: string, chainId?: number): Promise<PerpMarketStatsData | null>;
+declare function getMarkPriceCandles(indexerUrl: string, marketAddress: string, interval?: string, limit?: number, chainId?: number): Promise<OHLCCandle[]>;
 
 declare function getTotalFeesCollected(indexerUrl: string, chainId?: number): Promise<string>;
 declare function getInsuranceFundBalance(indexerUrl: string, chainId?: number): Promise<string>;
 declare function getProtocolTreasuryBalance(indexerUrl: string, chainId?: number): Promise<string>;
+declare function getGlobalTradeHistory(indexerUrl: string, chainId?: number, limit?: number): Promise<TradeHistoryEntry[]>;
 
 declare function createMarket(walletClient: WalletClient, publicClient: PublicClient, params: CreateMarketParams, chainId?: number): Promise<{
     txHash: `0x${string}`;
@@ -26011,4 +26046,4 @@ declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, le
     entryPrice: number;
 };
 
-export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getContractAddresses, getFundingHistory, getInsuranceFundBalance, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };
+export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };

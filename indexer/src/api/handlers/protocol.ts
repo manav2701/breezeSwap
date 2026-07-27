@@ -73,3 +73,53 @@ export async function getTreasuryBalance(req: Request, res: Response) {
     return res.status(500).json({ error: err.message || 'Internal error' })
   }
 }
+
+export async function getGlobalTradeHistory(req: Request, res: Response) {
+  try {
+    const limit = Math.min(Number(req.query.limit) || 50, 100)
+    const { data: positions, error } = await supabase
+      .from('perp_positions')
+      .select('*')
+      .order('opened_at', { ascending: false })
+      .limit(limit)
+
+    if (error) throw error
+
+    const trades: any[] = []
+    for (const pos of positions || []) {
+      trades.push({
+        id: `${pos.position_id}-open`,
+        marketAddress: pos.market_address,
+        type: 'OPEN',
+        timestamp: pos.opened_at,
+        trader: pos.trader_address,
+        side: pos.is_long ? 'LONG' : 'SHORT',
+        size: (Number(pos.collateral || 0) * Number(pos.leverage || 1)).toString(),
+        price: pos.entry_mark_price ? (Number(pos.entry_mark_price) / 1e18).toFixed(2) : '0.00',
+        pnl: null,
+        txHash: pos.open_tx_hash
+      })
+
+      if (pos.closed_at) {
+        trades.push({
+          id: `${pos.position_id}-close`,
+          marketAddress: pos.market_address,
+          type: pos.was_liquidated ? 'LIQUIDATION' : 'CLOSE',
+          timestamp: pos.closed_at,
+          trader: pos.trader_address,
+          side: pos.is_long ? 'LONG' : 'SHORT',
+          size: (Number(pos.collateral || 0) * Number(pos.leverage || 1)).toString(),
+          price: pos.entry_mark_price ? (Number(pos.entry_mark_price) / 1e18).toFixed(2) : '0.00',
+          pnl: pos.realized_pnl ? (Number(pos.realized_pnl) / 1e18).toFixed(2) : '0.00',
+          txHash: pos.close_tx_hash
+        })
+      }
+    }
+
+    trades.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    return res.json({ trades: trades.slice(0, limit) })
+  } catch (err: any) {
+    logger.error('getGlobalTradeHistory error:', err)
+    return res.status(500).json({ error: err.message || 'Internal error' })
+  }
+}

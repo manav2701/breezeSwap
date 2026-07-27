@@ -19374,6 +19374,35 @@ async function getMarkPriceHistory(indexerUrl, marketAddress, minutes = 60, chai
     return [];
   }
 }
+async function getTradeHistory(indexerUrl, marketAddress, chainId = 114, limit = 50, offset = 0) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/trade-history?limit=${limit}&offset=${offset}&chainId=${chainId}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.trades || [];
+  } catch (err) {
+    return [];
+  }
+}
+async function getPerpMarketStats(indexerUrl, marketAddress, chainId = 114) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/stats?chainId=${chainId}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    return null;
+  }
+}
+async function getMarkPriceCandles(indexerUrl, marketAddress, interval = "5m", limit = 100, chainId = 114) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/candles?interval=${interval}&limit=${limit}&chainId=${chainId}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.candles || [];
+  } catch (err) {
+    return [];
+  }
+}
 
 // src/reads/protocol.ts
 async function getTotalFeesCollected(indexerUrl, chainId = 114) {
@@ -19404,6 +19433,16 @@ async function getProtocolTreasuryBalance(indexerUrl, chainId = 114) {
     return data.balanceWei || "0";
   } catch {
     return "0";
+  }
+}
+async function getGlobalTradeHistory(indexerUrl, chainId = 114, limit = 50) {
+  try {
+    const res = await fetch(`${indexerUrl}/api/protocol/trade-history?limit=${limit}&chainId=${chainId}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.trades || [];
+  } catch {
+    return [];
   }
 }
 
@@ -21013,17 +21052,21 @@ export {
   formatPayoutRatio,
   getContractAddresses,
   getFundingHistory,
+  getGlobalTradeHistory,
   getInsuranceFundBalance,
+  getMarkPriceCandles,
   getMarkPriceHistory,
   getMarket,
   getMarketPositions,
   getMarkets,
   getPerpMarket,
   getPerpMarketPositions,
+  getPerpMarketStats,
   getPerpMarkets,
   getProtocolTreasuryBalance,
   getRegions,
   getTotalFeesCollected,
+  getTradeHistory,
   getUserPerpPositions,
   getUserPositions,
   getWeatherReadings,

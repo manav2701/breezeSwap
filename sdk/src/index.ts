@@ -2,7 +2,8 @@
 export type {
   Market, Position, WeatherReading, Side, MarketStatus,
   WeatherVariable, PayoffType, CreateMarketParams, MintPositionParams,
-  BreezeSwapConfig, PerpMarket, PerpPosition, FundingHistoryItem, MarkPriceHistoryItem
+  BreezeSwapConfig, PerpMarket, PerpPosition, FundingHistoryItem, MarkPriceHistoryItem,
+  TradeHistoryEntry, PerpMarketStatsData, OHLCCandle
 } from './types'
 
 // Constants
@@ -23,10 +24,10 @@ export { getWeatherReadings, getRegions } from './reads/weather'
 export { checkRole, type BreezeRole } from './reads/access'
 export {
   getPerpMarkets, getPerpMarket, getPerpMarketPositions, getUserPerpPositions,
-  getFundingHistory, getMarkPriceHistory
+  getFundingHistory, getMarkPriceHistory, getTradeHistory, getPerpMarketStats, getMarkPriceCandles
 } from './reads/perp'
 export {
-  getTotalFeesCollected, getInsuranceFundBalance, getProtocolTreasuryBalance
+  getTotalFeesCollected, getInsuranceFundBalance, getProtocolTreasuryBalance, getGlobalTradeHistory
 } from './reads/protocol'
 
 // Writes

@@ -1,4 +1,7 @@
-import { PerpMarket, PerpPosition, FundingHistoryItem, MarkPriceHistoryItem } from '../types'
+import {
+  PerpMarket, PerpPosition, FundingHistoryItem, MarkPriceHistoryItem,
+  TradeHistoryEntry, PerpMarketStatsData, OHLCCandle
+} from '../types'
 
 export async function getPerpMarkets(indexerUrl: string, chainId: number = 114): Promise<PerpMarket[]> {
   try {
@@ -66,6 +69,54 @@ export async function getMarkPriceHistory(
     if (!res.ok) return []
     const data = await res.json()
     return data.history || []
+  } catch (err) {
+    return []
+  }
+}
+
+export async function getTradeHistory(
+  indexerUrl: string,
+  marketAddress: string,
+  chainId: number = 114,
+  limit = 50,
+  offset = 0
+): Promise<TradeHistoryEntry[]> {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/trade-history?limit=${limit}&offset=${offset}&chainId=${chainId}`)
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.trades || []
+  } catch (err) {
+    return []
+  }
+}
+
+export async function getPerpMarketStats(
+  indexerUrl: string,
+  marketAddress: string,
+  chainId: number = 114
+): Promise<PerpMarketStatsData | null> {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/stats?chainId=${chainId}`)
+    if (!res.ok) return null
+    return await res.json()
+  } catch (err) {
+    return null
+  }
+}
+
+export async function getMarkPriceCandles(
+  indexerUrl: string,
+  marketAddress: string,
+  interval = '5m',
+  limit = 100,
+  chainId: number = 114
+): Promise<OHLCCandle[]> {
+  try {
+    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/candles?interval=${interval}&limit=${limit}&chainId=${chainId}`)
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.candles || []
   } catch (err) {
     return []
   }

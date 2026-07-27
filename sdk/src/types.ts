@@ -128,3 +128,37 @@ export interface BreezeSwapConfig {
   rpcUrl: string             // Coston2 RPC
   chainId: number            // 114 for Coston2
 }
+
+export interface TradeHistoryEntry {
+  id: string
+  marketAddress?: string
+  type: 'OPEN' | 'CLOSE' | 'LIQUIDATION'
+  timestamp: string
+  trader: string
+  side: 'LONG' | 'SHORT'
+  size: string
+  price: string
+  pnl: string | null
+  txHash: string
+}
+
+export interface PerpMarketStatsData {
+  markPrice: string
+  oraclePrice: string
+  currentFundingRate: string
+  nextFundingAt: string
+  fundingInterval: number
+  openInterestLong: string
+  openInterestShort: string
+  oiSkewPercent: number
+  totalVolume24h: string
+  tradeCount24h: number
+}
+
+export interface OHLCCandle {
+  timestamp: number
+  open: number
+  high: number
+  low: number
+  close: number
+}

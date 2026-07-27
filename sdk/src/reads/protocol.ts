@@ -1,3 +1,5 @@
+import { TradeHistoryEntry } from '../types'
+
 export async function getTotalFeesCollected(indexerUrl: string, chainId: number = 114): Promise<string> {
   try {
     const res = await fetch(`${indexerUrl}/api/protocol/fees/total?chainId=${chainId}`)
@@ -28,5 +30,20 @@ export async function getProtocolTreasuryBalance(indexerUrl: string, chainId: nu
     return data.balanceWei || '0'
   } catch {
     return '0'
+  }
+}
+
+export async function getGlobalTradeHistory(
+  indexerUrl: string,
+  chainId: number = 114,
+  limit = 50
+): Promise<TradeHistoryEntry[]> {
+  try {
+    const res = await fetch(`${indexerUrl}/api/protocol/trade-history?limit=${limit}&chainId=${chainId}`)
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.trades || []
+  } catch {
+    return []
   }
 }
