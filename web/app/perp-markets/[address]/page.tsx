@@ -88,29 +88,29 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
   return (
     <div className="space-y-8 py-4">
       {/* Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div className="flex items-center gap-3">
-          <span className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="p-3 rounded-2xl bg-[#fde047] text-black shadow-lg shadow-yellow-500/20">
             <TrendingUp className="w-7 h-7" />
           </span>
           <div>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">
-              {market?.regionName || 'Tokyo'} vAMM Perpetual Market
+            <h1 className="text-3xl font-black text-white tracking-tight uppercase">
+              {market?.regionName || 'Tokyo'} vAMM Perpetual
             </h1>
-            <span className="text-xs font-mono text-cyan-400">{marketAddress}</span>
+            <span className="text-xs font-mono text-[#fde047]">{marketAddress}</span>
           </div>
         </div>
 
-        <span className="px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-xs font-bold w-fit flex items-center gap-2">
+        <span className="px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-xs font-bold w-fit flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           ACTIVE vAMM PERPETUAL
         </span>
       </div>
 
-      {/* PART B.2: Institutional Stats Header */}
+      {/* Institutional Stats Header */}
       <PerpStatsHeader marketAddress={marketAddress} />
 
-      {/* PART B.3: Funding Rate Sparkline */}
+      {/* Funding Rate Sparkline */}
       <FundingRateSparkline marketAddress={marketAddress} />
 
       {/* Main Grid: Chart & Depth + Terminal */}
@@ -118,16 +118,16 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
         
         {/* Left Column (2/3): Chart, Depth Ladder, Trade History */}
         <div className="lg:col-span-2 space-y-8">
-          {/* PART D: Mark Price Historical Chart */}
+          {/* Mark Price Historical Chart */}
           <MarkPriceChart marketAddress={marketAddress} />
 
-          {/* PART C.1: Depth & Liquidity Ladder */}
+          {/* Depth & Liquidity Ladder */}
           <DepthLadder reserves={mockReserves} tradingFeeBps={10} />
 
-          {/* PART A.3: Market Trade History Table */}
+          {/* Market Trade History Table */}
           <div className="space-y-4">
-            <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
-              <BarChart2 className="w-5 h-5 text-cyan-400" />
+            <h3 className="text-base font-black text-white tracking-tight uppercase flex items-center gap-2">
+              <BarChart2 className="w-5 h-5 text-[#fde047]" />
               Live Trade Activity Feed
             </h3>
             <TradeHistoryTable marketAddress={marketAddress} limit={30} />
@@ -136,23 +136,23 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
 
         {/* Right Column (1/3): Trade Terminal */}
         <div className="lg:col-span-1">
-          <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 sticky top-24 shadow-2xl">
-            <h3 className="text-lg font-bold text-white">Execute vAMM Trade</h3>
+          <div className="glass-panel p-6 sm:p-8 space-y-6 sticky top-24">
+            <h3 className="text-lg font-black uppercase text-white tracking-tight">Execute vAMM Trade</h3>
 
-            {/* Long / Short Toggle */}
-            <div className="grid grid-cols-2 gap-2 p-1.5 rounded-2xl bg-slate-950 border border-slate-800 text-xs font-bold">
+            {/* Long / Short Pill Toggle */}
+            <div className="grid grid-cols-2 gap-2 p-1.5 rounded-full bg-black/80 border border-white/10 text-xs font-black">
               <button
                 onClick={() => setIsLong(true)}
-                className={`py-2.5 rounded-xl transition-all ${
-                  isLong ? 'bg-emerald-500 text-slate-950 shadow-lg font-extrabold' : 'text-slate-400 hover:text-white'
+                className={`py-3 rounded-full transition-all ${
+                  isLong ? 'bg-emerald-500 text-black shadow-lg font-extrabold' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 LONG ↗
               </button>
               <button
                 onClick={() => setIsLong(false)}
-                className={`py-2.5 rounded-xl transition-all ${
-                  !isLong ? 'bg-rose-500 text-slate-950 shadow-lg font-extrabold' : 'text-slate-400 hover:text-white'
+                className={`py-3 rounded-full transition-all ${
+                  !isLong ? 'bg-rose-500 text-black shadow-lg font-extrabold' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 SHORT ↘
@@ -160,21 +160,21 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
             </div>
 
             {/* Collateral Input */}
-            <div className="space-y-1.5 text-xs">
-              <label className="text-slate-400 font-semibold">Margin Collateral (bUSDT / mUSDT)</label>
+            <div className="space-y-2 text-xs">
+              <label className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Margin Collateral (USDT)</label>
               <input
                 type="number"
                 value={collateralInput}
                 onChange={(e) => setCollateralInput(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl p-3 text-xs font-mono focus:outline-none focus:border-cyan-500"
+                className="w-full bg-black/80 border border-white/10 text-white rounded-2xl p-4 text-sm font-mono focus:outline-none focus:border-[#fde047] font-bold"
               />
             </div>
 
             {/* Leverage Slider */}
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <label className="text-slate-400 font-semibold">Leverage Multiplier</label>
-                <span className="font-mono font-bold text-cyan-400">{leverage}x</span>
+                <label className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Leverage Multiplier</label>
+                <span className="font-mono font-extrabold text-[#fde047]">{leverage}x</span>
               </div>
               <input
                 type="range"
@@ -183,12 +183,12 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
                 step="1"
                 value={leverage}
                 onChange={(e) => setLeverage(Number(e.target.value))}
-                className="w-full accent-cyan-400"
+                className="w-full accent-[#fde047]"
               />
             </div>
 
-            {/* PART C.2: Live Trade Preview & Slippage Box */}
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80 space-y-2 text-xs font-mono text-slate-400">
+            {/* Live Trade Preview & Slippage Box */}
+            <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2.5 text-xs font-mono text-slate-300">
               <div className="flex items-center justify-between">
                 <span>Posted Margin:</span>
                 <span className="text-white font-bold">{parseFloat(collateralInput) || 0} USDT</span>
@@ -197,7 +197,7 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
                 <span>Trading Fee (0.10%):</span>
                 <span className="text-rose-400 font-bold">-{(Number(quote.feeAmount) / 1e6).toFixed(2)} USDT</span>
               </div>
-              <div className="flex items-center justify-between border-t border-slate-800/80 pt-2">
+              <div className="flex items-center justify-between border-t border-white/10 pt-2">
                 <span>Net Position Margin:</span>
                 <span className="text-emerald-400 font-bold">{(Number(quote.netCollateral) / 1e6).toFixed(2)} USDT</span>
               </div>
@@ -207,9 +207,9 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
               </div>
               <div className="flex items-center justify-between">
                 <span>Est. Entry Price:</span>
-                <span className="text-cyan-400 font-bold">${quote.entryPrice.toFixed(2)}</span>
+                <span className="text-[#fde047] font-bold">${quote.entryPrice.toFixed(2)}</span>
               </div>
-              <div className="flex items-center justify-between border-t border-slate-800/80 pt-2">
+              <div className="flex items-center justify-between border-t border-white/10 pt-2">
                 <span>Slippage Impact:</span>
                 <span className={`font-bold ${quote.priceImpactBps > 100 ? 'text-rose-400' : 'text-amber-400'}`}>
                   {(quote.priceImpactBps / 100).toFixed(2)}%
@@ -220,7 +220,7 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
             <button
               onClick={handleOpenTrade}
               disabled={submitting || !isConnected}
-              className={`w-full py-3.5 rounded-2xl font-bold text-xs text-slate-950 transition-all disabled:opacity-50 flex items-center justify-center gap-2 ${
+              className={`w-full py-4 rounded-full font-black text-xs uppercase tracking-wider text-black transition-all disabled:opacity-50 flex items-center justify-center gap-2 ${
                 isLong ? 'bg-emerald-400 hover:bg-emerald-300 shadow-lg shadow-emerald-500/20' : 'bg-rose-400 hover:bg-rose-300 shadow-lg shadow-rose-500/20'
               }`}
             >
@@ -228,8 +228,8 @@ export default function PerpMarketDetailPage({ params }: { params: Promise<{ add
             </button>
 
             {txHash && (
-              <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300 flex items-center justify-between">
-                <span>Trade submitted successfully!</span>
+              <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300 flex items-center justify-between font-mono">
+                <span>Trade submitted!</span>
                 <TxLink hash={txHash} />
               </div>
             )}

@@ -13,7 +13,7 @@ const SIZE_STEPS = [500, 1000, 2500, 5000, 10000, 25000]
 export function DepthLadder({ reserves, tradingFeeBps = 10 }: DepthLadderProps) {
   if (!reserves || reserves.collateralReserve === 0n || reserves.weatherReserve === 0n) {
     return (
-      <div className="p-4 rounded-2xl border border-slate-800 bg-slate-900/60 text-xs text-slate-400 text-center animate-pulse">
+      <div className="p-6 glass-panel text-xs text-slate-400 text-center animate-pulse font-mono">
         Loading liquidity depth ladder...
       </div>
     )
@@ -39,31 +39,33 @@ export function DepthLadder({ reserves, tradingFeeBps = 10 }: DepthLadderProps) 
   })
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 space-y-3 shadow-xl">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-bold text-white uppercase tracking-wider">vAMM Depth & Liquidity Impact Ladder</h3>
-        <span className="text-[10px] text-cyan-400 font-mono">Current Mark: ${markPrice.toFixed(2)}</span>
+    <div className="glass-panel p-6 space-y-4">
+      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 className="text-xs font-black text-white uppercase tracking-widest">vAMM Depth & Liquidity Impact</h3>
+        <span className="text-[10px] text-[#fde047] font-mono font-bold bg-white/5 px-3 py-1 rounded-full border border-white/10">
+          Mark: ${markPrice.toFixed(2)}
+        </span>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs text-slate-300 font-mono">
-          <thead className="text-[10px] uppercase text-slate-400 border-b border-slate-800 bg-slate-950/60">
+        <table className="w-full text-left text-xs text-slate-300 font-mono border-collapse">
+          <thead className="text-[10px] uppercase tracking-widest text-slate-400 border-b border-white/10 bg-black/60 font-sans">
             <tr>
-              <th className="p-2 font-sans">Trade Size ($)</th>
-              <th className="p-2 font-sans text-emerald-400">Long Entry</th>
-              <th className="p-2 font-sans text-emerald-400">Long Impact</th>
-              <th className="p-2 font-sans text-rose-400">Short Entry</th>
-              <th className="p-2 font-sans text-rose-400">Short Impact</th>
+              <th className="p-3">Notional ($)</th>
+              <th className="p-3 text-emerald-400">Long Entry</th>
+              <th className="p-3 text-emerald-400">Long Impact</th>
+              <th className="p-3 text-rose-400">Short Entry</th>
+              <th className="p-3 text-rose-400">Short Impact</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-white/5">
             {ladder.map((row) => (
-              <tr key={row.size} className="hover:bg-slate-800/30 transition-colors">
-                <td className="p-2 font-bold text-slate-200">${row.size.toLocaleString()}</td>
-                <td className="p-2 text-emerald-300">${row.longPrice.toFixed(2)}</td>
-                <td className="p-2 text-emerald-400 font-sans">+{row.longSlippage.toFixed(2)}%</td>
-                <td className="p-2 text-rose-300">${row.shortPrice.toFixed(2)}</td>
-                <td className="p-2 text-rose-400 font-sans">-{row.shortSlippage.toFixed(2)}%</td>
+              <tr key={row.size} className="hover:bg-white/5 transition-colors">
+                <td className="p-3 font-bold text-white">${row.size.toLocaleString()}</td>
+                <td className="p-3 text-emerald-300">${row.longPrice.toFixed(2)}</td>
+                <td className="p-3 text-emerald-400 font-sans font-bold">+{row.longSlippage.toFixed(2)}%</td>
+                <td className="p-3 text-rose-300">${row.shortPrice.toFixed(2)}</td>
+                <td className="p-3 text-rose-400 font-sans font-bold">-{row.shortSlippage.toFixed(2)}%</td>
               </tr>
             ))}
           </tbody>

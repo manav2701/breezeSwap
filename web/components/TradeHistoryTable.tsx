@@ -56,7 +56,7 @@ export function TradeHistoryTable({ marketAddress, isGlobal = false, limit = 20 
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-400 text-xs animate-pulse bg-slate-900/40 rounded-2xl border border-slate-800">
+      <div className="p-8 text-center text-slate-400 text-xs animate-pulse glass-panel">
         Loading trade history...
       </div>
     )
@@ -64,70 +64,65 @@ export function TradeHistoryTable({ marketAddress, isGlobal = false, limit = 20 
 
   if (trades.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-400 text-xs bg-slate-900/40 rounded-2xl border border-slate-800">
+      <div className="p-8 text-center text-slate-400 text-xs glass-panel">
         No recent trades recorded for this market yet.
       </div>
     )
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl">
-      <table className="w-full text-left text-xs text-slate-300">
-        <thead className="bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+    <div className="glass-panel overflow-x-auto">
+      <table className="w-full text-left text-xs text-slate-300 border-collapse">
+        <thead className="bg-black/60 text-slate-400 uppercase tracking-widest font-mono text-[10px] border-b border-white/10">
           <tr>
-            <th className="p-3.5">Time</th>
-            <th className="p-3.5">Trader</th>
-            <th className="p-3.5">Type</th>
-            <th className="p-3.5">Side</th>
-            <th className="p-3.5">Size ($)</th>
-            <th className="p-3.5">Price</th>
-            <th className="p-3.5">Realized PnL</th>
-            <th className="p-3.5 text-right">Tx</th>
+            <th className="p-4">Time</th>
+            <th className="p-4">Trader</th>
+            <th className="p-4">Type</th>
+            <th className="p-4">Side</th>
+            <th className="p-4">Size ($)</th>
+            <th className="p-4">Price</th>
+            <th className="p-4">Realized PnL</th>
+            <th className="p-4 text-right">Tx</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-800/60 font-mono">
+        <tbody className="divide-y divide-white/5 font-mono">
           {trades.map((t) => {
             const isLong = t.side === 'LONG'
             const isLiquidation = t.type === 'LIQUIDATION'
             const isClose = t.type === 'CLOSE'
-
             const pnlNum = t.pnl ? Number(t.pnl) : null
 
             return (
-              <tr key={t.id} className="hover:bg-slate-800/40 transition-colors">
-                <td className="p-3.5 text-slate-400 font-sans" title={t.timestamp}>
+              <tr key={t.id} className="hover:bg-white/5 transition-colors">
+                <td className="p-4 text-slate-400 font-sans" title={t.timestamp}>
                   {formatRelativeTime(t.timestamp)}
                 </td>
-                <td className="p-3.5 text-cyan-400">{formatAddr(t.trader)}</td>
-                <td className="p-3.5 font-sans">
+                <td className="p-4 text-[#fde047] font-bold">{formatAddr(t.trader)}</td>
+                <td className="p-4 font-sans">
                   {isLiquidation ? (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-bold">
                       <AlertOctagon className="w-3 h-3" />
                       LIQUIDATED
                     </span>
                   ) : isClose ? (
-                    <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold border border-slate-700">
+                    <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[10px] font-bold border border-white/10">
                       CLOSE
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 text-[10px] font-bold border border-sky-500/30">
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-bold border border-blue-500/20">
                       OPEN
                     </span>
                   )}
                 </td>
-                <td className="p-3.5">
-                  <span
-                    className={`inline-flex items-center gap-0.5 font-bold ${
-                      isLong ? 'text-emerald-400' : 'text-rose-400'
-                    }`}
-                  >
+                <td className="p-4">
+                  <span className={`inline-flex items-center gap-0.5 font-extrabold ${isLong ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {isLong ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
                     {t.side}
                   </span>
                 </td>
-                <td className="p-3.5 font-semibold text-slate-200">${Number(t.size).toLocaleString()}</td>
-                <td className="p-3.5 text-slate-300">${t.price}</td>
-                <td className="p-3.5 font-bold">
+                <td className="p-4 font-bold text-white">${Number(t.size).toLocaleString()}</td>
+                <td className="p-4 text-slate-300">${t.price}</td>
+                <td className="p-4 font-bold">
                   {pnlNum === null ? (
                     <span className="text-slate-500">-</span>
                   ) : pnlNum > 0 ? (
@@ -138,15 +133,15 @@ export function TradeHistoryTable({ marketAddress, isGlobal = false, limit = 20 
                     <span className="text-slate-400">$0.00</span>
                   )}
                 </td>
-                <td className="p-3.5 text-right font-sans">
+                <td className="p-4 text-right font-sans">
                   {t.txHash ? (
                     <a
                       href={`https://${chainId === 14 ? 'flare' : 'coston2'}-explorer.flare.network/tx/${t.txHash}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-slate-400 hover:text-white transition-colors"
+                      className="inline-flex items-center gap-1 text-slate-400 hover:text-[#fde047] transition-colors"
                     >
-                      <ExternalLink className="w-3 h-3 text-cyan-400" />
+                      <ExternalLink className="w-3.5 h-3.5 text-[#fde047]" />
                     </a>
                   ) : (
                     <span className="text-slate-600">-</span>

@@ -38,56 +38,56 @@ export function Navbar() {
   return (
     <>
       <NetworkBanner />
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <CloudRain className="w-5 h-5 text-cyan-400" />
+      <header className="sticky top-0 z-50 backdrop-blur-2xl bg-[#0a0a0a]/90 border-b border-white/10 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-11 h-11 rounded-2xl bg-[#fde047] p-0.5 flex items-center justify-center shadow-lg shadow-yellow-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-[#0a0a0a] rounded-[14px] flex items-center justify-center">
+                <CloudRain className="w-6 h-6 text-[#fde047]" />
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent tracking-tight">
-                BreezeSwap
+              <span className="text-2xl font-black tracking-tight text-white group-hover:text-[#fde047] transition-colors">
+                Breeze<span className="text-[#fde047]">Swap</span>
               </span>
-              <span className={`text-[10px] font-semibold -mt-1 tracking-wider uppercase ${isMainnet ? 'text-emerald-400' : 'text-cyan-400'}`}>
+              <span className={`text-[10px] font-mono font-bold tracking-widest uppercase ${isMainnet ? 'text-emerald-400' : 'text-[#fde047]'}`}>
                 {isMainnet ? 'Flare Mainnet' : 'Coston2 Testnet'}
               </span>
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800/80">
+          <nav className="hidden md:flex items-center gap-1.5 bg-[#171717]/90 p-1.5 rounded-full border border-white/10 shadow-inner">
             <Link
               href="/markets"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all"
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold text-slate-300 hover:text-black hover:bg-[#fde047] transition-all uppercase tracking-wider"
             >
-              <Compass className="w-4 h-4 text-cyan-400" />
+              <Compass className="w-4 h-4" />
               Classic
             </Link>
             <Link
               href="/perp-markets"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all"
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold text-slate-300 hover:text-black hover:bg-[#fde047] transition-all uppercase tracking-wider"
             >
               <TrendingUp className="w-4 h-4 text-emerald-400" />
               Perps
             </Link>
             <Link
               href="/portfolio"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all"
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold text-slate-300 hover:text-black hover:bg-[#fde047] transition-all uppercase tracking-wider"
             >
               <PieChart className="w-4 h-4 text-purple-400" />
               Portfolio
             </Link>
             <Link
               href="/create"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all"
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold text-slate-300 hover:text-black hover:bg-[#fde047] transition-all uppercase tracking-wider"
             >
               <PlusCircle className="w-4 h-4 text-emerald-400" />
               Create
             </Link>
             <Link
               href="/docs"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all"
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold text-slate-300 hover:text-black hover:bg-[#fde047] transition-all uppercase tracking-wider"
             >
               <BookOpen className="w-4 h-4 text-amber-400" />
               Docs
@@ -96,9 +96,9 @@ export function Navbar() {
             {isAdmin && (
               <Link
                 href="/admin"
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all border border-rose-500/20"
+                className="flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold text-rose-400 hover:text-black hover:bg-rose-400 transition-all uppercase tracking-wider border border-rose-500/20"
               >
-                <ShieldAlert className="w-4 h-4 text-rose-400" />
+                <ShieldAlert className="w-4 h-4" />
                 Admin
               </Link>
             )}

@@ -46,18 +46,18 @@ export default function MarketsPage() {
   })
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 py-4">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Weather Markets</h1>
-          <p className="text-xs text-slate-400">Browse, filter, and trade active weather derivative contracts.</p>
+          <h1 className="text-4xl font-black uppercase tracking-tight text-white">Classic Weather Swaps</h1>
+          <p className="text-xs text-slate-400 font-mono">Browse, filter, and trade CME-style pooled binary and capped weather options.</p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={loadMarkets}
-            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
+            className="p-3 rounded-full bg-white/10 border border-white/10 text-slate-300 hover:text-black hover:bg-[#fde047] transition-all"
             title="Refresh Markets"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -65,7 +65,7 @@ export default function MarketsPage() {
 
           <Link
             href="/create"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-bold text-xs hover:opacity-90 transition-all shadow-lg shadow-emerald-500/20"
+            className="btn-cyber-yellow py-3 px-6 text-xs uppercase tracking-wider font-extrabold flex items-center gap-2"
           >
             <PlusCircle className="w-4 h-4" />
             Create Market
@@ -74,27 +74,27 @@ export default function MarketsPage() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 glass-panel">
         {/* Search */}
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
           <input
             type="text"
             placeholder="Search region or address..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-cyan-500 transition-colors"
+            className="w-full bg-black/80 border border-white/10 text-white rounded-full pl-9 pr-4 py-2.5 text-xs font-mono focus:outline-none focus:border-[#fde047] transition-colors"
           />
         </div>
 
         {/* Status Filter */}
-        <div className="flex items-center gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-1 bg-black/80 p-1 rounded-full border border-white/10">
           {(['ALL', 'OPEN', 'SETTLED'] as const).map((s) => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-colors ${
-                statusFilter === s ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-400 hover:text-slate-200'
+              className={`flex-1 py-1.5 px-3 rounded-full text-[10px] font-extrabold uppercase transition-all ${
+                statusFilter === s ? 'bg-[#fde047] text-black shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
               {s}
@@ -104,11 +104,11 @@ export default function MarketsPage() {
 
         {/* Region Filter */}
         <div className="relative">
-          <Filter className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <Filter className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
           <select
             value={regionFilter}
             onChange={(e) => setRegionFilter(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-cyan-500 transition-colors appearance-none"
+            className="w-full bg-black/80 border border-white/10 text-white rounded-full pl-9 pr-4 py-2.5 text-xs font-mono focus:outline-none focus:border-[#fde047] transition-colors appearance-none"
           >
             <option value="ALL">All Regions</option>
             <option value="Tokyo">Tokyo 🇯🇵</option>
@@ -120,13 +120,13 @@ export default function MarketsPage() {
         </div>
 
         {/* Weather Variable Filter */}
-        <div className="flex items-center gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-1 bg-black/80 p-1 rounded-full border border-white/10">
           {(['ALL', 'RAINFALL', 'TEMPERATURE'] as const).map((v) => (
             <button
               key={v}
               onClick={() => setVariableFilter(v)}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-colors ${
-                variableFilter === v ? 'bg-slate-800 text-cyan-400 shadow-sm' : 'text-slate-400 hover:text-slate-200'
+              className={`flex-1 py-1.5 px-3 rounded-full text-[10px] font-extrabold uppercase transition-all ${
+                variableFilter === v ? 'bg-[#fde047] text-black shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
               {v === 'ALL' ? 'All Metrics' : v}
@@ -139,12 +139,12 @@ export default function MarketsPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-64 rounded-2xl bg-slate-900/40 border border-slate-800 animate-pulse" />
+            <div key={i} className="h-64 glass-panel animate-pulse bg-white/5" />
           ))}
         </div>
       ) : filteredMarkets.length === 0 ? (
-        <div className="p-16 text-center rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-          <p className="text-slate-300 font-semibold">No matching markets found</p>
+        <div className="p-16 glass-panel text-center space-y-3 font-mono">
+          <p className="text-slate-300 font-bold">No matching markets found</p>
           <p className="text-xs text-slate-500">Try adjusting your search query or region/status filters.</p>
         </div>
       ) : (
