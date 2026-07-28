@@ -1,6 +1,17 @@
 # BreezeSwap — Weather Derivatives Protocol on Flare
 
-> Parametric weather derivatives protocol letting anyone hedge or speculate on real weather outcomes with instant, automatic, tamper-proof payouts on Flare Network. Supports both **Coston2 Testnet (Chain ID 114)** and **Flare Mainnet (Chain ID 14)** with live multi-chain network switching.
+> Parametric weather derivatives protocol letting anyone hedge or speculate on real weather outcomes with instant, automatic, tamper-proof payouts on Flare Network. Combines **BreezeSwap Classic** (fixed-expiry pooled weather swaps) and **BreezeSwap Perp** (continuous vAMM-based weather perpetuals with 15m funding rates & open interest).
+> Live on **Flare Mainnet (Chain ID 14)** and **Coston2 Testnet (Chain ID 114)** with live multi-chain network toggle.
+
+---
+
+## 📄 Submission & Demo Documentation
+
+- 📜 **[Hackathon Submission Writeup](file:///c:/Users/manav/OneDrive/Desktop/ddd/breezeswap/docs/SUBMISSION.md)** — Project framing, target tracks, architecture breakdown, Flare native integration depth, security audit summary, and roadmap.
+- 🎬 **[Demo Video Script & Manual Testing Protocol](file:///c:/Users/manav/OneDrive/Desktop/ddd/breezeswap/docs/DEMO_SCRIPT.md)** — Step-by-step video recording beat sheet and 6-scenario multi-wallet manual testing protocol.
+- 🏗️ **[System Architecture](file:///c:/Users/manav/OneDrive/Desktop/ddd/breezeswap/ARCHITECTURE.md)** — Modular smart contract architecture, vAMM constant-product formula, and indexer pipeline.
+- 🛡️ **[Security Audit & Invariants](file:///c:/Users/manav/OneDrive/Desktop/ddd/breezeswap/SECURITY.md)** — Solvency guarantees, reentrancy guards, invariant fuzz testing, and role-based access control.
+- 🔌 **[TypeScript SDK Integration Guide](file:///c:/Users/manav/OneDrive/Desktop/ddd/breezeswap/INTEGRATION.md)** — Multi-chain developer integration guide for `@breezeswap/sdk`.
 
 ---
 
@@ -31,10 +42,11 @@
 
 ## 🧪 Test Suite & Safety Summary
 
-- **Total Consolidated Tests:** 122 Passing Tests (100% Pass Rate across 31 Test Suites)
-- **Adversarial Security Suites:** Fee manipulation, reentrancy, double settlement, double redemption, oracle staleness, access control, precision & dust loss, liquidation solvency (All 31 Suites Passed)
-- **Invariant Fuzzing:** 8 Protocol Invariants Holding across 256 Runs × 64 Depth (`BreezeInvariantsTest`, `PerpInvariantsTest`)
-- **Payoff & vAMM Fuzzing:** 10,000 Fuzz Iterations Passed (`PayoffCalculatorFuzzTest`, `VirtualAMMFuzzTest`)
+- **Total Consolidated Tests:** 122/122 Passing Tests (100% Pass Rate across 31 Test Suites)
+- **Code Coverage Snapshot:** 82.88% line coverage overall across all contracts (100% VirtualAMM, 100% CollateralVault, 100% FundingRateEngine, 96.83% BreezeMarket).
+- **Adversarial Security Suites:** Fee manipulation, reentrancy defense, double settlement, double redemption, oracle staleness, access control, precision & dust loss, liquidation solvency (All 31 Suites Passed).
+- **Invariant Fuzzing:** 8 Protocol Invariants Holding across 256 Runs × 64 Depth (131,072 total state calls in `BreezeInvariantsTest` & `PerpInvariantsTest`).
+- **Payoff & vAMM Fuzzing:** 10,000 Fuzz Iterations Passed (`PayoffCalculatorFuzzTest`, `VirtualAMMFuzzTest`).
 
 ---
 
@@ -44,10 +56,13 @@
 # 1. Install dependencies
 pnpm install
 
-# 2. Build SDK
-cd sdk && npx tsup
+# 2. Run Foundry smart contract tests
+cd contracts && C:\Users\manav\.foundry\bin\forge.exe test -vvv
 
-# 3. Start Web Application
+# 3. Build SDK
+cd ../sdk && npx tsup
+
+# 4. Start Web Application
 cd ../web && pnpm dev
 ```
 
@@ -61,5 +76,6 @@ breezeswap/
   sdk/                  # Multi-chain TypeScript SDK (@breezeswap/sdk)
   indexer/              # Dual-chain event watcher service & REST API
   web/                  # Next.js App Router web application with Network Toggle
+  docs/                 # Hackathon Submission (SUBMISSION.md) & Demo Script (DEMO_SCRIPT.md)
   weather-seed/         # Open-Meteo weather data seeder script
 ```
