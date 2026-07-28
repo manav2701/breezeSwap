@@ -20,35 +20,35 @@ export function PayoffChart({ market }: { market: Partial<Market> }) {
   const unit = market.weatherVariable === 'RAINFALL' ? 'mm' : '°C'
 
   return (
-    <div className="w-full h-72 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+    <div className="w-full h-72 bg-[#141414] p-4 rounded-3xl border border-white/10 font-mono">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={data} margin={{ top: 10, right: 20, bottom: 20, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#262626" opacity={0.6} />
           <XAxis
             dataKey="x"
-            stroke="#94a3b8"
-            fontSize={11}
+            stroke="#a3a3a3"
+            fontSize={10}
             unit={` ${unit}`}
             tickLine={false}
           />
           <YAxis
-            stroke="#94a3b8"
-            fontSize={11}
+            stroke="#a3a3a3"
+            fontSize={10}
             domain={[0, 1]}
             tickFormatter={(v) => `${(v * 100).toFixed(0)}%`}
             tickLine={false}
           />
           <Tooltip
-            contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px' }}
+            contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '12px', fontSize: '11px', color: '#ffffff' }}
             formatter={(value: any, name: any) => [`${(Number(value) * 100).toFixed(1)}%`, name === 'long' ? 'LONG Payout' : 'SHORT Payout']}
             labelFormatter={(label) => `Oracle Value: ${label} ${unit}`}
           />
-          <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px' }} />
+          <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px', fontWeight: 'bold' }} />
 
           <Line
             type="monotone"
             dataKey="long"
-            stroke="#10b981"
+            stroke="#34d399"
             strokeWidth={2.5}
             dot={false}
             name="LONG Side"
@@ -56,7 +56,7 @@ export function PayoffChart({ market }: { market: Partial<Market> }) {
           <Line
             type="monotone"
             dataKey="short"
-            stroke="#ef4444"
+            stroke="#f87171"
             strokeWidth={2.5}
             dot={false}
             name="SHORT Side"
@@ -65,27 +65,27 @@ export function PayoffChart({ market }: { market: Partial<Market> }) {
           {market.thresholdLow !== undefined && (
             <ReferenceLine
               x={market.thresholdLow}
-              stroke="#06b6d4"
+              stroke="#fde047"
               strokeDasharray="4 4"
-              label={{ value: `Low: ${market.thresholdLow}`, fill: '#06b6d4', fontSize: 10, position: 'top' }}
+              label={{ value: `Low: ${market.thresholdLow}`, fill: '#fde047', fontSize: 10, position: 'top' }}
             />
           )}
 
           {market.thresholdHigh && (
             <ReferenceLine
               x={market.thresholdHigh}
-              stroke="#8b5cf6"
+              stroke="#c084fc"
               strokeDasharray="4 4"
-              label={{ value: `High: ${market.thresholdHigh}`, fill: '#8b5cf6', fontSize: 10, position: 'top' }}
+              label={{ value: `High: ${market.thresholdHigh}`, fill: '#c084fc', fontSize: 10, position: 'top' }}
             />
           )}
 
           {market.finalOracleValue !== undefined && market.finalOracleValue !== null && (
             <ReferenceLine
               x={market.finalOracleValue}
-              stroke="#f59e0b"
+              stroke="#fde047"
               strokeWidth={2}
-              label={{ value: `Final: ${market.finalOracleValue}`, fill: '#f59e0b', fontSize: 11, position: 'insideTopLeft' }}
+              label={{ value: `Final: ${market.finalOracleValue}`, fill: '#fde047', fontSize: 11, position: 'insideTopLeft' }}
             />
           )}
         </ComposedChart>

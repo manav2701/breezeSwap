@@ -42,22 +42,22 @@ export function MarkPriceChart({ marketAddress }: MarkPriceChartProps) {
   }))
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 space-y-4 shadow-xl">
+    <div className="glass-card-dark p-6 space-y-4">
       {/* Header controls */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <div>
-          <h3 className="text-sm font-bold text-white tracking-tight">Mark Price Historical Trajectory</h3>
-          <p className="text-[11px] text-slate-400">Aggregated vAMM mark price snapshots over time</p>
+          <h3 className="text-sm font-black uppercase text-white tracking-tight">Mark Price Historical Trajectory</h3>
+          <p className="text-[11px] text-slate-400 font-mono">Aggregated vAMM mark price snapshots over time</p>
         </div>
 
-        <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-bold font-mono">
+        <div className="flex items-center gap-1 bg-black p-1 rounded-full border border-white/10 text-xs font-bold font-mono">
           {(['5m', '15m', '1h'] as const).map((int) => (
             <button
               key={int}
               onClick={() => setIntervalState(int)}
-              className={`px-3 py-1 rounded-lg transition-all ${
+              className={`px-3 py-1 rounded-full transition-all ${
                 interval === int
-                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                  ? 'bg-[#fde047] text-[#0a0a0a] font-black'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -68,13 +68,13 @@ export function MarkPriceChart({ marketAddress }: MarkPriceChartProps) {
       </div>
 
       {/* Chart */}
-      <div className="h-64 w-full">
+      <div className="h-64 w-full font-mono">
         {loading ? (
-          <div className="h-full flex items-center justify-center text-xs text-slate-500 animate-pulse">
+          <div className="h-full flex items-center justify-center text-xs text-slate-400 animate-pulse">
             Loading mark price data...
           </div>
         ) : chartData.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-xs text-slate-500">
+          <div className="h-full flex items-center justify-center text-xs text-slate-400">
             No mark price history available for this market yet.
           </div>
         ) : (
@@ -82,17 +82,17 @@ export function MarkPriceChart({ marketAddress }: MarkPriceChartProps) {
             <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="markPriceGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#06b6d4" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#fde047" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#fde047" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="time" stroke="#475569" fontSize={10} tickLine={false} />
-              <YAxis stroke="#475569" fontSize={10} tickLine={false} domain={['auto', 'auto']} />
+              <XAxis dataKey="time" stroke="#737373" fontSize={10} tickLine={false} />
+              <YAxis stroke="#737373" fontSize={10} tickLine={false} domain={['auto', 'auto']} />
               <Tooltip
-                contentStyle={{ backgroundColor: '#090d16', borderColor: '#1e293b', borderRadius: '8px', fontSize: '11px' }}
+                contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '12px', fontSize: '11px', color: '#ffffff' }}
                 formatter={(val: any) => [`$${Number(val).toFixed(2)}`, 'Mark Price']}
               />
-              <Area type="monotone" dataKey="price" stroke="#06b6d4" strokeWidth={2} fillOpacity={1} fill="url(#markPriceGrad)" />
+              <Area type="monotone" dataKey="price" stroke="#fde047" strokeWidth={2} fillOpacity={1} fill="url(#markPriceGrad)" />
             </AreaChart>
           </ResponsiveContainer>
         )}

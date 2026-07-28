@@ -3,15 +3,15 @@ import React from 'react'
 export function StatusBadge({ status }: { status: 'OPEN' | 'SETTLED' | string }) {
   if (status === 'OPEN') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black font-mono bg-[#fde047] text-[#0a0a0a]">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#0a0a0a] animate-pulse" />
         OPEN
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">
-      <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black font-mono bg-[#141414] text-slate-300 border border-white/10">
+      <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
       SETTLED
     </span>
   )

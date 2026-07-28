@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <body className={`${inter.className} bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950`}>
+      <body className={`${inter.className} bg-[#faf8f5] text-[#0a0a0a] antialiased min-h-screen flex flex-col selection:bg-[#fde047] selection:text-[#0a0a0a]`}>
         <Providers>
           <Navbar />
           <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">

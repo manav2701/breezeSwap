@@ -40,11 +40,11 @@ export function PositionCard({ position, onRedeemed }: { position: Position; onR
   }
 
   return (
-    <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 space-y-4 hover:border-slate-700 transition-all">
+    <div className="glass-card-dark p-6 space-y-4 font-mono">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span
-            className={`px-3 py-1 rounded-full text-xs font-bold ${
+            className={`px-3 py-1 rounded-full text-xs font-black ${
               isLong
                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                 : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
@@ -53,7 +53,7 @@ export function PositionCard({ position, onRedeemed }: { position: Position; onR
             {position.side}
           </span>
           <div>
-            <h4 className="text-sm font-bold text-white">
+            <h4 className="text-sm font-black text-white uppercase font-sans">
               {position.market?.regionName || 'Market'} — {position.market?.weatherVariable}
             </h4>
             <p className="text-xs text-slate-400">Token ID: #{position.tokenId}</p>
@@ -62,29 +62,29 @@ export function PositionCard({ position, onRedeemed }: { position: Position; onR
 
         <Link
           href={`/markets/${position.marketAddress}`}
-          className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-medium"
+          className="text-xs text-[#fde047] hover:underline flex items-center gap-1 font-bold"
         >
           Market <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 py-3 border-y border-slate-800/80 text-xs">
+      <div className="grid grid-cols-2 gap-4 py-3 border-y border-white/10 text-xs">
         <div>
-          <span className="text-slate-400 block mb-0.5">Collateral Deposited</span>
-          <span className="font-semibold text-slate-200 font-mono">
+          <span className="text-slate-400 block mb-0.5 font-sans">Collateral Deposited</span>
+          <span className="font-bold text-white">
             {formatCollateral(position.collateralAmount, 6, 'mUSDT')}
           </span>
         </div>
 
         <div>
-          <span className="text-slate-400 block mb-0.5">Minted Tx</span>
+          <span className="text-slate-400 block mb-0.5 font-sans">Minted Tx</span>
           <TxLink hash={position.txHash} />
         </div>
 
         {isRedeemed && (
           <div>
-            <span className="text-slate-400 block mb-0.5">Redeemed Amount</span>
-            <span className="font-semibold text-emerald-400 font-mono">
+            <span className="text-slate-400 block mb-0.5 font-sans">Redeemed Amount</span>
+            <span className="font-bold text-emerald-400">
               {formatCollateral(position.redeemedAmount || '0', 6, 'mUSDT')}
             </span>
           </div>
@@ -93,7 +93,7 @@ export function PositionCard({ position, onRedeemed }: { position: Position; onR
 
       <div className="flex items-center justify-between pt-1">
         {isRedeemed ? (
-          <div className="flex items-center gap-2 text-xs text-emerald-400 font-medium">
+          <div className="flex items-center gap-2 text-xs text-emerald-400 font-bold">
             <CheckCircle2 className="w-4 h-4" />
             Redeemed (<TxLink hash={position.redeemTxHash || ''} label="Tx" />)
           </div>
@@ -101,27 +101,27 @@ export function PositionCard({ position, onRedeemed }: { position: Position; onR
           <button
             onClick={handleRedeem}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-bold text-xs hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-emerald-500/20"
+            className="w-full btn-cyber-yellow py-3 text-xs font-black uppercase tracking-wider disabled:opacity-50 flex items-center justify-center gap-2"
           >
             <DollarSign className="w-4 h-4" />
             {loading ? 'Redeeming...' : 'Redeem Payout'}
           </button>
         ) : (
           <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
+            <Clock className="w-3.5 h-3.5 text-[#fde047]" />
             Active — Awaiting Expiry
           </div>
         )}
       </div>
 
       {txHash && (
-        <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300">
+        <div className="p-3 rounded-2xl bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300">
           Redeemed successfully! <TxLink hash={txHash} />
         </div>
       )}
 
       {error && (
-        <div className="p-2.5 rounded-lg bg-rose-950/40 border border-rose-800/50 text-xs text-rose-300">
+        <div className="p-3 rounded-2xl bg-rose-950/40 border border-rose-800/50 text-xs text-rose-300">
           {error}
         </div>
       )}

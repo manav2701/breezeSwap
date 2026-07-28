@@ -42,10 +42,10 @@ export function FundingRateSparkline({ marketAddress }: FundingRateSparklineProp
     })
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2 shadow-lg">
-      <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
-        <span>Historical Funding Rate Settlement (Last 24 Periods)</span>
-        <span className="text-[10px] text-slate-500 font-mono">Green = Negative / Shorts pay Longs</span>
+    <div className="bg-[#141414] border border-white/10 rounded-3xl p-4 space-y-2 font-mono">
+      <div className="flex items-center justify-between text-xs font-bold text-slate-300">
+        <span className="uppercase text-white text-[11px]">Funding Rate Settlement History (24 Periods)</span>
+        <span className="text-[10px] text-[#fde047]">Green = Negative / Red = Positive</span>
       </div>
 
       <div className="h-20 w-full">
@@ -54,12 +54,12 @@ export function FundingRateSparkline({ marketAddress }: FundingRateSparklineProp
             <XAxis dataKey="time" hide />
             <YAxis hide domain={['auto', 'auto']} />
             <Tooltip
-              contentStyle={{ backgroundColor: '#090d16', borderColor: '#1e293b', borderRadius: '8px', fontSize: '11px' }}
+              contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '12px', fontSize: '11px', color: '#ffffff' }}
               formatter={(value: any) => [`${Number(value).toFixed(4)}%`, 'Funding Rate']}
             />
             <Bar dataKey="rate">
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.rate < 0 ? '#10b981' : entry.rate > 0 ? '#f43f5e' : '#64748b'} />
+                <Cell key={`cell-${index}`} fill={entry.rate < 0 ? '#34d399' : entry.rate > 0 ? '#f87171' : '#737373'} />
               ))}
             </Bar>
           </BarChart>
