@@ -10,7 +10,7 @@ contract FundingRateEngineTest is Test {
         uint256 markPrice = 30 * 1e18;
         uint256 oraclePrice = 25 * 1e18;
 
-        int256 rate = FundingRateEngine.calculateFundingRate(markPrice, oraclePrice);
+        int256 rate = FundingRateEngine.calculateFundingRate(markPrice, oraclePrice, PerpConstants.MAX_FUNDING_RATE_PER_PERIOD);
         // Deviation = (30 - 25)/25 = +20% = +2000 BPS -> clamped to max 500 BPS
         assertEq(rate, int256(PerpConstants.MAX_FUNDING_RATE_PER_PERIOD));
     }
@@ -19,7 +19,7 @@ contract FundingRateEngineTest is Test {
         uint256 markPrice = 20 * 1e18;
         uint256 oraclePrice = 25 * 1e18;
 
-        int256 rate = FundingRateEngine.calculateFundingRate(markPrice, oraclePrice);
+        int256 rate = FundingRateEngine.calculateFundingRate(markPrice, oraclePrice, PerpConstants.MAX_FUNDING_RATE_PER_PERIOD);
         // Deviation = (20 - 25)/25 = -20% = -2000 BPS -> clamped to -500 BPS
         assertEq(rate, -int256(PerpConstants.MAX_FUNDING_RATE_PER_PERIOD));
     }
@@ -28,7 +28,7 @@ contract FundingRateEngineTest is Test {
         uint256 markPrice = 25 * 1e18;
         uint256 oraclePrice = 25 * 1e18;
 
-        int256 rate = FundingRateEngine.calculateFundingRate(markPrice, oraclePrice);
+        int256 rate = FundingRateEngine.calculateFundingRate(markPrice, oraclePrice, PerpConstants.MAX_FUNDING_RATE_PER_PERIOD);
         assertEq(rate, 0);
     }
 

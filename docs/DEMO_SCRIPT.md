@@ -31,13 +31,9 @@
 - **Visual:** Navigate to `/admin`.
 - **Narration:** *"BreezeAccessControl governs protocol roles. When PAUSER_ROLE triggers an emergency pause, new position opening is halted instantly. Crucially, existing traders can ALWAYS close positions and liquidate underwater margin — collateral is never trapped."*
 
-### 6. Dual Network Toggle (30s)
-- **Visual:** Click **NetworkSwitcher** pill in top navbar to switch from Coston2 Testnet (Chain ID 114) to Flare Mainnet (Chain ID 14).
-- **Narration:** *"BreezeSwap seamlessly supports both testnet and Flare Mainnet (Chain ID 14). Toggling networks instantly switches RPC clients, contract registries, and indexer queries."*
-
-### 7. Closing (30s)
+### 6. Closing (30s)
 - **Visual:** Summary slide / repo link (`github.com/manav2701/breezeSwap`).
-- **Narration:** *"122 passing Foundry tests, 100% core vAMM solvency coverage, and live dual-chain deployments. Thank you!"*
+- **Narration:** *"122 passing Foundry tests, 100% line coverage on the core vAMM and vault, and a live Coston2 deployment. Thank you!"*
 
 ---
 
@@ -91,11 +87,11 @@ Prepare 4 distinct browser wallet accounts funded with Coston2 testnet FLR and m
 4. `settle()` is called, computing payout ratio mathematically.
 5. **Wallet A** calls `redeem()` -> Receives exact winning collateral payout with 0 rounding loss.
 
-### Scenario 6 — Cross-Network Parity Toggle
-1. Connect wallet and select **Coston2 Testnet (114)** in `NetworkSwitcher`.
-2. Inspect market data and contract addresses.
-3. Select **Flare Mainnet (14)** in `NetworkSwitcher`.
-4. **Verify:**
-   - Top banner updates to green Flare Mainnet notice.
-   - Contract addresses switch to Mainnet registry (`0x5A88...`, `0x799f...`).
-   - Network switching functions cleanly without page reloads.
+### Scenario 6 — Wrong-Network Handling
+1. Connect a wallet set to any chain other than Coston2 (114).
+2. **Verify:**
+   - The UI detects the unsupported network and prompts to switch, rather than
+     rendering stale or incorrect contract data.
+   - `getContractAddresses()` throws for undeployed chains instead of silently
+     falling back to another network's registry.
+   - After switching to Coston2, market data loads cleanly without a page reload.

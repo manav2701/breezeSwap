@@ -35,9 +35,22 @@ contract FtsoWeatherAdapter is IWeatherOracle {
 
     /**
      * @notice Staleness check against FTSOv2 feed updates.
+     *
+     * @dev Returns TRUE — maximally stale — because this feed does not exist yet.
+     *
+     * It returned `false` while `getReading` reverted, which is a dead feed claiming to be
+     * fresh. Nothing was exploitable, but the pair was inconsistent in the dangerous
+     * direction: every consumer checks staleness as its guard, so a caller that read
+     * `isStale` and branched on it would conclude the feed was usable and then revert on the
+     * read. `WeatherPolicyMarket.settlePolicy` does exactly that ordering.
+     *
+     * A stub should fail the way an outage fails. Reporting "stale" makes every consumer
+     * refuse this adapter through its normal guard rather than through an unhandled revert,
+     * and it keeps the two functions telling the same story.
+     *
+     * Swap-in point: compare the FTSOv2 feed's publication timestamp against `maxAge`.
      */
     function isStale(bytes32 regionId, uint256 maxAge) external view override returns (bool) {
-        // Swap-in point: Check feed timestamp from FTSOv2 registry
-        return false;
+        return true;
     }
 }

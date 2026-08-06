@@ -64,7 +64,7 @@ export function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-white/10 text-xs text-center text-slate-400 font-mono">
-        © {new Date().getFullYear()} BreezeSwap. All rights reserved. Deployed on Flare Coston2 Testnet & Flare Mainnet.
+        © {new Date().getFullYear()} BreezeSwap. Deployed on Flare Coston2 Testnet. Not deployed on Flare Mainnet.
       </div>
     </footer>
   )

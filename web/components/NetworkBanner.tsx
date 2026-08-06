@@ -1,25 +1,34 @@
 'use client'
 
 import React from 'react'
-import { AlertTriangle, ShieldCheck } from 'lucide-react'
+import { AlertTriangle, FlaskConical } from 'lucide-react'
 import { useBreezeNetwork } from '../lib/hooks/useNetwork'
 
 export function NetworkBanner() {
-  const { isMainnet } = useBreezeNetwork()
+  const { isWrongNetwork, isSwitching, switchToSupported } = useBreezeNetwork()
 
-  if (isMainnet) {
+  if (isWrongNetwork) {
     return (
-      <div className="w-full bg-emerald-400 py-1.5 px-4 text-center text-xs font-black text-[#0a0a0a] flex items-center justify-center gap-2 font-mono">
-        <ShieldCheck className="w-4 h-4 shrink-0 text-[#0a0a0a]" />
-        <span>Connected to <strong>Flare Mainnet (Chain ID 14)</strong> — Transactions execute on-chain with real assets.</span>
+      <div className="w-full bg-red-500 py-1.5 px-4 text-center text-xs font-black text-white flex items-center justify-center gap-2 font-mono">
+        <AlertTriangle className="w-4 h-4 shrink-0" />
+        <span>Unsupported network — BreezeSwap is deployed on Coston2 only.</span>
+        <button
+          onClick={switchToSupported}
+          disabled={isSwitching}
+          className="underline underline-offset-2 hover:no-underline disabled:opacity-60"
+        >
+          {isSwitching ? 'Switching…' : 'Switch to Coston2'}
+        </button>
       </div>
     )
   }
 
   return (
     <div className="w-full bg-[#fde047] py-1.5 px-4 text-center text-xs font-black text-[#0a0a0a] flex items-center justify-center gap-2 font-mono">
-      <AlertTriangle className="w-4 h-4 shrink-0 text-[#0a0a0a]" />
-      <span>Connected to <strong>Coston2 Testnet (Chain ID 114)</strong> — Simulated test funds only. Switch networks via navbar toggle.</span>
+      <FlaskConical className="w-4 h-4 shrink-0" />
+      <span>
+        <strong>Coston2 Testnet (Chain ID 114)</strong> — test funds only. BreezeSwap is not deployed on Flare Mainnet.
+      </span>
     </div>
   )
 }

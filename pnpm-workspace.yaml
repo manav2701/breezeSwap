@@ -4,10 +4,10 @@ packages:
   - "indexer"
   - "web"
   - "weather-seed"
-allowBuilds:
-  bufferutil: true
-  esbuild: true
-  keccak: true
-  sharp: true
-  unrs-resolver: true
-  utf-8-validate: true
+onlyBuiltDependencies:
+  - bufferutil
+  - esbuild
+  - keccak
+  - sharp
+  - unrs-resolver
+  - utf-8-validate

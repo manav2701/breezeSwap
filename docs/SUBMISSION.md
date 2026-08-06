@@ -26,27 +26,31 @@ BreezeSwap is a first-of-its-kind decentralized weather derivatives protocol bui
 
 ## 2. Flare Native Integration Depth
 
-BreezeSwap leverages Flare Network's native data infrastructure and multi-chain capabilities:
+BreezeSwap is built around a single oracle abstraction, `IWeatherOracle`, which every
+weather-data consumer reads through. Swapping the data source is a constructor
+argument, not a rewrite. What is actually wired today, stated plainly:
 
-- **FTSO V2 (Flare Time Series Oracle)**: Consumes low-latency price feeds (`FtsoWeatherAdapter.sol`) to calculate USD notional valuation of collateral assets and maintain accurate liquidation triggers.
-- **FDC (Flare Data Connector)**: Interoperability adapter (`FdcWeatherAdapter.sol`) verifying off-chain weather data (from Open-Meteo & Kweather) with cryptographic consensus proofs on-chain.
-- **FAssets Interoperability (`FAssetsCollateralAdapter.sol`)**: Enables non-smart-contract assets (such as FXRP and FBTC) to be deposited directly into BreezeSwap collateral vaults as margin.
-- **Flare Mainnet & Coston2 Deployments**: Contract suite is fully deployed to **Flare Mainnet (Chain ID 14)** and **Coston2 Testnet (Chain ID 114)** with live multi-chain network switching in the SDK and frontend.
+- **`MockWeatherOracle` — live and in use.** Settles both Classic and Perp markets,
+  seeded with real historical rainfall and temperature data from Open-Meteo for five
+  regions. This is the only oracle currently returning readings.
+- **`FtsoWeatherAdapter` — interface-complete stub, not functional.** No weather feed
+  exists on FTSO today, so `getReading()` reverts with `FtsoFeedNotYetLive()`. The
+  contract implements `IWeatherOracle` and documents its swap-in point, so it can be
+  activated when Flare/Kweather ship a feed. **It reads no live data today.**
+- **`FdcWeatherAdapter` — interface-complete stub, not functional.** Same posture:
+  `getReading()` reverts with `FdcAttestationTypeNotYetLive()` pending Merkle-proof
+  attestation wiring. **It verifies nothing today.**
+- **FAssets (`FAssetsCollateralAdapter.sol`)**: Accepts FXRP as a collateral asset
+  alongside the demo stablecoin.
+- **Chain-parametrised deployment tooling**: The SDK, indexer, and frontend resolve contracts from a chain-ID-keyed registry rather than hardcoded addresses, so supporting an additional Flare network is a registry entry, not a rewrite.
 
 ---
 
 ## 3. Live Smart Contract Registries
 
-### Flare Mainnet (Chain ID 14)
-| Contract | Deployed Address | Explorer Link |
-|---|---|---|
-| **`BreezeAccessControl`** | `0x5A88420AB4Ef4D2c2dd22c151fd6CB93d2543853` | [View on Explorer](https://flare-explorer.flare.network/address/0x5A88420AB4Ef4D2c2dd22c151fd6CB93d2543853) |
-| **`BreezeMarketFactory`** | `0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf` | [View on Explorer](https://flare-explorer.flare.network/address/0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf) |
-| **`BreezePerpFactory`** | `0x15e309f0434942BDfa0D961E25FaCc4483BABe46` | [View on Explorer](https://flare-explorer.flare.network/address/0x15e309f0434942BDfa0D961E25FaCc4483BABe46) |
-| **`FeeConfig`** | `0xC0D295305d653F044E4178bb6966e76FB79f325C` | [View on Explorer](https://flare-explorer.flare.network/address/0xC0D295305d653F044E4178bb6966e76FB79f325C) |
-| **`InsuranceFund`** | `0xA6952FC0fBe43AA72E1D08B11daD5cA56c12a36f` | [View on Explorer](https://flare-explorer.flare.network/address/0xA6952FC0fBe43AA72E1D08B11daD5cA56c12a36f) |
-| **`ProtocolTreasury`** | `0xfcB7Ff4dA80532F5C7803392761643bA4dDe5058` | [View on Explorer](https://flare-explorer.flare.network/address/0xfcB7Ff4dA80532F5C7803392761643bA4dDe5058) |
-| **`Breeze USD (bUSDT Demo)`** | `0x739b6b2a0195271557e543F51c0FA417265B2FAC` | [View on Explorer](https://flare-explorer.flare.network/address/0x739b6b2a0195271557e543F51c0FA417265B2FAC) |
+BreezeSwap is deployed to **Coston2 testnet only**. There is no Flare Mainnet
+deployment; mainnet is gated on a professional security audit (see
+[SECURITY.md](../SECURITY.md)).
 
 ### Flare Coston2 Testnet (Chain ID 114)
 | Contract | Deployed Address | Explorer Link |

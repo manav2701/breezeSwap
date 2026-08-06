@@ -4,6 +4,7 @@ pragma solidity 0.8.24;
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "../access/BreezeAccessControl.sol";
 import "./BreezeMarket.sol";
+import "../oracle/StrikeProbabilityOracle.sol";
 import "./PositionToken.sol";
 import "../settlement/PayoffCalculator.sol";
 
@@ -18,6 +19,19 @@ contract BreezeMarketFactory is Pausable {
 
     address[] public allMarkets;
     mapping(address => bool) public isMarket;
+
+    /// @notice Climatology new markets resolve their fair odds against. Optional.
+    ///
+    /// @dev Deliberately does NOT gate creation. Refusing markets whose strike has no
+    /// posted climatology would make listing a new region impossible until the seeder had
+    /// run — an operational deadlock rather than a safety property, and this factory is
+    /// permissionless by design. Instead each market records whether it is priced
+    /// (`BreezeMarket.isPriced`) and enforces a fair-odds band only when it is, so an
+    /// unpriced market is possible and is flagged as such on-chain rather than being
+    /// indistinguishable from a priced one.
+    StrikeProbabilityOracle public pricingOracle;
+
+    event PricingOracleUpdated(address indexed oldOracle, address indexed newOracle);
 
     event MarketCreated(
         address indexed market,
@@ -88,7 +102,8 @@ contract BreezeMarketFactory is Pausable {
             collateralToken,
             address(sharedPositionToken),
             payoffType,
-            address(accessControl)
+            address(accessControl),
+            address(pricingOracle)
         );
 
         marketAddress = address(market);
@@ -101,6 +116,12 @@ contract BreezeMarketFactory is Pausable {
         isMarket[marketAddress] = true;
 
         emit MarketCreated(marketAddress, regionId, expiryTimestamp, collateralToken, payoffType);
+    }
+
+    function setPricingOracle(address oracle) external onlyRole(accessControl.ADMIN_ROLE()) {
+        address old = address(pricingOracle);
+        pricingOracle = StrikeProbabilityOracle(oracle);
+        emit PricingOracleUpdated(old, oracle);
     }
 
     /**

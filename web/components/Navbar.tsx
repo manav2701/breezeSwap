@@ -14,12 +14,12 @@ import { NetworkBanner } from './NetworkBanner'
 export function Navbar() {
   const { address, isConnected } = useAccount()
   const { publicClient } = useBreezeSDK()
-  const { chainId, isMainnet } = useBreezeNetwork()
+  const { chainId, isSupported } = useBreezeNetwork()
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     async function verifyAdmin() {
-      if (!isConnected || !address || !publicClient) {
+      if (!isConnected || !address || !publicClient || !isSupported) {
         setIsAdmin(false)
         return
       }
@@ -33,7 +33,7 @@ export function Navbar() {
       }
     }
     verifyAdmin()
-  }, [address, isConnected, publicClient, chainId])
+  }, [address, isConnected, publicClient, chainId, isSupported])
 
   return (
     <>
@@ -52,8 +52,8 @@ export function Navbar() {
               <span className="text-xl font-black tracking-tight text-white group-hover:text-[#fde047] transition-colors">
                 Breeze<span className="text-[#fde047]">Swap</span>
               </span>
-              <span className={`text-[9px] font-mono font-bold tracking-widest uppercase mt-0.5 ${isMainnet ? 'text-emerald-400' : 'text-[#fde047]'}`}>
-                {isMainnet ? 'Flare Mainnet' : 'Coston2 Testnet'}
+              <span className={`text-[9px] font-mono font-bold tracking-widest uppercase mt-0.5 ${isSupported ? 'text-[#fde047]' : 'text-red-400'}`}>
+                {isSupported ? 'Coston2 Testnet' : 'Unsupported network'}
               </span>
             </div>
           </Link>

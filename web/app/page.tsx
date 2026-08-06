@@ -30,8 +30,8 @@ import { TxLink } from '../components/TxLink'
 
 export default function Home() {
   const { indexerUrl } = useBreezeSDK()
-  const { chainId, isMainnet } = useBreezeNetwork()
-  const chainName = isMainnet ? 'Flare Mainnet' : 'Coston2 Testnet'
+  const { chainId } = useBreezeNetwork()
+  const chainName = 'Coston2 Testnet'
   const [classicMarkets, setClassicMarkets] = useState<Market[]>([])
   const [perpMarkets, setPerpMarkets] = useState<PerpMarket[]>([])
   const [tradeHistory, setTradeHistory] = useState<TradeHistoryEntry[]>([])
@@ -69,30 +69,31 @@ export default function Home() {
   return (
     <div className="space-y-12 pb-16">
       {/* ============================================================ */}
-      {/* 1. ASYMMETRICAL CYBER YELLOW LIQUID HERO SECTION             */}
+      {/* 1. HERO                                                      */}
       {/* ============================================================ */}
-      <section className="relative w-full liquid-hero-bg p-8 sm:p-12 md:p-16 text-[#0a0a0a] shadow-2xl overflow-hidden">
+      <section className="relative w-full liquid-hero-bg p-8 sm:p-12 md:p-16 overflow-hidden">
         <div className="max-w-5xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black text-[#fde047] text-xs font-mono font-bold uppercase tracking-widest shadow-md">
-            <Sparkles className="w-4 h-4 text-[#fde047]" />
-            First Weather Perpetuals on Flare Network
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-wash border border-hairline text-accent text-xs font-mono font-bold uppercase tracking-widest">
+            <Sparkles className="w-4 h-4" />
+            Weather perpetuals on Flare — Coston2 testnet
           </div>
 
-          <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight uppercase leading-[0.95] text-[#0a0a0a]">
-            Weather Risk,<br />
-            <span className="underline decoration-black decoration-4 underline-offset-8">Zero Counterparty.</span>
+          <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight leading-[0.95] text-ink">
+            Hedge the<br />
+            <span className="text-accent">weather.</span>
           </h1>
 
-          <p className="text-lg sm:text-xl font-medium text-[#0a0a0a]/90 max-w-2xl leading-relaxed">
-            Hedge agricultural, energy, and climate exposure with fixed-term CME-style weather swaps and continuous vAMM weather perpetuals featuring 15-minute funding rates.
+          <p className="text-lg sm:text-xl text-ink-muted max-w-2xl leading-relaxed">
+            Take a position on rainfall or temperature and get paid automatically from a
+            verified reading — no claim, no adjuster, no counterparty to chase.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-4">
-            <Link href="/perp-markets" className="btn-cyber-yellow bg-black text-white hover:bg-slate-900 px-8 py-4 text-sm uppercase tracking-wider font-extrabold flex items-center gap-2">
-              Start Trading <ArrowUpRight className="w-5 h-5 text-[#fde047]" />
+            <Link href="/perp-markets" className="btn-cyber-yellow px-8 py-4 text-sm uppercase tracking-wider flex items-center gap-2">
+              Start trading <ArrowUpRight className="w-5 h-5" />
             </Link>
-            <Link href="/markets" className="btn-onyx-outline px-8 py-4 text-sm uppercase tracking-wider font-extrabold">
-              View Classic Markets
+            <Link href="/markets" className="btn-onyx px-8 py-4 text-sm uppercase tracking-wider">
+              View classic markets
             </Link>
           </div>
         </div>
