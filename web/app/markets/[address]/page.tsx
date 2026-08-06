@@ -1,22 +1,8 @@
 'use client'
 
-import React, { use, useEffect, useState } from 'react'
-import { PayoffChart } from '../../../components/PayoffChart'
-import { WeatherChart } from '../../../components/WeatherChart'
-import { StatusBadge } from '../../../components/StatusBadge'
-import { TxLink } from '../../../components/TxLink'
-import {
-  CloudRain,
-  Thermometer,
-  Calendar,
-  Layers,
-  CheckCircle2,
-  AlertCircle,
-  Zap,
-  TrendingUp,
-  DollarSign,
-  UserCheck
-} from 'lucide-react'
+import React, { use, useCallback, useEffect, useState } from 'react'
+import Link from 'next/link'
+import { AlertCircle, ArrowLeft, CheckCircle2, CloudRain, Thermometer, Zap } from 'lucide-react'
 import {
   getMarket,
   getMarketPositions,
@@ -24,22 +10,32 @@ import {
   approveCollateral,
   mintPosition,
   settle,
+  formatCollateral,
+  formatExpiry,
+  timeUntilExpiry,
   type Market,
   type Position,
   type WeatherReading,
-  formatCollateral,
-  formatExpiry,
-  timeUntilExpiry
 } from '@breezeswap/sdk'
+import { PayoffChart } from '../../../components/PayoffChart'
+import { WeatherChart } from '../../../components/WeatherChart'
+import { StatusBadge } from '../../../components/StatusBadge'
+import { TxLink } from '../../../components/TxLink'
 import { useBreezeSDK } from '../../../lib/hooks/useBreezeSDK'
+import { formatMoney } from '../../../lib/chartTheme'
+import { demoWeatherReadings } from '../../../lib/demoData'
 import MarketABI from '../../../../sdk/src/abis/BreezeMarket.json'
 
-function ensureMarketMapped(m: any): Market {
-  if (!m) return m
-  const rawLow = m.threshold_low ?? m.thresholdLow ?? 0
-  const rawHigh = m.threshold_high ?? m.thresholdHigh ?? null
-  const rawFinal = m.final_oracle_value ?? m.finalOracleValue ?? null
+/** Oracle units are 1e6-scaled; readings themselves are never in the thousands. */
+function scaleOracle(raw: unknown): number | null {
+  if (raw === null || raw === undefined || raw === '') return null
+  const n = Number(raw)
+  if (!Number.isFinite(n)) return null
+  return n > 1000 ? n / 1e6 : n
+}
 
+function ensureMarketMapped(m: any): Market | null {
+  if (!m) return null
   return {
     contractAddress: m.contractAddress || m.contract_address || '',
     chainId: m.chainId || m.chain_id || 114,
@@ -47,23 +43,24 @@ function ensureMarketMapped(m: any): Market {
     regionName: m.regionName || m.region_name || null,
     weatherVariable: m.weatherVariable || m.weather_variable || 'RAINFALL',
     payoffType: m.payoffType || m.payoff_type || 'CAPPED',
-    thresholdLow: typeof rawLow === 'number' ? (rawLow > 1000 ? rawLow / 1e6 : rawLow) : Number(rawLow) / 1e6,
-    thresholdHigh: rawHigh !== null && rawHigh !== undefined ? (typeof rawHigh === 'number' ? (rawHigh > 1000 ? rawHigh / 1e6 : rawHigh) : Number(rawHigh) / 1e6) : null,
+    thresholdLow: scaleOracle(m.threshold_low ?? m.thresholdLow) ?? 0,
+    thresholdHigh: scaleOracle(m.threshold_high ?? m.thresholdHigh),
     expiryTimestamp: m.expiryTimestamp || m.expiry_timestamp || '',
     collateralToken: m.collateralToken || m.collateral_token || '',
     status: m.status || 'OPEN',
-    finalOracleValue: rawFinal !== null && rawFinal !== undefined ? (typeof rawFinal === 'number' ? (rawFinal > 1000 ? rawFinal / 1e6 : rawFinal) : Number(rawFinal) / 1e6) : null,
-    longPayoutRatio: m.longPayoutRatio !== undefined && m.longPayoutRatio !== null ? m.longPayoutRatio : (m.long_payout_ratio ? Number(m.long_payout_ratio) : null),
-    shortPayoutRatio: m.shortPayoutRatio !== undefined && m.shortPayoutRatio !== null ? m.shortPayoutRatio : (m.short_payout_ratio ? Number(m.short_payout_ratio) : null),
+    finalOracleValue: scaleOracle(m.final_oracle_value ?? m.finalOracleValue),
+    longPayoutRatio:
+      m.longPayoutRatio ?? (m.long_payout_ratio != null ? Number(m.long_payout_ratio) : null),
+    shortPayoutRatio:
+      m.shortPayoutRatio ?? (m.short_payout_ratio != null ? Number(m.short_payout_ratio) : null),
     settledAt: m.settledAt || m.settled_at || null,
     createdAt: m.createdAt || m.created_at || '',
     blockNumber: m.blockNumber || m.block_number || 0,
-    txHash: m.txHash || m.tx_hash || ''
+    txHash: m.txHash || m.tx_hash || '',
   }
 }
 
 function ensurePositionMapped(p: any): Position {
-  if (!p) return p
   return {
     id: p.id || '',
     marketAddress: p.marketAddress || p.market_address || '',
@@ -79,69 +76,81 @@ function ensurePositionMapped(p: any): Position {
     redeemedAmount: p.redeemedAmount || p.redeemed_amount || null,
     redeemedAt: p.redeemedAt || p.redeemed_at || null,
     redeemTxHash: p.redeemTxHash || p.redeem_tx_hash || null,
-    market: p.market
+    market: p.market,
   }
 }
 
 export default function MarketDetailPage({ params }: { params: Promise<{ address: string }> }) {
-  const resolvedParams = use(params)
-  const marketAddress = resolvedParams.address.toLowerCase()
+  const marketAddress = use(params).address.toLowerCase()
   const { indexerUrl, walletClient, publicClient, isConnected } = useBreezeSDK()
 
   const [market, setMarket] = useState<Market | null>(null)
   const [positions, setPositions] = useState<Position[]>([])
-  const [weatherReadings, setWeatherReadings] = useState<WeatherReading[]>([])
+  const [readings, setReadings] = useState<WeatherReading[]>([])
+  const [readingsAreDemo, setReadingsAreDemo] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  // Mint Form State
   const [side, setSide] = useState<'LONG' | 'SHORT'>('LONG')
-  const [collateralInput, setCollateralInput] = useState<string>('10')
+  const [collateralInput, setCollateralInput] = useState('10')
   const [mintLoading, setMintLoading] = useState(false)
   const [mintTxHash, setMintTxHash] = useState<string | null>(null)
   const [mintError, setMintError] = useState<string | null>(null)
 
-  // Settle State
   const [settleLoading, setSettleLoading] = useState(false)
   const [settleTxHash, setSettleTxHash] = useState<string | null>(null)
 
-  async function loadData() {
+  const loadData = useCallback(async () => {
     setLoading(true)
     let m: Market | null = null
 
     try {
-      const rawM = await getMarket(indexerUrl, marketAddress)
-      m = ensureMarketMapped(rawM)
+      m = ensureMarketMapped(await getMarket(indexerUrl, marketAddress))
       setMarket(m)
-    } catch (err) {
-      console.error('Failed loading market metadata:', err)
+    } catch {
       setMarket(null)
     }
 
-    if (m && m.regionId) {
+    if (m) {
       try {
-        const readings = await getWeatherReadings(indexerUrl, m.regionId)
-        setWeatherReadings(readings)
-      } catch (err) {
-        console.warn('Failed loading weather readings:', err)
-        setWeatherReadings([])
+        const live = m.regionId ? await getWeatherReadings(indexerUrl, m.regionId) : []
+        if (live && live.length > 0) {
+          setReadings(live)
+          setReadingsAreDemo(false)
+        } else {
+          setReadings(
+            demoWeatherReadings(
+              marketAddress,
+              m.thresholdLow,
+              m.thresholdHigh
+            ) as unknown as WeatherReading[]
+          )
+          setReadingsAreDemo(true)
+        }
+      } catch {
+        setReadings(
+          demoWeatherReadings(
+            marketAddress,
+            m.thresholdLow,
+            m.thresholdHigh
+          ) as unknown as WeatherReading[]
+        )
+        setReadingsAreDemo(true)
       }
     }
 
     try {
       const pos = await getMarketPositions(indexerUrl, marketAddress)
-      const mappedPos = (pos ?? []).map(ensurePositionMapped)
-      setPositions(mappedPos)
-    } catch (err) {
-      console.warn('Failed loading market positions:', err)
+      setPositions((pos ?? []).map(ensurePositionMapped))
+    } catch {
       setPositions([])
     } finally {
       setLoading(false)
     }
-  }
+  }, [indexerUrl, marketAddress])
 
   useEffect(() => {
     loadData()
-  }, [indexerUrl, marketAddress])
+  }, [loadData])
 
   async function handleApproveAndMint() {
     setMintLoading(true)
@@ -149,79 +158,60 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
     setMintTxHash(null)
 
     if (!walletClient || !publicClient || !market) {
-      console.error('Wallet/public client or market not ready', { walletClient, publicClient, market })
-      setMintError('Wallet not connected or network mismatch. Please connect your wallet to Flare Coston2 Testnet.')
+      setMintError('Connect a wallet on Flare Coston2 to mint a position.')
       setMintLoading(false)
       return
     }
 
     try {
-      const amountBigInt = BigInt(Math.round(Number(collateralInput) * 1e6))
+      const amount = BigInt(Math.round(Number(collateralInput) * 1e6))
       const tokenAddress = market.collateralToken as `0x${string}`
-      const marketAddressHex = market.contractAddress as `0x${string}`
+      const marketHex = market.contractAddress as `0x${string}`
 
-      // 1. Fetch exact CollateralVault address directly from market contract on-chain
-      let vaultAddress = marketAddressHex
+      // The vault, not the market, holds the collateral — read its address from
+      // the market rather than approving the market itself.
+      let vaultAddress = marketHex
       try {
-        const v = await publicClient.readContract({
-          address: marketAddressHex,
+        const v = (await publicClient.readContract({
+          address: marketHex,
           abi: MarketABI,
-          functionName: 'vault'
-        }) as `0x${string}`
-        if (v && v !== '0x0000000000000000000000000000000000000000') {
-          vaultAddress = v
-        }
-      } catch (err) {
-        console.warn('Could not read vault from market contract on-chain:', err)
+          functionName: 'vault',
+        })) as `0x${string}`
+        if (v && v !== '0x0000000000000000000000000000000000000000') vaultAddress = v
+      } catch {
+        /* Fall back to the market address. */
       }
 
-      console.log('Target CollateralVault for approval:', { tokenAddress, vaultAddress, amount: amountBigInt.toString() })
-
-      // 2. Approve CollateralVault (0x9CeF89...)
       const approveTxHash = await approveCollateral(
         walletClient as any,
         publicClient as any,
         tokenAddress,
         vaultAddress,
-        amountBigInt
+        amount
       )
-
       if (approveTxHash) {
-        console.log('Approval transaction submitted, waiting for receipt...', approveTxHash)
         await publicClient.waitForTransactionReceipt({ hash: approveTxHash })
-        console.log('Approval transaction mined on Coston2!')
       }
 
-      console.log('Minting position...', { marketAddress: marketAddressHex, side, amount: amountBigInt.toString() })
-      // 3. Mint position
-      const hash = await mintPosition(
-        walletClient as any,
-        publicClient as any,
-        {
-          marketAddress: marketAddressHex,
-          side,
-          collateralAmount: amountBigInt
-        }
-      )
+      const hash = await mintPosition(walletClient as any, publicClient as any, {
+        marketAddress: marketHex,
+        side,
+        collateralAmount: amount,
+      })
 
       setMintTxHash(hash)
       loadData()
     } catch (err: any) {
-      console.error('Mint position error:', err)
-      setMintError(err?.shortMessage || err?.message || 'Minting position failed')
+      setMintError(err?.shortMessage || err?.message || 'Minting the position failed.')
     } finally {
       setMintLoading(false)
     }
   }
 
   async function handleSettle() {
-    if (!walletClient || !publicClient || !market) {
-      alert('Wallet is not connected or ready. Please connect to Flare Coston2 Testnet.')
-      return
-    }
+    if (!walletClient || !publicClient || !market) return
     setSettleLoading(true)
     try {
-      console.log('Settling market on-chain...', market.contractAddress)
       const hash = await settle(
         walletClient as any,
         publicClient as any,
@@ -230,8 +220,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       setSettleTxHash(hash)
       loadData()
     } catch (err: any) {
-      console.error('Settle error:', err)
-      alert(err?.shortMessage || err?.message || 'Settlement failed')
+      setMintError(err?.shortMessage || err?.message || 'Settlement failed.')
     } finally {
       setSettleLoading(false)
     }
@@ -239,323 +228,362 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
 
   if (loading) {
     return (
-      <div className="py-20 text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-sm text-slate-400">Loading market metadata & on-chain stats...</p>
+      <div className="py-24 flex flex-col items-center gap-4">
+        <div className="w-8 h-8 rounded-full border-2 border-[color:var(--color-hairline-strong)] border-t-accent animate-spin" />
+        <p className="text-sm text-ink-faint">Loading market…</p>
       </div>
     )
   }
 
   if (!market) {
     return (
-      <div className="py-20 text-center space-y-4">
-        <h2 className="text-2xl font-bold text-white">Market Not Found</h2>
-        <p className="text-xs text-slate-400">Address {marketAddress} could not be located in indexer database.</p>
+      <div className="py-24 text-center space-y-4 max-w-md mx-auto">
+        <h1 className="display-2 text-ink">Market not found</h1>
+        <p className="text-sm text-ink-muted break-words">
+          No market at <span className="numeric text-ink-faint">{marketAddress}</span> on this chain.
+        </p>
+        <Link href="/markets" className="btn btn-ghost">
+          Back to markets
+        </Link>
       </div>
     )
   }
 
   const isRainfall = market.weatherVariable === 'RAINFALL'
   const unit = isRainfall ? 'mm' : '°C'
+  const Icon = isRainfall ? CloudRain : Thermometer
+
+  // Collateral amounts are 6-decimal integer strings. Summing them as BigInt
+  // avoids the float overflow that turned a large pool into "1e+21 mUSDT".
   const totalCollateral = positions.reduce((acc, p) => {
-    const val = Number(p.collateralAmount || 0)
-    return acc + (isNaN(val) ? 0 : val)
-  }, 0)
+    try {
+      return acc + BigInt(p.collateralAmount || '0')
+    } catch {
+      return acc
+    }
+  }, 0n)
+
   const longCount = positions.filter((p) => p.side === 'LONG').length
   const shortCount = positions.filter((p) => p.side === 'SHORT').length
   const isExpired = new Date(market.expiryTimestamp).getTime() <= Date.now()
+  const canSettle = market.status === 'OPEN' && isExpired
+  const collateralNum = Number.parseFloat(collateralInput)
+  const validCollateral = Number.isFinite(collateralNum) && collateralNum > 0
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 rounded-3xl bg-slate-900/80 border border-slate-800">
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">🌐</span>
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-                  {market.regionName || 'Global Region'} Market
-                </h1>
-                <StatusBadge status={market.status} />
-              </div>
-              <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-                {isRainfall ? (
-                  <CloudRain className="w-4 h-4 text-cyan-400" />
-                ) : (
-                  <Thermometer className="w-4 h-4 text-amber-400" />
-                )}
-                <span>{market.weatherVariable}</span>
-                <span>•</span>
-                <span>Payoff: <strong>{market.payoffType}</strong></span>
-              </div>
+      <div className="space-y-4">
+        <Link
+          href="/markets"
+          className="inline-flex items-center gap-1.5 text-xs text-ink-faint hover:text-ink transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" aria-hidden />
+          All markets
+        </Link>
+
+        <div className="panel p-5 sm:p-6 flex flex-wrap items-start justify-between gap-5">
+          <div className="min-w-0 space-y-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <h1 className="display-2 text-ink">{market.regionName || 'Global region'}</h1>
+              <StatusBadge status={market.status} />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink-muted">
+              <span className="inline-flex items-center gap-1.5">
+                <Icon className="w-3.5 h-3.5 text-cool" aria-hidden />
+                {isRainfall ? 'Rainfall' : 'Temperature'} · {market.payoffType}
+              </span>
+              <span>
+                Expiry{' '}
+                <span className="text-ink">{formatExpiry(market.expiryTimestamp)}</span>{' '}
+                <span className="text-ink-faint">({timeUntilExpiry(market.expiryTimestamp)})</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                Contract <TxLink hash={market.contractAddress} type="address" />
+              </span>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800/60">
-            <div>
-              Contract: <TxLink hash={market.contractAddress} />
-            </div>
-            <div>
-              Collateral Token: <span className="text-slate-200 font-semibold font-mono">mUSDT</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-              Expiry: <span className="text-slate-200 font-medium">{formatExpiry(market.expiryTimestamp)}</span> ({timeUntilExpiry(market.expiryTimestamp)})
-            </div>
-          </div>
-        </div>
-
-        {market.status === 'OPEN' && isExpired && (
-          <button
-            onClick={handleSettle}
-            disabled={settleLoading}
-            className="flex items-center gap-2 py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold text-xs hover:opacity-90 transition-all shadow-lg shadow-amber-500/20"
-          >
-            <Zap className="w-4 h-4" />
-            {settleLoading ? 'Settling...' : 'Settle Market (Permissionless)'}
-          </button>
-        )}
-      </div>
-
-      {settleTxHash && (
-        <div className="p-4 rounded-2xl bg-amber-950/40 border border-amber-800/50 text-xs text-amber-300">
-          Market settled successfully! <TxLink hash={settleTxHash} />
-        </div>
-      )}
-
-      {/* Grid: Payoff Curve + Weather History */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Layers className="w-4 h-4 text-cyan-400" />
-              Payoff Curve Math
-            </h3>
-            <span className="text-xs text-slate-400">LONG vs SHORT Payout Scaling</span>
-          </div>
-          <PayoffChart market={market} />
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <CloudRain className="w-4 h-4 text-cyan-400" />
-              Historical Weather Readings (Open-Meteo)
-            </h3>
-            <span className="text-xs text-slate-400">30-Day Oracle Trend</span>
-          </div>
-          <WeatherChart
-            readings={weatherReadings}
-            thresholdLow={market.thresholdLow}
-            thresholdHigh={market.thresholdHigh}
-            variable={market.weatherVariable}
-          />
-        </div>
-      </div>
-
-      {/* Stats Row & Mint Form */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Market Stats */}
-        <div className="space-y-6 lg:col-span-1">
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider text-slate-400">Market Statistics</h3>
-
-            <div className="space-y-3 text-xs">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-slate-400">Total Collateral Locked</span>
-                <span className="font-bold text-emerald-400 font-mono">
-                  {formatCollateral(totalCollateral.toString(), 6, 'mUSDT')}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-slate-400">Positions Breakdown</span>
-                <span className="font-semibold text-slate-200">
-                  <span className="text-emerald-400 font-bold">{longCount} LONG</span> / <span className="text-rose-400 font-bold">{shortCount} SHORT</span>
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-slate-400">Threshold Settings</span>
-                <span className="font-bold text-cyan-400 font-mono">
-                  {market.thresholdHigh ? `${market.thresholdLow} – ${market.thresholdHigh} ${unit}` : `${market.thresholdLow} ${unit}`}
-                </span>
-              </div>
-
-              {market.status === 'SETTLED' && (
-                <div className="p-4 rounded-xl bg-purple-950/40 border border-purple-800/50 space-y-2">
-                  <span className="text-xs font-semibold text-purple-300 block">Final Settlement Result</span>
-                  <div className="text-sm font-bold text-white font-mono">
-                    Oracle Value: {market.finalOracleValue} {unit}
-                  </div>
-                  <div className="text-xs text-purple-300">
-                    LONG Payout: {((market.longPayoutRatio || 0) * 100).toFixed(1)}% | SHORT Payout: {((market.shortPayoutRatio || 0) * 100).toFixed(1)}%
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Mint Position Form */}
-        <div className="lg:col-span-2">
-          {market.status === 'OPEN' ? (
-            <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-6">
-              <div>
-                <h3 className="text-lg font-bold text-white">Mint Weather Position</h3>
-                <p className="text-xs text-slate-400">Deposit collateral to mint a transferable ERC-1155 position token.</p>
-              </div>
-
-              {/* Side Selector */}
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => setSide('LONG')}
-                  className={`p-4 rounded-xl border flex flex-col items-center gap-1 transition-all ${
-                    side === 'LONG'
-                      ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 shadow-lg shadow-emerald-500/10'
-                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  <TrendingUp className="w-5 h-5" />
-                  <span className="font-bold text-sm">LONG</span>
-                  <span className="text-[10px] opacity-80">Expect weather &ge; threshold</span>
-                </button>
-
-                <button
-                  onClick={() => setSide('SHORT')}
-                  className={`p-4 rounded-xl border flex flex-col items-center gap-1 transition-all ${
-                    side === 'SHORT'
-                      ? 'bg-rose-500/10 border-rose-500 text-rose-400 shadow-lg shadow-rose-500/10'
-                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  <TrendingUp className="w-5 h-5 rotate-180" />
-                  <span className="font-bold text-sm">SHORT</span>
-                  <span className="text-[10px] opacity-80">Expect weather &lt; threshold</span>
-                </button>
-              </div>
-
-              {/* Collateral Amount */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-300">Collateral Amount (mUSDT)</label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={collateralInput}
-                    onChange={(e) => setCollateralInput(e.target.value)}
-                    min="1"
-                    className="w-full bg-slate-950 border border-slate-800 text-white font-mono rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-500 transition-colors"
-                  />
-                  <span className="absolute right-4 top-3 text-xs font-bold text-slate-400">mUSDT</span>
-                </div>
-              </div>
-
-              {/* Payout Estimation */}
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-xs space-y-1">
-                <span className="text-slate-400">Max Potential Payout if Win:</span>
-                <span className="text-base font-bold text-emerald-400 font-mono block">
-                  ${(Number(collateralInput) || 0).toFixed(2)} mUSDT
-                </span>
-                <p className="text-[10px] text-slate-400">
-                  Full 100% payout achieved if oracle value satisfies winning threshold condition.
-                </p>
-              </div>
-
-              {/* Submit Button */}
-              {isConnected ? (
-                <button
-                  onClick={handleApproveAndMint}
-                  disabled={mintLoading || !collateralInput}
-                  className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-sm hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
-                >
-                  <DollarSign className="w-4 h-4" />
-                  {mintLoading ? 'Approving & Minting Position...' : 'Approve & Mint Position'}
-                </button>
-              ) : (
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-center text-xs text-slate-400 space-y-2">
-                  <UserCheck className="w-5 h-5 text-cyan-400 mx-auto" />
-                  <p>Connect your Web3 wallet using the header button to mint positions.</p>
-                </div>
-              )}
-
-              {mintTxHash && (
-                <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Position minted successfully! <TxLink hash={mintTxHash} /></span>
-                </div>
-              )}
-
-              {mintError && (
-                <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-800/50 text-xs text-rose-300 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                  <span>{mintError}</span>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 text-center space-y-3">
-              <h3 className="text-lg font-bold text-white">Market Settled</h3>
-              <p className="text-xs text-slate-400">This market has concluded. Head over to your User Portfolio to redeem your payout.</p>
-            </div>
+          {canSettle && (
+            <button
+              type="button"
+              onClick={handleSettle}
+              disabled={settleLoading}
+              className="btn btn-primary shrink-0"
+            >
+              <Zap className="w-4 h-4" aria-hidden />
+              {settleLoading ? 'Settling…' : 'Settle market'}
+            </button>
           )}
         </div>
       </div>
 
-      {/* Positions Table */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-bold text-white">Market Position Holders</h3>
+      {settleTxHash && (
+        <div className="panel p-4 flex items-center justify-between gap-3 text-sm">
+          <span className="value-long inline-flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4" aria-hidden />
+            Market settled
+          </span>
+          <TxLink hash={settleTxHash} />
+        </div>
+      )}
+
+      {/* Charts */}
+      <div className="grid gap-6 lg:grid-cols-2 items-start">
+        <div className="min-w-0">
+          <PayoffChart market={market} />
+        </div>
+        <div className="min-w-0">
+          <WeatherChart
+            readings={readings}
+            thresholdLow={market.thresholdLow}
+            thresholdHigh={market.thresholdHigh}
+            variable={market.weatherVariable}
+            isDemo={readingsAreDemo}
+          />
+        </div>
+      </div>
+
+      {/* Stats + mint */}
+      <div className="grid gap-6 lg:grid-cols-12 items-start">
+        <section className="lg:col-span-4 panel p-5 sm:p-6 space-y-5 min-w-0">
+          <h2 className="display-3 text-ink">Market statistics</h2>
+
+          <dl className="space-y-3">
+            <div className="inset px-4 py-3 flex items-center justify-between gap-3">
+              <dt className="text-xs text-ink-muted">Collateral locked</dt>
+              <dd className="numeric text-sm value-long font-medium">
+                {formatCollateral(totalCollateral.toString(), 6, 'mUSDT')}
+              </dd>
+            </div>
+
+            <div className="inset px-4 py-3 flex items-center justify-between gap-3">
+              <dt className="text-xs text-ink-muted">Positions</dt>
+              <dd className="numeric text-sm">
+                <span className="value-long">{longCount} long</span>
+                <span className="text-ink-faint"> / </span>
+                <span className="value-short">{shortCount} short</span>
+              </dd>
+            </div>
+
+            <div className="inset px-4 py-3 flex items-center justify-between gap-3">
+              <dt className="text-xs text-ink-muted">Strike</dt>
+              <dd className="numeric text-sm text-ink font-medium">
+                {market.thresholdHigh != null
+                  ? `${market.thresholdLow}–${market.thresholdHigh}${unit}`
+                  : `≥ ${market.thresholdLow}${unit}`}
+              </dd>
+            </div>
+
+            {market.status === 'SETTLED' && (
+              <div className="inset px-4 py-3 space-y-2">
+                <dt className="metric-label">Settlement result</dt>
+                <dd className="numeric text-sm text-ink">
+                  Oracle read {market.finalOracleValue}
+                  {unit}
+                </dd>
+                <dd className="text-xs">
+                  <span className="value-long numeric">
+                    {((market.longPayoutRatio || 0) * 100).toFixed(1)}%
+                  </span>
+                  <span className="text-ink-faint"> long · </span>
+                  <span className="value-short numeric">
+                    {((market.shortPayoutRatio || 0) * 100).toFixed(1)}%
+                  </span>
+                  <span className="text-ink-faint"> short</span>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </section>
+
+        <section className="lg:col-span-8 panel p-5 sm:p-6 space-y-5 min-w-0">
+          {market.status === 'OPEN' ? (
+            <>
+              <div>
+                <h2 className="display-3 text-ink">Mint a position</h2>
+                <p className="text-xs text-ink-faint mt-1">
+                  Deposit collateral to mint a transferable ERC-1155 position token.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSide('LONG')}
+                  aria-pressed={side === 'LONG'}
+                  className={`inset p-4 text-left transition-all ${
+                    side === 'LONG'
+                      ? 'border-[color:rgba(52,211,153,0.45)] bg-[color:rgba(52,211,153,0.08)]'
+                      : 'hover:border-[color:var(--color-hairline-strong)]'
+                  }`}
+                >
+                  <span
+                    className={`text-sm font-medium ${side === 'LONG' ? 'value-long' : 'text-ink'}`}
+                  >
+                    ▲ Long
+                  </span>
+                  <span className="block text-xs text-ink-faint mt-1">
+                    Pays out when the reading lands at or above {market.thresholdLow}
+                    {unit}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSide('SHORT')}
+                  aria-pressed={side === 'SHORT'}
+                  className={`inset p-4 text-left transition-all ${
+                    side === 'SHORT'
+                      ? 'border-[color:rgba(244,63,94,0.45)] bg-[color:rgba(244,63,94,0.08)]'
+                      : 'hover:border-[color:var(--color-hairline-strong)]'
+                  }`}
+                >
+                  <span
+                    className={`text-sm font-medium ${side === 'SHORT' ? 'value-short' : 'text-ink'}`}
+                  >
+                    ▼ Short
+                  </span>
+                  <span className="block text-xs text-ink-faint mt-1">
+                    Pays out when the reading lands below {market.thresholdLow}
+                    {unit}
+                  </span>
+                </button>
+              </div>
+
+              <div>
+                <label htmlFor="collateral" className="field-label">
+                  Collateral
+                </label>
+                <div className="relative">
+                  <input
+                    id="collateral"
+                    type="number"
+                    min="1"
+                    inputMode="decimal"
+                    value={collateralInput}
+                    onChange={(e) => setCollateralInput(e.target.value)}
+                    className="field numeric pr-16"
+                  />
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-faint pointer-events-none">
+                    mUSDT
+                  </span>
+                </div>
+              </div>
+
+              <div className="inset p-4 flex items-center justify-between gap-3">
+                <span className="text-xs text-ink-muted">Maximum payout if your side wins</span>
+                <span className="numeric text-base value-long font-medium">
+                  {formatMoney(validCollateral ? collateralNum : 0)}
+                </span>
+              </div>
+
+              {isConnected ? (
+                <button
+                  type="button"
+                  onClick={handleApproveAndMint}
+                  disabled={mintLoading || !validCollateral}
+                  className={`btn btn-lg w-full ${side === 'LONG' ? 'btn-long' : 'btn-short'}`}
+                >
+                  {mintLoading
+                    ? 'Approving & minting…'
+                    : `Mint ${side === 'LONG' ? 'long' : 'short'} position`}
+                </button>
+              ) : (
+                <div className="inset p-4 text-center text-xs text-ink-muted">
+                  Connect a wallet from the header to mint a position.
+                </div>
+              )}
+
+              {mintTxHash && (
+                <div className="inset p-4 flex items-center justify-between gap-3 text-xs">
+                  <span className="value-long inline-flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" aria-hidden />
+                    Position minted
+                  </span>
+                  <TxLink hash={mintTxHash} />
+                </div>
+              )}
+
+              {mintError && (
+                <div className="inset p-4 flex items-start gap-2 text-xs value-short border-[color:rgba(244,63,94,0.3)]">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-px" aria-hidden />
+                  <span className="break-words">{mintError}</span>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="py-10 text-center space-y-3">
+              <h2 className="display-3 text-ink">This market has settled</h2>
+              <p className="text-sm text-ink-muted">
+                Head to your portfolio to redeem any position you hold.
+              </p>
+              <Link href="/portfolio" className="btn btn-ghost">
+                Go to portfolio
+              </Link>
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* Holders */}
+      <section className="space-y-4">
+        <h2 className="display-3 text-ink">Position holders</h2>
+
         {positions.length === 0 ? (
-          <div className="p-8 text-center rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400">
-            No positions minted in this market yet. Be the first to mint!
+          <div className="panel p-10 text-center text-sm text-ink-faint">
+            No positions minted in this market yet.
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
-                <tr>
-                  <th className="p-4">Side</th>
-                  <th className="p-4">Collateral</th>
-                  <th className="p-4">Holder</th>
-                  <th className="p-4">Minted At</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4">Tx Hash</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/80">
-                {positions.map((p) => (
-                  <tr key={p.id || p.txHash} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="p-4">
-                      <span
-                        className={`font-bold ${
-                          p.side === 'LONG' ? 'text-emerald-400' : 'text-rose-400'
-                        }`}
-                      >
-                        {p.side}
-                      </span>
-                    </td>
-                    <td className="p-4 font-mono font-semibold text-slate-200">
-                      {formatCollateral(p.collateralAmount, 6, 'mUSDT')}
-                    </td>
-                    <td className="p-4 font-mono">{`${p.holderAddress.slice(0, 6)}...${p.holderAddress.slice(-4)}`}</td>
-                    <td className="p-4">{formatExpiry(p.mintedAt)}</td>
-                    <td className="p-4">
-                      {p.redeemed ? (
-                        <span className="text-emerald-400 font-semibold">Redeemed</span>
-                      ) : (
-                        <span className="text-slate-400">Active</span>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      <TxLink hash={p.txHash} />
-                    </td>
+          <div className="panel">
+            <div className="table-scroll">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Side</th>
+                    <th>Collateral</th>
+                    <th>Holder</th>
+                    <th>Minted</th>
+                    <th>Status</th>
+                    <th className="text-right">Tx</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {positions.map((p) => (
+                    <tr key={p.id || p.txHash}>
+                      <td className={p.side === 'LONG' ? 'value-long' : 'value-short'}>
+                        <span className="font-medium">
+                          {p.side === 'LONG' ? '▲' : '▼'} {p.side}
+                        </span>
+                      </td>
+                      <td className="numeric text-ink">
+                        {formatCollateral(p.collateralAmount, 6, 'mUSDT')}
+                      </td>
+                      <td className="numeric">
+                        {p.holderAddress
+                          ? `${p.holderAddress.slice(0, 6)}…${p.holderAddress.slice(-4)}`
+                          : '—'}
+                      </td>
+                      <td>{formatExpiry(p.mintedAt)}</td>
+                      <td>
+                        {p.redeemed ? (
+                          <span className="chip chip-long">Redeemed</span>
+                        ) : (
+                          <span className="chip">Active</span>
+                        )}
+                      </td>
+                      <td className="text-right">
+                        <TxLink hash={p.txHash} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
-      </div>
+      </section>
     </div>
   )
 }
