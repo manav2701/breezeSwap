@@ -1,11 +1,18 @@
 'use client'
 
-import React, { useEffect, useState, use } from 'react'
+import React, { useEffect, useMemo, useState, use } from 'react'
+import Link from 'next/link'
 import { useAccount } from 'wagmi'
-import { TrendingUp, Zap, Clock, ShieldCheck, ArrowUpRight, ArrowDownRight, RefreshCw, BarChart2, Layers } from 'lucide-react'
+import { ArrowLeft, TrendingUp } from 'lucide-react'
 import {
-  getPerpMarket, getPerpMarketPositions, calculatePerpQuote, openPerpPosition, closePerpPosition,
-  type PerpMarket, type PerpPosition, type Reserves
+  getPerpMarket,
+  getPerpMarketPositions,
+  calculatePerpQuote,
+  calculateMarkPrice,
+  openPerpPosition,
+  type PerpMarket,
+  type PerpPosition,
+  type Reserves,
 } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../../../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../../../lib/hooks/useNetwork'
@@ -15,227 +22,324 @@ import { FundingRateSparkline } from '../../../components/FundingRateSparkline'
 import { MarkPriceChart } from '../../../components/MarkPriceChart'
 import { DepthLadder } from '../../../components/DepthLadder'
 import { TradeHistoryTable } from '../../../components/TradeHistoryTable'
+import { formatMoney } from '../../../lib/chartTheme'
 
-export default function PerpMarketDetailPage({ params }: { params: Promise<{ address: string }> }) {
-  const resolvedParams = use(params)
-  const marketAddress = resolvedParams.address as `0x${string}`
+/**
+ * Reference reserves for the quote preview.
+ *
+ * The vAMM's reserves are 18-decimal, so **everything derived from a quote is
+ * also 18-decimal** — including `feeAmount` and `netCollateral`. The previous
+ * build formatted those with `/1e6`, which rendered a $0.10 fee on a $100
+ * margin as "-100000000000.00 USDT". Collateral is scaled up on the way in and
+ * back down on the way out through the constants below, so the two never drift
+ * apart again.
+ */
+const REFERENCE_RESERVES: Reserves = {
+  collateralReserve: 1_000_000n * 10n ** 18n,
+  weatherReserve: 40_000n * 10n ** 18n,
+}
 
-  const { address, isConnected } = useAccount()
-  const { indexerUrl, walletClient, publicClient } = useBreezeSDK()
+/** mUSDT has 6 decimals on-chain; the AMM works in 18. */
+const COLLATERAL_DECIMALS = 6
+const AMM_DECIMALS = 18
+
+const LEVERAGE_STEPS = [1, 2, 3]
+const TRADING_FEE_BPS = 10
+
+export default function PerpMarketDetailPage({
+  params,
+}: {
+  params: Promise<{ address: string }>
+}) {
+  const marketAddress = use(params).address as `0x${string}`
+
+  const { isConnected } = useAccount()
+  const { walletClient, publicClient, indexerUrl } = useBreezeSDK()
   const { chainId } = useBreezeNetwork()
 
   const [market, setMarket] = useState<PerpMarket | null>(null)
-  const [positions, setPositions] = useState<PerpPosition[]>([])
-  const [loading, setLoading] = useState(true)
+  const [, setPositions] = useState<PerpPosition[]>([])
 
-  // Form states
   const [isLong, setIsLong] = useState(true)
   const [collateralInput, setCollateralInput] = useState('100')
   const [leverage, setLeverage] = useState(2)
   const [submitting, setSubmitting] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
-
-  // Default virtual reserves for quote calculation (1M collateral, 40k size)
-  const mockReserves: Reserves = {
-    collateralReserve: 1_000_000n * 10n ** 18n,
-    weatherReserve: 40_000n * 10n ** 18n
-  }
-
-  const colInWei = BigInt(Math.round((parseFloat(collateralInput) || 0) * 1e6)) * 10n ** 12n
-  const quote = calculatePerpQuote(mockReserves, colInWei, leverage, isLong, 10)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function loadDetail() {
-      setLoading(true)
+    let cancelled = false
+    async function load() {
       try {
         const [m, pos] = await Promise.all([
           getPerpMarket(indexerUrl, marketAddress, chainId),
-          getPerpMarketPositions(indexerUrl, marketAddress, chainId)
+          getPerpMarketPositions(indexerUrl, marketAddress, chainId),
         ])
+        if (cancelled) return
         if (m) setMarket(m)
-        setPositions(pos)
-      } catch (err) {
-        console.warn('Perp detail load fallback:', err)
-      } finally {
-        setLoading(false)
+        setPositions(pos ?? [])
+      } catch {
+        /* The panels below each carry their own fallback. */
       }
     }
-    loadDetail()
+    load()
+    return () => {
+      cancelled = true
+    }
   }, [indexerUrl, marketAddress, chainId])
 
+  const markPrice = useMemo(() => calculateMarkPrice(REFERENCE_RESERVES), [])
+
+  const collateralNum = Number.parseFloat(collateralInput)
+  const validCollateral = Number.isFinite(collateralNum) && collateralNum > 0
+
+  const quote = useMemo(() => {
+    const base = validCollateral ? collateralNum : 0
+    // Scale display units → 6dp on-chain units → 18dp AMM units, so rounding
+    // happens once and matches what the contract will actually receive.
+    const collateralWei =
+      BigInt(Math.round(base * 10 ** COLLATERAL_DECIMALS)) *
+      10n ** BigInt(AMM_DECIMALS - COLLATERAL_DECIMALS)
+    return calculatePerpQuote(REFERENCE_RESERVES, collateralWei, leverage, isLong, TRADING_FEE_BPS)
+  }, [collateralNum, validCollateral, leverage, isLong])
+
+  const AMM_SCALE = 10 ** AMM_DECIMALS
+  const feeAmount = Number(quote.feeAmount) / AMM_SCALE
+  const netCollateral = Number(quote.netCollateral) / AMM_SCALE
+  const notional = netCollateral * leverage
+  const impactPct = quote.priceImpactBps / 100
+
+  /*
+    Maintenance margin is 10% of notional.
+
+    This is the closed form of the same equation `lib/perpPnl` solves for an
+    open position, with collateral / size substituted for entry / leverage:
+
+      long:  (entry·size − collateral) / (0.9·size) = (entry/0.9)·(1 − 1/lev)
+      short: (entry·size + collateral) / (1.1·size) = (entry/1.1)·(1 + 1/lev)
+
+    Deriving it any other way makes the estimate shown before opening disagree
+    with the liquidation price shown in the portfolio a moment later.
+  */
+  const liquidationPrice = isLong
+    ? (quote.entryPrice / 0.9) * (1 - 1 / leverage)
+    : (quote.entryPrice / 1.1) * (1 + 1 / leverage)
+
   async function handleOpenTrade() {
-    if (!walletClient || !publicClient) return
+    if (!walletClient || !publicClient || !validCollateral) return
     setSubmitting(true)
+    setError(null)
     setTxHash(null)
     try {
-      const colWei = BigInt(Math.round(parseFloat(collateralInput) * 1e6))
       const hash = await openPerpPosition(
         walletClient as any,
         publicClient as any,
         marketAddress,
         isLong,
-        colWei,
+        BigInt(Math.round(collateralNum * 10 ** COLLATERAL_DECIMALS)),
         BigInt(leverage)
       )
       setTxHash(hash)
     } catch (err: any) {
-      alert(err?.shortMessage || err?.message || 'Open position failed')
+      setError(err?.shortMessage || err?.message || 'Opening the position failed.')
     } finally {
       setSubmitting(false)
     }
   }
 
-  return (
-    <div className="space-y-8 py-4">
-      {/* Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
-        <div className="flex items-center gap-3">
-          <span className="p-3 rounded-2xl bg-[#fde047] text-black shadow-lg shadow-yellow-500/20">
-            <TrendingUp className="w-7 h-7" />
-          </span>
-          <div>
-            <h1 className="text-3xl font-black text-white tracking-tight uppercase">
-              {market?.regionName || 'Tokyo'} vAMM Perpetual
-            </h1>
-            <span className="text-xs font-mono text-[#fde047]">{marketAddress}</span>
-          </div>
-        </div>
+  const regionName = market?.regionName || 'Weather'
+  const basePrice = market?.oraclePrice ?? markPrice
 
-        <span className="px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-xs font-bold w-fit flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          ACTIVE vAMM PERPETUAL
-        </span>
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="space-y-4">
+        <Link
+          href="/perp-markets"
+          className="inline-flex items-center gap-1.5 text-xs text-ink-faint hover:text-ink transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" aria-hidden />
+          All perpetual markets
+        </Link>
+
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="w-11 h-11 rounded-xl inset flex items-center justify-center shrink-0">
+              <TrendingUp className="w-5 h-5 text-accent" aria-hidden />
+            </span>
+            <div className="min-w-0">
+              <h1 className="display-2 text-ink truncate">{regionName} perpetual</h1>
+              <TxLink hash={marketAddress} type="address" />
+            </div>
+          </div>
+
+          <span className="chip chip-long shrink-0">
+            <span className="pulse-dot" aria-hidden />
+            Active
+          </span>
+        </div>
       </div>
 
-      {/* Institutional Stats Header */}
-      <PerpStatsHeader marketAddress={marketAddress} />
+      <PerpStatsHeader marketAddress={marketAddress} basePrice={basePrice} />
 
-      {/* Funding Rate Sparkline */}
-      <FundingRateSparkline marketAddress={marketAddress} />
-
-      {/* Main Grid: Chart & Depth + Terminal */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Column (2/3): Chart, Depth Ladder, Trade History */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Mark Price Historical Chart */}
-          <MarkPriceChart marketAddress={marketAddress} />
-
-          {/* Depth & Liquidity Ladder */}
-          <DepthLadder reserves={mockReserves} tradingFeeBps={10} />
-
-          {/* Market Trade History Table */}
-          <div className="space-y-4">
-            <h3 className="text-base font-black text-white tracking-tight uppercase flex items-center gap-2">
-              <BarChart2 className="w-5 h-5 text-[#fde047]" />
-              Live Trade Activity Feed
-            </h3>
-            <TradeHistoryTable marketAddress={marketAddress} limit={30} />
-          </div>
+      <div className="grid gap-6 lg:grid-cols-12 items-start">
+        {/* Charts and depth */}
+        <div className="lg:col-span-8 space-y-6 min-w-0">
+          <MarkPriceChart marketAddress={marketAddress} basePrice={basePrice} />
+          <FundingRateSparkline marketAddress={marketAddress} />
+          <DepthLadder reserves={REFERENCE_RESERVES} tradingFeeBps={TRADING_FEE_BPS} />
+          <TradeHistoryTable marketAddress={marketAddress} limit={20} basePrice={basePrice} />
         </div>
 
-        {/* Right Column (1/3): Trade Terminal */}
-        <div className="lg:col-span-1">
-          <div className="glass-panel p-6 sm:p-8 space-y-6 sticky top-24">
-            <h3 className="text-lg font-black uppercase text-white tracking-tight">Execute vAMM Trade</h3>
+        {/* Trade terminal */}
+        <div className="lg:col-span-4 min-w-0">
+          <div className="panel p-5 sm:p-6 space-y-5 lg:sticky lg:top-24">
+            <h2 className="display-3 text-ink">Open a position</h2>
 
-            {/* Long / Short Pill Toggle */}
-            <div className="grid grid-cols-2 gap-2 p-1.5 rounded-full bg-black/80 border border-white/10 text-xs font-black">
+            <div className="segmented" role="group" aria-label="Position side">
               <button
+                type="button"
                 onClick={() => setIsLong(true)}
-                className={`py-3 rounded-full transition-all ${
-                  isLong ? 'bg-emerald-500 text-black shadow-lg font-extrabold' : 'text-slate-400 hover:text-white'
-                }`}
+                data-active={isLong}
+                data-tone="long"
+                aria-pressed={isLong}
               >
-                LONG ↗
+                ▲ Long
               </button>
               <button
+                type="button"
                 onClick={() => setIsLong(false)}
-                className={`py-3 rounded-full transition-all ${
-                  !isLong ? 'bg-rose-500 text-black shadow-lg font-extrabold' : 'text-slate-400 hover:text-white'
-                }`}
+                data-active={!isLong}
+                data-tone="short"
+                aria-pressed={!isLong}
               >
-                SHORT ↘
+                ▼ Short
               </button>
             </div>
 
-            {/* Collateral Input */}
-            <div className="space-y-2 text-xs">
-              <label className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Margin Collateral (USDT)</label>
-              <input
-                type="number"
-                value={collateralInput}
-                onChange={(e) => setCollateralInput(e.target.value)}
-                className="w-full bg-black/80 border border-white/10 text-white rounded-2xl p-4 text-sm font-mono focus:outline-none focus:border-[#fde047] font-bold"
-              />
-            </div>
-
-            {/* Leverage Slider */}
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between">
-                <label className="text-slate-400 font-bold uppercase tracking-wider text-[10px]">Leverage Multiplier</label>
-                <span className="font-mono font-extrabold text-[#fde047]">{leverage}x</span>
-              </div>
-              <input
-                type="range"
-                min="1"
-                max="3"
-                step="1"
-                value={leverage}
-                onChange={(e) => setLeverage(Number(e.target.value))}
-                className="w-full accent-[#fde047]"
-              />
-            </div>
-
-            {/* Live Trade Preview & Slippage Box */}
-            <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2.5 text-xs font-mono text-slate-300">
-              <div className="flex items-center justify-between">
-                <span>Posted Margin:</span>
-                <span className="text-white font-bold">{parseFloat(collateralInput) || 0} USDT</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Trading Fee (0.10%):</span>
-                <span className="text-rose-400 font-bold">-{(Number(quote.feeAmount) / 1e6).toFixed(2)} USDT</span>
-              </div>
-              <div className="flex items-center justify-between border-t border-white/10 pt-2">
-                <span>Net Position Margin:</span>
-                <span className="text-emerald-400 font-bold">{(Number(quote.netCollateral) / 1e6).toFixed(2)} USDT</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Notional Position Size:</span>
-                <span className="text-white font-bold">${((Number(quote.netCollateral) / 1e6) * leverage).toFixed(2)} USD</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Est. Entry Price:</span>
-                <span className="text-[#fde047] font-bold">${quote.entryPrice.toFixed(2)}</span>
-              </div>
-              <div className="flex items-center justify-between border-t border-white/10 pt-2">
-                <span>Slippage Impact:</span>
-                <span className={`font-bold ${quote.priceImpactBps > 100 ? 'text-rose-400' : 'text-amber-400'}`}>
-                  {(quote.priceImpactBps / 100).toFixed(2)}%
+            <div>
+              <label htmlFor="margin" className="field-label">
+                Margin (mUSDT)
+              </label>
+              <div className="relative">
+                <input
+                  id="margin"
+                  type="number"
+                  min="1"
+                  step="1"
+                  inputMode="decimal"
+                  value={collateralInput}
+                  onChange={(e) => setCollateralInput(e.target.value)}
+                  className="field numeric pr-16"
+                />
+                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-faint pointer-events-none">
+                  mUSDT
                 </span>
               </div>
+              <div className="flex gap-1.5 mt-2">
+                {[50, 100, 500, 1000].map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setCollateralInput(String(preset))}
+                    className="btn btn-ghost btn-sm flex-1 numeric"
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
             </div>
 
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="leverage" className="field-label mb-0">
+                  Leverage
+                </label>
+                <span className="numeric text-sm text-accent font-medium">{leverage}×</span>
+              </div>
+              <input
+                id="leverage"
+                type="range"
+                min={1}
+                max={3}
+                step={1}
+                value={leverage}
+                onChange={(e) => setLeverage(Number(e.target.value))}
+              />
+              <div className="flex justify-between mt-1.5">
+                {LEVERAGE_STEPS.map((s) => (
+                  <span key={s} className="numeric text-[10px] text-ink-faint">
+                    {s}×
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Quote preview */}
+            <dl className="inset p-4 space-y-2.5 text-xs">
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-ink-muted">Trading fee ({(TRADING_FEE_BPS / 100).toFixed(2)}%)</dt>
+                <dd className="numeric value-short">−{formatMoney(feeAmount)}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-ink-muted">Net margin</dt>
+                <dd className="numeric text-ink">{formatMoney(netCollateral)}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3 pt-2.5 border-t border-[color:var(--color-hairline)]">
+                <dt className="text-ink-muted">Position size</dt>
+                <dd className="numeric text-ink font-medium">{formatMoney(notional)}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-ink-muted">Est. entry price</dt>
+                <dd className="numeric text-accent font-medium">{formatMoney(quote.entryPrice)}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-ink-muted">Price impact</dt>
+                <dd
+                  className={`numeric ${
+                    impactPct > 2 ? 'value-short' : impactPct > 0.5 ? 'text-warn' : 'value-long'
+                  }`}
+                >
+                  {impactPct.toFixed(2)}%
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-3 pt-2.5 border-t border-[color:var(--color-hairline)]">
+                <dt className="text-ink-muted">Est. liquidation</dt>
+                <dd className="numeric text-warn">{formatMoney(liquidationPrice)}</dd>
+              </div>
+            </dl>
+
             <button
+              type="button"
               onClick={handleOpenTrade}
-              disabled={submitting || !isConnected}
-              className={`w-full py-4 rounded-full font-black text-xs uppercase tracking-wider text-black transition-all disabled:opacity-50 flex items-center justify-center gap-2 ${
-                isLong ? 'bg-emerald-400 hover:bg-emerald-300 shadow-lg shadow-emerald-500/20' : 'bg-rose-400 hover:bg-rose-300 shadow-lg shadow-rose-500/20'
-              }`}
+              disabled={submitting || !isConnected || !validCollateral}
+              className={`btn btn-lg w-full ${isLong ? 'btn-long' : 'btn-short'}`}
             >
-              {submitting ? 'Submitting Trade...' : `Open ${isLong ? 'Long' : 'Short'} ${leverage}x Position`}
+              {submitting
+                ? 'Submitting…'
+                : !isConnected
+                  ? 'Connect a wallet to trade'
+                  : `Open ${isLong ? 'long' : 'short'} · ${leverage}×`}
             </button>
 
+            {!validCollateral && (
+              <p className="text-xs text-warn">Enter a margin amount greater than zero.</p>
+            )}
+
             {txHash && (
-              <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300 flex items-center justify-between font-mono">
-                <span>Trade submitted!</span>
+              <div className="inset p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="value-long">Trade submitted</span>
                 <TxLink hash={txHash} />
+              </div>
+            )}
+
+            {error && (
+              <div className="inset p-3.5 text-xs value-short border-[color:rgba(244,63,94,0.3)]">
+                {error}
               </div>
             )}
           </div>
         </div>
-
       </div>
     </div>
   )

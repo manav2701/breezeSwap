@@ -1,45 +1,58 @@
 import Link from 'next/link'
 import { CloudRain, ExternalLink, Github, Terminal } from 'lucide-react'
 
+const PROTOCOL_LINKS = [
+  { href: '/perp-markets', label: 'Perpetuals' },
+  { href: '/markets', label: 'Classic markets' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/create', label: 'Create a market' },
+  { href: '/docs', label: 'Documentation' },
+]
+
 export function Footer() {
   return (
-    <footer className="border-t border-[#0a0a0a]/10 bg-[#141414] text-slate-300 text-sm py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#fde047] flex items-center justify-center">
-              <CloudRain className="w-5 h-5 text-[#0a0a0a]" />
-            </div>
-            <span className="text-xl font-black text-white tracking-tight">
-              Breeze<span className="text-[#fde047]">Swap</span>
+    <footer className="mt-16 border-t border-[color:var(--color-hairline)]">
+      <div className="max-w-[86rem] mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="space-y-3 lg:col-span-2 max-w-sm">
+          <div className="flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
+              <CloudRain className="w-4 h-4 text-[#0a0a0a]" aria-hidden />
+            </span>
+            <span className="text-base font-semibold tracking-tight text-ink">
+              Breeze<span className="text-accent">Swap</span>
             </span>
           </div>
-          <p className="text-slate-400 text-xs leading-relaxed font-mono">
-            First-of-its-kind weather derivatives protocol built on Flare Network. Hedging climate risk with real-world weather oracle data.
+          <p className="text-sm text-ink-muted leading-relaxed">
+            Parametric weather derivatives on Flare. Positions settle automatically from a verified
+            oracle reading — no claim, no adjuster, no counterparty to chase.
           </p>
         </div>
 
         <div>
-          <h4 className="text-xs font-black text-white uppercase tracking-wider mb-3 font-mono">Protocol</h4>
-          <ul className="space-y-2 text-xs font-mono">
-            <li><Link href="/markets" className="hover:text-[#fde047] transition-colors">Browse Markets</Link></li>
-            <li><Link href="/portfolio" className="hover:text-[#fde047] transition-colors">User Portfolio</Link></li>
-            <li><Link href="/create" className="hover:text-[#fde047] transition-colors">Create Market</Link></li>
-            <li><Link href="/docs" className="hover:text-[#fde047] transition-colors">Documentation</Link></li>
+          <h4 className="eyebrow mb-3">Protocol</h4>
+          <ul className="space-y-2 text-sm">
+            {PROTOCOL_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-ink-muted hover:text-accent transition-colors">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
         <div>
-          <h4 className="text-xs font-black text-white uppercase tracking-wider mb-3 font-mono">Developers</h4>
-          <ul className="space-y-2 text-xs font-mono">
+          <h4 className="eyebrow mb-3">Developers</h4>
+          <ul className="space-y-2 text-sm">
             <li>
               <a
                 href="https://github.com/manav2701/breezeSwap"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 hover:text-[#fde047] transition-colors"
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-accent transition-colors"
               >
-                <Github className="w-3.5 h-3.5" /> GitHub Monorepo <ExternalLink className="w-3 h-3" />
+                <Github className="w-3.5 h-3.5" aria-hidden /> GitHub
+                <ExternalLink className="w-3 h-3" aria-hidden />
               </a>
             </li>
             <li>
@@ -47,24 +60,21 @@ export function Footer() {
                 href="https://coston2-explorer.flare.network"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 hover:text-[#fde047] transition-colors"
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-accent transition-colors"
               >
-                <Terminal className="w-3.5 h-3.5" /> Coston2 Explorer <ExternalLink className="w-3 h-3" />
+                <Terminal className="w-3.5 h-3.5" aria-hidden /> Coston2 explorer
+                <ExternalLink className="w-3 h-3" aria-hidden />
               </a>
             </li>
           </ul>
         </div>
-
-        <div>
-          <h4 className="text-xs font-black text-white uppercase tracking-wider mb-3 font-mono">Powered By</h4>
-          <p className="text-xs text-slate-400 leading-relaxed font-mono">
-            Built for the Flare Network ecosystem. Powered by Open-Meteo real weather data, FTSO, and FDC oracle infrastructure.
-          </p>
-        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 mt-8 border-t border-white/10 text-xs text-center text-slate-400 font-mono">
-        © {new Date().getFullYear()} BreezeSwap. Deployed on Flare Coston2 Testnet. Not deployed on Flare Mainnet.
+      <div className="max-w-[86rem] mx-auto px-4 sm:px-6 lg:px-8 py-5 border-t border-[color:var(--color-hairline)] flex flex-wrap items-center justify-between gap-3 text-xs text-ink-faint">
+        <span>© {new Date().getFullYear()} BreezeSwap</span>
+        <span>
+          Deployed on Flare Coston2 testnet only. Not deployed on Flare mainnet — test funds only.
+        </span>
       </div>
     </footer>
   )

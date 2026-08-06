@@ -1,26 +1,45 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { MarketCard } from '../../components/MarketCard'
-import { PlusCircle, Search, Filter, RefreshCw } from 'lucide-react'
+import { PlusCircle, RefreshCw, Search } from 'lucide-react'
 import { getMarkets, type Market } from '@breezeswap/sdk'
+import { MarketCard } from '../../components/MarketCard'
+import { Reveal } from '../../components/motion/Reveal'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
+import { useBreezeNetwork } from '../../lib/hooks/useNetwork'
+
+const STATUSES = ['ALL', 'OPEN', 'SETTLED'] as const
+const VARIABLES = ['ALL', 'RAINFALL', 'TEMPERATURE'] as const
+const REGIONS = ['ALL', 'Tokyo', 'Seoul', 'Singapore', 'Dubai', 'London'] as const
+
+const VARIABLE_LABELS: Record<(typeof VARIABLES)[number], string> = {
+  ALL: 'All',
+  RAINFALL: 'Rainfall',
+  TEMPERATURE: 'Temperature',
+}
+
+const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
+  ALL: 'All',
+  OPEN: 'Open',
+  SETTLED: 'Settled',
+}
 
 export default function MarketsPage() {
   const { indexerUrl } = useBreezeSDK()
+  const { chainId } = useBreezeNetwork()
+
   const [markets, setMarkets] = useState<Market[]>([])
   const [loading, setLoading] = useState(true)
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'OPEN' | 'SETTLED'>('ALL')
-  const [regionFilter, setRegionFilter] = useState<string>('ALL')
-  const [variableFilter, setVariableFilter] = useState<'ALL' | 'RAINFALL' | 'TEMPERATURE'>('ALL')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [status, setStatus] = useState<(typeof STATUSES)[number]>('ALL')
+  const [region, setRegion] = useState<string>('ALL')
+  const [variable, setVariable] = useState<(typeof VARIABLES)[number]>('ALL')
+  const [query, setQuery] = useState('')
 
   async function loadMarkets() {
     setLoading(true)
     try {
-      const data = await getMarkets(indexerUrl)
-      setMarkets(data)
+      setMarkets((await getMarkets(indexerUrl, chainId)) ?? [])
     } catch {
       setMarkets([])
     } finally {
@@ -30,129 +49,160 @@ export default function MarketsPage() {
 
   useEffect(() => {
     loadMarkets()
-  }, [indexerUrl])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [indexerUrl, chainId])
 
-  const filteredMarkets = markets.filter((m) => {
-    if (statusFilter !== 'ALL' && m.status !== statusFilter) return false
-    if (regionFilter !== 'ALL' && m.regionName !== regionFilter) return false
-    if (variableFilter !== 'ALL' && m.weatherVariable !== variableFilter) return false
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      const regionMatch = (m.regionName || '').toLowerCase().includes(query)
-      const addressMatch = m.contractAddress.toLowerCase().includes(query)
-      if (!regionMatch && !addressMatch) return false
-    }
-    return true
-  })
+  const filtered = useMemo(
+    () =>
+      markets.filter((m) => {
+        if (status !== 'ALL' && m.status !== status) return false
+        if (region !== 'ALL' && m.regionName !== region) return false
+        if (variable !== 'ALL' && m.weatherVariable !== variable) return false
+        if (query) {
+          const q = query.toLowerCase()
+          const matchesRegion = (m.regionName || '').toLowerCase().includes(q)
+          const matchesAddress = m.contractAddress.toLowerCase().includes(q)
+          if (!matchesRegion && !matchesAddress) return false
+        }
+        return true
+      }),
+    [markets, status, region, variable, query]
+  )
+
+  const hasFilters = status !== 'ALL' || region !== 'ALL' || variable !== 'ALL' || query !== ''
 
   return (
-    <div className="space-y-8 py-4">
-      {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
-        <div>
-          <h1 className="text-4xl font-black uppercase tracking-tight text-white">Classic Weather Swaps</h1>
-          <p className="text-xs text-slate-400 font-mono">Browse, filter, and trade CME-style pooled binary and capped weather options.</p>
+    <div className="space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4 pb-6 border-b border-[color:var(--color-hairline)]">
+        <div className="max-w-2xl">
+          <p className="eyebrow mb-2">Classic markets</p>
+          <h1 className="display-2 text-ink">Fixed-expiry weather contracts</h1>
+          <p className="text-sm text-ink-muted mt-2 leading-relaxed">
+            Pooled binary, linear and capped options that settle once against a verified reading.
+          </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={loadMarkets}
-            className="p-3 rounded-full bg-white/10 border border-white/10 text-slate-300 hover:text-black hover:bg-[#fde047] transition-all"
-            title="Refresh Markets"
+            className="btn btn-ghost btn-icon"
+            aria-label="Refresh markets"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} aria-hidden />
           </button>
-
-          <Link
-            href="/create"
-            className="btn-cyber-yellow py-3 px-6 text-xs uppercase tracking-wider font-extrabold flex items-center gap-2"
-          >
-            <PlusCircle className="w-4 h-4" />
-            Create Market
+          <Link href="/create" className="btn btn-primary">
+            <PlusCircle className="w-4 h-4" aria-hidden />
+            Create market
           </Link>
         </div>
-      </div>
+      </header>
 
-      {/* Filter & Search Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 glass-panel">
-        {/* Search */}
+      {/* Filters — one row above the results, per the interaction spec. */}
+      <div className="panel p-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+          <Search
+            className="w-4 h-4 text-ink-faint absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            aria-hidden
+          />
           <input
-            type="text"
-            placeholder="Search region or address..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-black/80 border border-white/10 text-white rounded-full pl-9 pr-4 py-2.5 text-xs font-mono focus:outline-none focus:border-[#fde047] transition-colors"
+            type="search"
+            placeholder="Search region or address"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search markets"
+            className="field pl-9"
           />
         </div>
 
-        {/* Status Filter */}
-        <div className="flex items-center gap-1 bg-black/80 p-1 rounded-full border border-white/10">
-          {(['ALL', 'OPEN', 'SETTLED'] as const).map((s) => (
+        <div className="segmented" role="group" aria-label="Status filter">
+          {STATUSES.map((s) => (
             <button
               key={s}
-              onClick={() => setStatusFilter(s)}
-              className={`flex-1 py-1.5 px-3 rounded-full text-[10px] font-extrabold uppercase transition-all ${
-                statusFilter === s ? 'bg-[#fde047] text-black shadow-sm' : 'text-slate-400 hover:text-white'
-              }`}
+              type="button"
+              onClick={() => setStatus(s)}
+              data-active={status === s}
+              aria-pressed={status === s}
             >
-              {s}
+              {STATUS_LABELS[s]}
             </button>
           ))}
         </div>
 
-        {/* Region Filter */}
-        <div className="relative">
-          <Filter className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-          <select
-            value={regionFilter}
-            onChange={(e) => setRegionFilter(e.target.value)}
-            className="w-full bg-black/80 border border-white/10 text-white rounded-full pl-9 pr-4 py-2.5 text-xs font-mono focus:outline-none focus:border-[#fde047] transition-colors appearance-none"
-          >
-            <option value="ALL">All Regions</option>
-            <option value="Tokyo">Tokyo 🇯🇵</option>
-            <option value="Seoul">Seoul 🇰🇷</option>
-            <option value="Singapore">Singapore 🇸🇬</option>
-            <option value="Dubai">Dubai 🇦🇪</option>
-            <option value="London">London 🇬🇧</option>
-          </select>
-        </div>
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          aria-label="Region filter"
+          className="field"
+        >
+          {REGIONS.map((r) => (
+            <option key={r} value={r}>
+              {r === 'ALL' ? 'All regions' : r}
+            </option>
+          ))}
+        </select>
 
-        {/* Weather Variable Filter */}
-        <div className="flex items-center gap-1 bg-black/80 p-1 rounded-full border border-white/10">
-          {(['ALL', 'RAINFALL', 'TEMPERATURE'] as const).map((v) => (
+        <div className="segmented" role="group" aria-label="Weather metric filter">
+          {VARIABLES.map((v) => (
             <button
               key={v}
-              onClick={() => setVariableFilter(v)}
-              className={`flex-1 py-1.5 px-3 rounded-full text-[10px] font-extrabold uppercase transition-all ${
-                variableFilter === v ? 'bg-[#fde047] text-black shadow-sm' : 'text-slate-400 hover:text-white'
-              }`}
+              type="button"
+              onClick={() => setVariable(v)}
+              data-active={variable === v}
+              aria-pressed={variable === v}
             >
-              {v === 'ALL' ? 'All Metrics' : v}
+              {VARIABLE_LABELS[v]}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Market Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-64 glass-panel animate-pulse bg-white/5" />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="panel skeleton h-56" />
           ))}
         </div>
-      ) : filteredMarkets.length === 0 ? (
-        <div className="p-16 glass-panel text-center space-y-3 font-mono">
-          <p className="text-slate-300 font-bold">No matching markets found</p>
-          <p className="text-xs text-slate-500">Try adjusting your search query or region/status filters.</p>
+      ) : filtered.length === 0 ? (
+        <div className="panel p-14 text-center space-y-3">
+          <p className="text-sm text-ink-muted">
+            {markets.length === 0
+              ? 'No classic markets deployed on this chain yet.'
+              : 'No markets match these filters.'}
+          </p>
+          {hasFilters && markets.length > 0 ? (
+            <button
+              type="button"
+              onClick={() => {
+                setStatus('ALL')
+                setRegion('ALL')
+                setVariable('ALL')
+                setQuery('')
+              }}
+              className="btn btn-ghost btn-sm"
+            >
+              Clear filters
+            </button>
+          ) : (
+            <Link href="/create" className="btn btn-ghost btn-sm">
+              Create the first one
+            </Link>
+          )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {filteredMarkets.map((m) => (
-            <MarketCard key={m.contractAddress} market={m} />
-          ))}
-        </div>
+        <>
+          <p className="text-xs text-ink-faint">
+            <span className="numeric">{filtered.length}</span> of{' '}
+            <span className="numeric">{markets.length}</span> markets
+          </p>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((m, i) => (
+              <Reveal key={m.contractAddress} index={i} className="h-full">
+                <MarketCard market={m} />
+              </Reveal>
+            ))}
+          </div>
+        </>
       )}
     </div>
   )
