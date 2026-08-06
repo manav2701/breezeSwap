@@ -25,7 +25,7 @@ const PerpMarketABI = [
 ] as const
 
 async function main() {
-  logger.info('BreezeSwap multi-chain indexer starting (Chain IDs: 114, 14)...')
+  logger.info('BreezeSwap indexer starting (Chain ID: 114 — Coston2)...')
 
   // 1. Start API server with CORS enabled immediately
   const app = express()

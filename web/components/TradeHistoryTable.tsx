@@ -136,7 +136,7 @@ export function TradeHistoryTable({ marketAddress, isGlobal = false, limit = 20 
                 <td className="p-4 text-right font-sans">
                   {t.txHash ? (
                     <a
-                      href={`https://${chainId === 14 ? 'flare' : 'coston2'}-explorer.flare.network/tx/${t.txHash}`}
+                      href={`https://coston2-explorer.flare.network/tx/${t.txHash}`}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-slate-400 hover:text-[#fde047] transition-colors"

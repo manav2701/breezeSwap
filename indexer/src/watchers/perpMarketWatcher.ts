@@ -57,6 +57,10 @@ const PerpMarketABI = [
       { indexed: true, internalType: "address", name: "trader", type: "address" },
       { indexed: false, internalType: "uint256", name: "feeAmount", type: "uint256" },
       { indexed: false, internalType: "uint256", name: "insuranceShare", type: "uint256" },
+      // Added when waterfall tier 1 gained its own funded reserve. The event
+      // signature changed with it, so this entry is not optional — without it the
+      // topic no longer matches and fee events stop being indexed silently.
+      { indexed: false, internalType: "uint256", name: "firstLossShare", type: "uint256" },
       { indexed: false, internalType: "uint256", name: "treasuryShare", type: "uint256" }
     ],
     name: "FeeCollected",
@@ -130,6 +134,7 @@ export function startPerpMarketWatcher(marketAddress: string) {
             trader_address: args.trader.toLowerCase(),
             fee_amount: args.feeAmount.toString(),
             insurance_share: args.insuranceShare.toString(),
+            first_loss_share: args.firstLossShare.toString(),
             treasury_share: args.treasuryShare.toString(),
             block_number: Number(blockNumber),
             tx_hash: transactionHash,

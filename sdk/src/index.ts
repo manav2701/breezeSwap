@@ -9,6 +9,7 @@ export type {
 // Constants
 export {
   COSTON2_CHAIN_ID, FLARE_MAINNET_CHAIN_ID, CONTRACT_ADDRESSES, getContractAddresses,
+  DEPLOYED_CHAIN_IDS, isChainDeployed,
   ORACLE_DECIMALS, ORACLE_SCALAR, WAD, WEATHER_VARIABLES, PAYOFF_TYPES, SIDES
 } from './constants'
 

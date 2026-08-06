@@ -52,7 +52,8 @@ contract BreezeMarketTest is Test {
             address(collateral),
             address(positionToken),
             PayoffCalculator.PayoffType.CAPPED,
-            address(accessControl)
+            address(accessControl),
+            address(0) // no pricing oracle: these tests predate fair-odds pricing
         );
 
         positionToken.setMinter(address(market), true);

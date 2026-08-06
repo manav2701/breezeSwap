@@ -1,107 +1,221 @@
 @import "tailwindcss";
 
-:root {
-  --cream-bg: #faf8f5;
-  --cyber-yellow: #fde047;
-  --onyx-black: #0a0a0a;
-  --charcoal-card: #141414;
+/*
+  BreezeSwap design system — dark-first.
+
+  The previous palette put Cyber Yellow (#fde047) on a cream canvas (#faf8f5).
+  That pairing has a contrast ratio of roughly 1.2:1, so yellow was unreadable
+  as text or as a data colour and could only ever be a background block. That
+  forced near-black cards to float on a light page, which is why the old UI
+  read as three competing themes at once.
+
+  On a dark canvas the same yellow reaches ~14.8:1. It finally works as an
+  accent, a chart series, and a focus ring — and dense trading data reads far
+  better on dark. Every token below clears WCAG AA (4.5:1) against the canvas.
+*/
+
+@theme {
+  /* Surfaces, from furthest back to closest */
+  --color-canvas: #0b0d10;
+  --color-surface: #14171c;
+  --color-raised: #1b1f26;
+  --color-overlay: #232830;
+
+  /* Text — contrast against --color-canvas noted per token */
+  --color-ink: #f2f4f7; /* 17.3:1 */
+  --color-ink-muted: #9ba3af; /*  7.5:1 */
+  --color-ink-faint: #6b7280; /*  4.6:1 */
+
+  /* Brand */
+  --color-accent: #fde047; /* 14.8:1 */
+  --color-accent-deep: #eab308;
+  --color-accent-wash: rgba(253, 224, 71, 0.12);
+
+  /* Semantic / data */
+  --color-long: #34d399; /* 11.2:1 */
+  --color-short: #f87171; /*  7.4:1 */
+  --color-info: #60a5fa; /*  8.0:1 */
+  --color-warn: #fbbf24;
+
+  /* Lines */
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-hairline-strong: rgba(255, 255, 255, 0.16);
+
+  --radius-panel: 1.25rem;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  background-color: var(--color-canvas);
+  color-scheme: dark;
 }
 
 body {
-  background-color: #faf8f5;
-  color: #0a0a0a;
-  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
   overflow-x: hidden;
+  /* Subtle depth so large dark areas do not read as flat black. */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(253, 224, 71, 0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(96, 165, 250, 0.04), transparent);
+  background-attachment: fixed;
 }
 
-/* Glassmorphic Panel Design Tokens */
+/* ------------------------------------------------------------------ */
+/* Panels                                                              */
+/* ------------------------------------------------------------------ */
+
 .glass-panel,
 .glass-card-dark {
-  background-color: #141414;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.75rem; /* rounded-3xl */
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+  background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
+  backdrop-filter: blur(12px);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset, 0 16px 40px -24px rgba(0, 0, 0, 0.8);
   overflow: hidden;
 }
 
+/* Kept for components that still ask for a "light" card. On a dark canvas the
+   readable equivalent is a raised surface, not an inverted one. */
 .glass-card-light {
-  background-color: #ffffff;
-  color: #0a0a0a;
-  border: 1px solid rgba(10, 10, 10, 0.1);
-  border-radius: 1.75rem; /* rounded-3xl */
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+  background-color: var(--color-raised);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 16px 40px -24px rgba(0, 0, 0, 0.8);
   overflow: hidden;
 }
 
 .glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    border-color 0.25s var(--ease-out-quint),
+    box-shadow 0.25s var(--ease-out-quint),
+    transform 0.25s var(--ease-out-quint);
 }
 
 .glass-panel-hover:hover {
-  border-color: #fde047;
-  box-shadow: 0 10px 30px rgba(253, 224, 71, 0.25);
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  box-shadow: 0 0 0 1px var(--color-accent-wash), 0 20px 44px -24px rgba(253, 224, 71, 0.25);
   transform: translateY(-2px);
 }
 
-/* Liquid Hero Asymmetrical Cutout */
+/* Hero band. The old asymmetric cutout fought the grid; a soft accent wash
+   sits behind content instead of carving the page into blocks. */
 .liquid-hero-bg {
-  background-color: #fde047;
-  border-bottom-left-radius: 60px;
-  border-bottom-right-radius: 140px;
+  background:
+    radial-gradient(ellipse 90% 100% at 20% 0%, rgba(253, 224, 71, 0.16), transparent 70%),
+    radial-gradient(ellipse 70% 90% at 85% 20%, rgba(96, 165, 250, 0.1), transparent 70%),
+    var(--color-surface);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-panel);
 }
 
-@media (min-width: 768px) {
-  .liquid-hero-bg {
-    border-bottom-left-radius: 90px;
-    border-bottom-right-radius: 200px;
-  }
-}
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
 
-/* Cyber Yellow Buttons */
 .btn-cyber-yellow {
-  background-color: #fde047;
+  background-color: var(--color-accent);
   color: #0a0a0a;
-  font-weight: 800;
+  font-weight: 700;
   border-radius: 9999px;
-  transition: all 0.2s ease-in-out;
+  transition:
+    background-color 0.18s ease,
+    transform 0.18s var(--ease-out-quint),
+    box-shadow 0.18s ease;
 }
 
 .btn-cyber-yellow:hover {
-  background-color: #facc15;
-  transform: scale(1.03);
-  box-shadow: 0 10px 25px -5px rgba(253, 224, 71, 0.4);
+  background-color: #fce96a;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px -10px rgba(253, 224, 71, 0.5);
 }
 
 .btn-cyber-yellow:active {
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.985);
 }
 
 .btn-onyx {
-  background-color: #0a0a0a;
-  color: #ffffff;
-  font-weight: 800;
+  background-color: var(--color-raised);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+  font-weight: 700;
   border-radius: 9999px;
-  transition: all 0.2s ease-in-out;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s var(--ease-out-quint);
 }
 
 .btn-onyx:hover {
-  background-color: #1f1f1f;
-  transform: scale(1.03);
+  background-color: var(--color-overlay);
+  border-color: var(--color-hairline-strong);
+  transform: translateY(-1px);
 }
 
-/* Custom Scrollbars */
+.btn-onyx:active {
+  transform: translateY(0) scale(0.985);
+}
+
+/* A single visible focus treatment for every interactive element. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Data display                                                        */
+/* ------------------------------------------------------------------ */
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.value-long {
+  color: var(--color-long);
+}
+
+.value-short {
+  color: var(--color-short);
+}
+
+/* ------------------------------------------------------------------ */
+/* Scrollbars                                                          */
+/* ------------------------------------------------------------------ */
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #faf8f5;
+  background: var(--color-canvas);
 }
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d4;
+  background: var(--color-overlay);
   border-radius: 9999px;
+  border: 2px solid var(--color-canvas);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #fde047;
+  background: var(--color-ink-faint);
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion                                                              */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -168,6 +168,15 @@ interface OHLCCandle {
 
 declare const COSTON2_CHAIN_ID = 114;
 declare const FLARE_MAINNET_CHAIN_ID = 14;
+/**
+ * Live contract registry, keyed by chain ID.
+ *
+ * Only chains with a verified on-chain deployment appear here. BreezeSwap is
+ * currently deployed to Coston2 testnet only — Flare Mainnet (chain 14) is
+ * intentionally absent because no mainnet deployment exists yet. The SDK,
+ * indexer, and frontend are all genuinely chain-parametrised, so adding a
+ * mainnet entry here is the only change required once one is deployed.
+ */
 declare const CONTRACT_ADDRESSES: {
     readonly 114: {
         readonly accessControl: `0x${string}`;
@@ -189,27 +198,17 @@ declare const CONTRACT_ADDRESSES: {
         readonly seoulPerpMarket: `0x${string}`;
         readonly dubaiPerpMarket: `0x${string}`;
     };
-    readonly 14: {
-        readonly accessControl: `0x${string}`;
-        readonly factory: `0x${string}`;
-        readonly marketFactory: `0x${string}`;
-        readonly positionToken: `0x${string}`;
-        readonly mockWeatherOracle: `0x${string}`;
-        readonly oracle: `0x${string}`;
-        readonly mockUsdt: `0x${string}`;
-        readonly fTestXrp: `0x${string}`;
-        readonly ftsoWeatherAdapter: `0x${string}`;
-        readonly fdcWeatherAdapter: `0x${string}`;
-        readonly fAssetsCollateralAdapter: `0x${string}`;
-        readonly feeConfig: `0x${string}`;
-        readonly protocolTreasury: `0x${string}`;
-        readonly insuranceFund: `0x${string}`;
-        readonly perpFactory: `0x${string}`;
-        readonly tokyoPerpMarket: `0x${string}`;
-        readonly seoulPerpMarket: `0x${string}`;
-        readonly dubaiPerpMarket: `0x${string}`;
-    };
 };
+/** Chain IDs with a verified on-chain deployment. */
+declare const DEPLOYED_CHAIN_IDS: readonly [114];
+declare function isChainDeployed(chainId: number): boolean;
+/**
+ * Resolve the contract registry for a chain.
+ *
+ * Throws for chains with no deployment rather than falling back to another
+ * chain's addresses — a silent fallback would let a caller believe it was
+ * writing to one network while pointing at contracts on a different one.
+ */
 declare function getContractAddresses(chainId: number): {
     readonly accessControl: `0x${string}`;
     readonly factory: `0x${string}`;
@@ -314,6 +313,15 @@ declare const coston2Chain: {
     serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
     verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
 };
+/**
+ * Flare Mainnet chain definition.
+ *
+ * Defined and exported so the stack stays genuinely chain-parametrised, but
+ * deliberately NOT part of `SUPPORTED_CHAINS`: BreezeSwap has no mainnet
+ * deployment, so offering it in a network switcher would point users at
+ * addresses that hold no code. Add it to `SUPPORTED_CHAINS` and add a
+ * registry entry in `constants.ts` once a real deployment exists.
+ */
 declare const flareMainnetChain: {
     blockExplorers: {
         readonly default: {
@@ -367,6 +375,7 @@ declare const flareMainnetChain: {
     serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
     verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
 };
+/** Chains BreezeSwap is actually deployed on and can be used against. */
 declare const SUPPORTED_CHAINS: readonly [{
     blockExplorers: {
         readonly default: {
@@ -399,58 +408,6 @@ declare const SUPPORTED_CHAINS: readonly [{
         };
         readonly public: {
             readonly http: readonly ["https://coston2-api.flare.network/ext/C/rpc"];
-        };
-    };
-    sourceId?: number | undefined | undefined;
-    supportsTransactionReplacementDetection?: boolean | undefined | undefined;
-    testnet?: boolean | undefined | undefined;
-    custom?: Record<string, unknown> | undefined;
-    extendSchema?: Record<string, unknown> | undefined;
-    fees?: viem.ChainFees<undefined> | undefined;
-    formatters?: undefined;
-    prepareTransactionRequest?: ((args: viem.PrepareTransactionRequestParameters, options: {
-        client: viem.Client;
-        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
-    }) => Promise<viem.PrepareTransactionRequestParameters>) | [fn: ((args: viem.PrepareTransactionRequestParameters, options: {
-        client: viem.Client;
-        phase: "beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters";
-    }) => Promise<viem.PrepareTransactionRequestParameters>) | undefined, options: {
-        runAt: readonly ("beforeFillTransaction" | "beforeFillParameters" | "afterFillParameters")[];
-    }] | undefined;
-    serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
-    verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
-}, {
-    blockExplorers: {
-        readonly default: {
-            readonly name: "Flare Explorer";
-            readonly url: "https://flare-explorer.flare.network";
-        };
-    };
-    blockTime?: number | undefined | undefined;
-    contracts?: {
-        [x: string]: viem.ChainContract | {
-            [sourceId: number]: viem.ChainContract | undefined;
-        } | undefined;
-        ensRegistry?: viem.ChainContract | undefined;
-        ensUniversalResolver?: viem.ChainContract | undefined;
-        multicall3?: viem.ChainContract | undefined;
-        erc6492Verifier?: viem.ChainContract | undefined;
-    } | undefined;
-    ensTlds?: readonly string[] | undefined;
-    id: 14;
-    name: "Flare Mainnet";
-    nativeCurrency: {
-        readonly name: "Flare";
-        readonly symbol: "FLR";
-        readonly decimals: 18;
-    };
-    experimental_preconfirmationTime?: number | undefined | undefined;
-    rpcUrls: {
-        readonly default: {
-            readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
-        };
-        readonly public: {
-            readonly http: readonly ["https://flare-api.flare.network/ext/C/rpc"];
         };
     };
     sourceId?: number | undefined | undefined;
@@ -26046,4 +26003,4 @@ declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, le
     entryPrice: number;
 };
 
-export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };
+export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, DEPLOYED_CHAIN_IDS, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, isChainDeployed, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };
