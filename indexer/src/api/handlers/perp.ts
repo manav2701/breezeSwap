@@ -187,7 +187,7 @@ export async function getPerpMarketStats(req: Request, res: Response) {
     const chainId = Number(req.query.chainId ?? 114)
     const client = getPublicClient(chainId)
 
-    // 1. On-chain view queries using Promise.allSettled
+    // 1. On-chain view queries using Promise.allSettled for fault tolerance
     let markPrice = '0'
     let oraclePrice = '0'
     let longOI = '0'
