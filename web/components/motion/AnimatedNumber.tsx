@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { animate, useReducedMotion } from 'motion/react'
+import { animate, useReducedMotion } from 'framer-motion'
 
 type AnimatedNumberProps = {
   value: number
