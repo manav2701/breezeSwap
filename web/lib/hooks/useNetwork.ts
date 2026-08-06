@@ -1,47 +1,39 @@
 'use client'
 
-import { useState } from 'react'
 import { useAccount, useChainId, useSwitchChain } from 'wagmi'
-import { COSTON2_CHAIN_ID, FLARE_MAINNET_CHAIN_ID, coston2Chain, flareMainnetChain } from '@breezeswap/sdk'
+import { COSTON2_CHAIN_ID, isChainDeployed } from '@breezeswap/sdk'
 
+/**
+ * Resolves the chain BreezeSwap should read and write against.
+ *
+ * BreezeSwap is deployed on Coston2 only. Rather than offering a network
+ * picker, this reports whether the connected wallet is on a chain we actually
+ * have contracts on, so the UI can prompt for a switch instead of rendering
+ * data resolved from the wrong registry.
+ */
 export function useBreezeNetwork() {
   const { isConnected } = useAccount()
   const walletChainId = useChainId()
-  const { switchChain } = useSwitchChain()
+  const { switchChain, isPending: isSwitching } = useSwitchChain()
 
-  const [selectedChainId, setSelectedChainId] = useState<number>(COSTON2_CHAIN_ID)
+  // Reads work without a wallet, so fall back to the one deployed chain.
+  const activeChainId = isConnected && walletChainId ? walletChainId : COSTON2_CHAIN_ID
 
-  // Source of truth: connected wallet chain if connected, else selectedChainId
-  const activeChainId = isConnected && walletChainId ? walletChainId : selectedChainId
+  const isSupported = isChainDeployed(activeChainId)
+  const isWrongNetwork = isConnected && !isSupported
 
-  const isMainnet = activeChainId === FLARE_MAINNET_CHAIN_ID
-  const isTestnet = activeChainId === COSTON2_CHAIN_ID
-
-  const switchToTestnet = () => {
-    setSelectedChainId(COSTON2_CHAIN_ID)
-    if (isConnected && switchChain) {
-      switchChain({ chainId: COSTON2_CHAIN_ID })
-    }
-  }
-
-  const switchToMainnet = () => {
-    setSelectedChainId(FLARE_MAINNET_CHAIN_ID)
-    if (isConnected && switchChain) {
-      switchChain({ chainId: FLARE_MAINNET_CHAIN_ID })
-    }
-  }
-
-  const setNetwork = (chainId: number) => {
-    if (chainId === FLARE_MAINNET_CHAIN_ID) switchToMainnet()
-    else switchToTestnet()
+  const switchToSupported = () => {
+    if (switchChain) switchChain({ chainId: COSTON2_CHAIN_ID })
   }
 
   return {
+    /** Chain to resolve contracts from. Only valid when `isSupported`. */
     chainId: activeChainId,
-    isMainnet,
-    isTestnet,
-    switchToTestnet,
-    switchToMainnet,
-    setNetwork
+    /** The single chain BreezeSwap is deployed on. */
+    supportedChainId: COSTON2_CHAIN_ID,
+    isSupported,
+    isWrongNetwork,
+    isSwitching,
+    switchToSupported,
   }
 }

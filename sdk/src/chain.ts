@@ -13,6 +13,15 @@ export const coston2Chain = defineChain({
   }
 })
 
+/**
+ * Flare Mainnet chain definition.
+ *
+ * Defined and exported so the stack stays genuinely chain-parametrised, but
+ * deliberately NOT part of `SUPPORTED_CHAINS`: BreezeSwap has no mainnet
+ * deployment, so offering it in a network switcher would point users at
+ * addresses that hold no code. Add it to `SUPPORTED_CHAINS` and add a
+ * registry entry in `constants.ts` once a real deployment exists.
+ */
 export const flareMainnetChain = defineChain({
   id: 14,
   name: 'Flare Mainnet',
@@ -26,7 +35,8 @@ export const flareMainnetChain = defineChain({
   }
 })
 
-export const SUPPORTED_CHAINS = [coston2Chain, flareMainnetChain] as const
+/** Chains BreezeSwap is actually deployed on and can be used against. */
+export const SUPPORTED_CHAINS = [coston2Chain] as const
 
 export function createBreezePublicClient(chainId: number = 114, rpcUrl?: string) {
   const chain = chainId === 14 ? flareMainnetChain : coston2Chain

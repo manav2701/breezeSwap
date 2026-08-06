@@ -74,7 +74,8 @@ contract PerpMarketFeesTest is Test {
 
     function test_fee_deducted_on_open() public {
         uint256 rawCollateral = 10_000 * 1e18; // 10,000 mUSDT
-        (uint256 feeAmount, uint256 insuranceShare, uint256 treasuryShare) = feeConfig.calculateFeeSplit(rawCollateral);
+        (uint256 feeAmount, uint256 insuranceShare, uint256 firstLossShare, uint256 treasuryShare) =
+            feeConfig.calculateFeeSplit(rawCollateral);
 
         uint256 insBalBefore = collateralToken.balanceOf(address(insuranceFund));
         uint256 treBalBefore = collateralToken.balanceOf(address(treasury));
@@ -87,10 +88,16 @@ contract PerpMarketFeesTest is Test {
         // Assert net collateral recorded = rawCollateral - feeAmount
         assertEq(netCollateral, rawCollateral - feeAmount);
 
-        // Assert fee split routing
-        assertEq(collateralToken.balanceOf(address(insuranceFund)) - insBalBefore, insuranceShare);
+        // No first-loss reserve is configured on this market, so that leg joins the
+        // liquidation backstop rather than being stranded. This is the compatibility
+        // path: a market never wired to a reserve behaves exactly as before.
+        assertEq(
+            collateralToken.balanceOf(address(insuranceFund)) - insBalBefore,
+            insuranceShare + firstLossShare,
+            "first-loss leg went missing when no reserve was configured"
+        );
         assertEq(collateralToken.balanceOf(address(treasury)) - treBalBefore, treasuryShare);
-        assertEq(insuranceShare + treasuryShare, feeAmount);
+        assertEq(insuranceShare + firstLossShare + treasuryShare, feeAmount);
     }
 
     function test_fee_deducted_on_close() public {

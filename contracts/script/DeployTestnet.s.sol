@@ -1,4 +1,15 @@
 // SPDX-License-Identifier: MIT
+//
+// SUPERSEDED. This script deploys a HISTORICAL SUBSET of the protocol and is kept only so
+// the existing Coston2 addresses remain reproducible. It has no liquidity vault, no junior
+// tranche, no first-loss reserve, no peril exposure registry and no policy market — every
+// one of those tiers is optional by design, so a deployment from here works and silently
+// has none of them.
+//
+// Use `DeployProtocol.s.sol` (any network) or `DeployMainnet.s.sol` (production, requires a
+// real collateral token and a governance multisig). Both share one wiring implementation
+// with `BreezeDeployer.sol`, which `test/integration/DeploymentWiring.t.sol` asserts link by
+// link.
 pragma solidity 0.8.24;
 
 import "forge-std/Script.sol";

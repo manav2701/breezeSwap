@@ -9860,32 +9860,18 @@ var CONTRACT_ADDRESSES = {
     tokyoPerpMarket: "0x90C9876e41D0C5a7E1E8F660F0B2bD58D64Cb7Be",
     seoulPerpMarket: "0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
     dubaiPerpMarket: "0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD"
-  },
-  [FLARE_MAINNET_CHAIN_ID]: {
-    accessControl: "0x5A88420AB4Ef4D2c2dd22c151fd6CB93d2543853",
-    factory: "0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf",
-    marketFactory: "0x799fd810EC7C0620a9BF01Cd73356770Ae0aBbaf",
-    positionToken: "0x2A3C38499020a733C1534E8f43FBbF3afAf01e15",
-    mockWeatherOracle: "0x27EEF37738887b2a6f7149aA3af047D6144D6139",
-    oracle: "0x27EEF37738887b2a6f7149aA3af047D6144D6139",
-    mockUsdt: "0x739b6b2a0195271557e543F51c0FA417265B2FAC",
-    fTestXrp: "0x0b6a8e49F600B4676570c99a38e6a68d5d813DC7",
-    ftsoWeatherAdapter: "0xade4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c",
-    fdcWeatherAdapter: "0x441A6C8AA41A70c11803Cb67dd56E7F62c1fb18A",
-    fAssetsCollateralAdapter: "0x5cB99FD30BF78c735a5296462C2C2256bE5DcF54",
-    feeConfig: "0xC0D295305d653F044E4178bb6966e76FB79f325C",
-    protocolTreasury: "0xfcB7Ff4dA80532F5C7803392761643bA4dDe5058",
-    insuranceFund: "0xA6952FC0fBe43AA72E1D08B11daD5cA56c12a36f",
-    perpFactory: "0x15e309f0434942BDfa0D961E25FaCc4483BABe46",
-    tokyoPerpMarket: "0x1e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
-    seoulPerpMarket: "0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
-    dubaiPerpMarket: "0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD"
   }
 };
+var DEPLOYED_CHAIN_IDS = [COSTON2_CHAIN_ID];
+function isChainDeployed(chainId) {
+  return chainId in CONTRACT_ADDRESSES;
+}
 function getContractAddresses(chainId) {
   const addresses = CONTRACT_ADDRESSES[chainId];
   if (!addresses) {
-    return CONTRACT_ADDRESSES[COSTON2_CHAIN_ID];
+    throw new Error(
+      `BreezeSwap is not deployed on chain ${chainId}. Deployed chains: ${DEPLOYED_CHAIN_IDS.join(", ")}.`
+    );
   }
   return addresses;
 }
@@ -19062,7 +19048,7 @@ var flareMainnetChain = defineChain({
     default: { name: "Flare Explorer", url: "https://flare-explorer.flare.network" }
   }
 });
-var SUPPORTED_CHAINS = [coston2Chain, flareMainnetChain];
+var SUPPORTED_CHAINS = [coston2Chain];
 function createBreezePublicClient(chainId = 114, rpcUrl) {
   const chain = chainId === 14 ? flareMainnetChain : coston2Chain;
   const defaultRpc = chainId === 14 ? "https://flare-api.flare.network/ext/C/rpc" : "https://coston2-api.flare.network/ext/C/rpc";
@@ -20659,26 +20645,123 @@ var FeeConfig_default = [
   {
     inputs: [],
     name: "tradingFeeBps",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   },
   {
-    inputs: [{ internalType: "uint256", name: "newRateBps", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "newRateBps",
+        type: "uint256"
+      }
+    ],
     name: "setTradingFeeBps",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function"
   },
   {
-    inputs: [{ internalType: "uint256", name: "tradeAmount", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tradeAmount",
+        type: "uint256"
+      }
+    ],
     name: "calculateFeeSplit",
     outputs: [
-      { internalType: "uint256", name: "feeAmount", type: "uint256" },
-      { internalType: "uint256", name: "insuranceShare", type: "uint256" },
-      { internalType: "uint256", name: "treasuryShare", type: "uint256" }
+      {
+        internalType: "uint256",
+        name: "feeAmount",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "insuranceShare",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "firstLossShare",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "treasuryShare",
+        type: "uint256"
+      }
     ],
     stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "insuranceShareBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "firstLossShareBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "treasuryShareBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "insuranceBps",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "firstLossBps",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "treasuryBps",
+        type: "uint256"
+      }
+    ],
+    name: "setFeeSplit",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function"
   }
 ];
@@ -20792,32 +20875,80 @@ var BreezePerpMarket_default = [
   {
     inputs: [],
     name: "getMarkPrice",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [
-      { internalType: "bool", name: "isLong", type: "bool" },
-      { internalType: "uint256", name: "collateral", type: "uint256" },
-      { internalType: "uint256", name: "leverage", type: "uint256" }
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool"
+      },
+      {
+        internalType: "uint256",
+        name: "collateral",
+        type: "uint256"
+      },
+      {
+        internalType: "uint256",
+        name: "leverage",
+        type: "uint256"
+      }
     ],
     name: "openPosition",
-    outputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "positionId",
+        type: "uint256"
+      }
+    ],
     stateMutability: "nonpayable",
     type: "function"
   },
   {
-    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "positionId",
+        type: "uint256"
+      }
+    ],
     name: "closePosition",
-    outputs: [{ internalType: "int256", name: "pnl", type: "int256" }],
+    outputs: [
+      {
+        internalType: "int256",
+        name: "pnl",
+        type: "int256"
+      }
+    ],
     stateMutability: "nonpayable",
     type: "function"
   },
   {
-    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "positionId",
+        type: "uint256"
+      }
+    ],
     name: "liquidate",
-    outputs: [{ internalType: "uint256", name: "reward", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "reward",
+        type: "uint256"
+      }
+    ],
     stateMutability: "nonpayable",
     type: "function"
   },
@@ -20829,44 +20960,254 @@ var BreezePerpMarket_default = [
     type: "function"
   },
   {
-    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "positionId",
+        type: "uint256"
+      }
+    ],
     name: "calculateUnrealizedPnl",
-    outputs: [{ internalType: "int256", name: "totalPnl", type: "int256" }],
+    outputs: [
+      {
+        internalType: "int256",
+        name: "totalPnl",
+        type: "int256"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   },
   {
-    inputs: [{ internalType: "uint256", name: "positionId", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "positionId",
+        type: "uint256"
+      }
+    ],
     name: "isLiquidatable",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [],
     name: "totalLongOpenInterest",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [],
     name: "totalShortOpenInterest",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [],
     name: "cumulativeFundingIndex",
-    outputs: [{ internalType: "int256", name: "", type: "int256" }],
+    outputs: [
+      {
+        internalType: "int256",
+        name: "",
+        type: "int256"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   },
   {
     inputs: [],
     name: "lastFundingSettledAt",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "effectiveOpenFeeBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "capacityUtilizationBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "utilizationSurchargeBps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "maxNotionalCapacity",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "maxPerilNotionalCapacity",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "effectiveNotionalCapacity",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool"
+      }
+    ],
+    name: "availableNotional",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "openPositionCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "minCollateral",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "fundingInterval",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "currentFundingRate",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "",
+        type: "int256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "effectiveFundingIndex",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "",
+        type: "int256"
+      }
+    ],
     stateMutability: "view",
     type: "function"
   }
@@ -21025,6 +21366,7 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong, feeBps = 1
 export {
   CONTRACT_ADDRESSES,
   COSTON2_CHAIN_ID,
+  DEPLOYED_CHAIN_IDS,
   FLARE_MAINNET_CHAIN_ID,
   KNOWN_REGIONS,
   ORACLE_DECIMALS,
@@ -21071,6 +21413,7 @@ export {
   getUserPositions,
   getWeatherReadings,
   grantRole,
+  isChainDeployed,
   liquidatePerpPosition,
   mintPosition,
   openPerpPosition,

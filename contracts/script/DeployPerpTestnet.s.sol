@@ -1,4 +1,15 @@
 // SPDX-License-Identifier: MIT
+//
+// SUPERSEDED. This script deploys a HISTORICAL SUBSET of the protocol and is kept only so
+// the existing Coston2 addresses remain reproducible. It has no liquidity vault, no junior
+// tranche, no first-loss reserve, no peril exposure registry and no policy market — every
+// one of those tiers is optional by design, so a deployment from here works and silently
+// has none of them.
+//
+// Use `DeployProtocol.s.sol` (any network) or `DeployMainnet.s.sol` (production, requires a
+// real collateral token and a governance multisig). Both share one wiring implementation
+// with `BreezeDeployer.sol`, which `test/integration/DeploymentWiring.t.sol` asserts link by
+// link.
 pragma solidity 0.8.24;
 
 import "forge-std/Script.sol";
@@ -7,6 +18,8 @@ import "../src/fees/FeeConfig.sol";
 import "../src/fees/ProtocolTreasury.sol";
 import "../src/perp/InsuranceFund.sol";
 import "../src/perp/BreezePerpFactory.sol";
+import "../src/perp/BreezePerpMarket.sol";
+import "../src/perp/PerpConstants.sol";
 import "../src/perp/BreezePerpMarket.sol";
 import "../src/perp/VirtualAMM.sol";
 
@@ -84,6 +97,21 @@ contract DeployPerpTestnet is Script {
         insuranceFund.setMarketAuthorization(dubaiPerp, true);
         console.log("Deployed Dubai Perp Market:", dubaiPerp);
 
+        // Testnet markets adopt the DEMO funding preset explicitly. The contract
+        // default is the production preset (8-hour interval, 0.75% cap), which is
+        // correct for real capital but far too slow to demonstrate in a short
+        // walkthrough. Making the demo values opt-in is the point: they can no
+        // longer ship by accident.
+        _applyDemoFunding(tokyoPerp);
+        _applyDemoFunding(seoulPerp);
+        _applyDemoFunding(dubaiPerp);
+
         vm.stopBroadcast();
+    }
+
+    function _applyDemoFunding(address perp) internal {
+        BreezePerpMarket(perp).setFundingParams(
+            PerpConstants.FUNDING_INTERVAL, PerpConstants.MAX_FUNDING_RATE_PER_PERIOD
+        );
     }
 }
