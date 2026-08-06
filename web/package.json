@@ -12,6 +12,7 @@
     "@breezeswap/sdk": "file:../sdk",
     "@tanstack/react-query": "^5.66.0",
     "connectkit": "^1.8.2",
+    "framer-motion": "^12.43.0",
     "lucide-react": "^0.475.0",
     "motion": "^12.43.0",
     "next": "16.2.11",
