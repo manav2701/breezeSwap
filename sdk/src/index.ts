@@ -20,6 +20,15 @@ export {
 
 // Reads
 export { getMarkets, getMarket, getMarketPositions } from './reads/markets'
+export { getMarketOnChain } from './reads/onchain'
+export {
+  getTokenMeta,
+  getAllowance,
+  getTokenBalance,
+  toTokenUnits,
+  fromTokenUnits,
+  type TokenMeta,
+} from './reads/token'
 export { getUserPositions } from './reads/positions'
 export { getWeatherReadings, getRegions } from './reads/weather'
 export { checkRole, type BreezeRole } from './reads/access'
@@ -39,7 +48,8 @@ export {
   pauseFactory, unpauseFactory, grantRole, revokeRole, setTradingFeeBps
 } from './writes/admin'
 export {
-  openPerpPosition, closePerpPosition, liquidatePerpPosition, settleFunding
+  openPerpPosition,
+  approvePerpCollateral, closePerpPosition, liquidatePerpPosition, settleFunding
 } from './writes/perp'
 
 // Utilities

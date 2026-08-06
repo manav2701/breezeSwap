@@ -1,6 +1,6 @@
 import { approve } from './approve.js';
 import { approveSync } from './approveSync.js';
-import { getAllowance } from './getAllowance.js';
+import { getAllowance as getAllowance$1 } from './getAllowance.js';
 import { getBalance } from './getBalance.js';
 import { getMetadata } from './getMetadata.js';
 import { getTotalSupply } from './getTotalSupply.js';
@@ -11130,7 +11130,7 @@ declare function createBreezePublicClient(chainId?: number, rpcUrl?: string): {
     watchEvent: <const abiEvent extends viem.AbiEvent | undefined = undefined, const abiEvents extends readonly viem.AbiEvent[] | readonly unknown[] | undefined = abiEvent extends viem.AbiEvent ? [abiEvent] : undefined, strict extends boolean | undefined = undefined>(args: viem.WatchEventParameters<abiEvent, abiEvents, strict, viem.HttpTransport<undefined, false>>) => viem.WatchEventReturnType;
     watchPendingTransactions: (args: viem.WatchPendingTransactionsParameters<viem.HttpTransport<undefined, false>>) => viem.WatchPendingTransactionsReturnType;
     token: {
-        getAllowance: ((parameters: getAllowance.Parameters<{
+        getAllowance: ((parameters: getAllowance$1.Parameters<{
             blockExplorers: {
                 readonly default: {
                     readonly name: "Coston2 Explorer";
@@ -11234,8 +11234,8 @@ declare function createBreezePublicClient(chainId?: number, rpcUrl?: string): {
             }] | undefined;
             serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
             verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
-        }, undefined>) => Promise<getAllowance.ReturnValue>) & {
-            call: (args: getAllowance.Args<{
+        }, undefined>) => Promise<getAllowance$1.ReturnValue>) & {
+            call: (args: getAllowance$1.Args<{
                 blockExplorers: {
                     readonly default: {
                         readonly name: "Coston2 Explorer";
@@ -11339,7 +11339,7 @@ declare function createBreezePublicClient(chainId?: number, rpcUrl?: string): {
                 }] | undefined;
                 serializers?: viem.ChainSerializers<undefined, viem.TransactionSerializable> | undefined;
                 verifyHash?: ((client: viem.Client, parameters: viem.VerifyHashActionParameters) => Promise<viem.VerifyHashActionReturnType>) | undefined;
-            }, undefined>) => ReturnType<typeof getAllowance.call>;
+            }, undefined>) => ReturnType<typeof getAllowance$1.call>;
         };
         getBalance: ((parameters: getBalance.Parameters<{
             blockExplorers: {
@@ -25931,6 +25931,51 @@ declare function getMarkets(indexerUrl: string, chainId?: number, params?: {
 declare function getMarket(indexerUrl: string, address: string, chainId?: number): Promise<Market>;
 declare function getMarketPositions(indexerUrl: string, marketAddress: string, chainId?: number): Promise<any>;
 
+/**
+ * Read a classic market straight from its contract.
+ *
+ * The indexer is a convenience, not a source of truth, and treating it as one
+ * broke the single most important flow in the product: creating a market
+ * succeeded on-chain and the very next screen said **"Market not found"**,
+ * because the indexer had not seen the deployment — or, on a deployment whose
+ * indexer URL was wrong, would never see anything at all.
+ *
+ * Everything the detail page needs is on the market contract. This is the
+ * fallback that makes a freshly created market immediately usable, and makes
+ * the whole app degrade to "slower and without history" rather than "broken"
+ * when the indexer is down.
+ *
+ * Returns `null` when there is no contract at the address, so a genuine typo
+ * still reports not-found.
+ */
+declare function getMarketOnChain(publicClient: PublicClient, address: string, chainId?: number): Promise<Market | null>;
+
+interface TokenMeta {
+    address: string;
+    decimals: number;
+    symbol: string;
+}
+/**
+ * Read a collateral token's decimals and symbol from the chain.
+ *
+ * **Never assume 6.** The whole app previously hardcoded 6-decimal collateral
+ * while the deployed mUSDT on Coston2 has **18**. Every amount the UI sent was
+ * therefore 10^12 too small — entering "100" posted 0.0000000001 mUSDT — and
+ * every amount it displayed was 10^12 too large. Nothing reverted, because the
+ * numbers were small rather than invalid, so the error was invisible.
+ *
+ * Decimals are a property of whichever token a market was actually deployed
+ * against, and different markets on this deployment use different tokens. The
+ * only correct source is the token itself.
+ */
+declare function getTokenMeta(publicClient: PublicClient, token: string): Promise<TokenMeta>;
+declare function getAllowance(publicClient: PublicClient, token: string, owner: string, spender: string): Promise<bigint>;
+declare function getTokenBalance(publicClient: PublicClient, token: string, owner: string): Promise<bigint>;
+/** Convert a human-entered amount to raw units for a token of `decimals`. */
+declare function toTokenUnits(amount: number, decimals: number): bigint;
+/** Convert raw token units back to a display number. */
+declare function fromTokenUnits(raw: bigint | string, decimals: number): number;
+
 declare function getUserPositions(indexerUrl: string, walletAddress: string, chainId?: number): Promise<Position[]>;
 
 declare function getWeatherReadings(indexerUrl: string, regionId: string, days?: number, chainId?: number): Promise<WeatherReading[]>;
@@ -25973,6 +26018,29 @@ declare function unpauseFactory(walletClient: WalletClient, publicClient: Public
 declare function grantRole(walletClient: WalletClient, publicClient: PublicClient, accessControlAddress: `0x${string}`, role: BreezeRole, accountToGrant: `0x${string}`): Promise<`0x${string}`>;
 declare function revokeRole(walletClient: WalletClient, publicClient: PublicClient, accessControlAddress: `0x${string}`, role: BreezeRole, accountToRevoke: `0x${string}`): Promise<`0x${string}`>;
 
+/**
+ * Ensure the perp market may pull `amount` of its collateral token.
+ *
+ * `openPosition` calls `collateralToken.safeTransferFrom(msg.sender, ...)`, so
+ * without an allowance it reverts with `ERC20InsufficientAllowance`
+ * (`0xfb8f41b2`) — which is exactly what every first-time perp trade did. The
+ * classic mint path had always approved first; this one simply never did, and
+ * the error selector meant nothing to anyone reading it in a wallet popup.
+ *
+ * Unlike the classic path the spender is the MARKET itself: a perp market holds
+ * collateral directly rather than delegating to a `CollateralVault`.
+ *
+ * Returns the approval hash, or `null` when the existing allowance already
+ * covers the amount.
+ */
+declare function approvePerpCollateral(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, amount: bigint): Promise<`0x${string}` | null>;
+/**
+ * Open a leveraged position, approving collateral first when required.
+ *
+ * The approval is awaited to a receipt before the open is simulated. Firing
+ * both in the same block would have the simulation run against the pre-approval
+ * state and revert.
+ */
 declare function openPerpPosition(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, isLong: boolean, collateralAmount: bigint, leverage: bigint): Promise<`0x${string}`>;
 declare function closePerpPosition(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, positionId: bigint): Promise<`0x${string}`>;
 declare function liquidatePerpPosition(walletClient: WalletClient, publicClient: PublicClient, marketAddress: `0x${string}`, positionId: bigint): Promise<`0x${string}`>;
@@ -26003,4 +26071,4 @@ declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, le
     entryPrice: number;
 };
 
-export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, DEPLOYED_CHAIN_IDS, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, isChainDeployed, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, unpauseFactory, unpauseMarket };
+export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, DEPLOYED_CHAIN_IDS, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TokenMeta, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, approvePerpCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, fromTokenUnits, getAllowance, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketOnChain, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTokenBalance, getTokenMeta, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, isChainDeployed, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, toTokenUnits, unpauseFactory, unpauseMarket };
