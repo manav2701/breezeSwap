@@ -13,13 +13,6 @@ const PerpMarketViewABI = [
   },
   {
     inputs: [],
-    name: "getOraclePrice",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
     name: "totalLongOpenInterest",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
@@ -194,29 +187,25 @@ export async function getPerpMarketStats(req: Request, res: Response) {
     const chainId = Number(req.query.chainId ?? 114)
     const client = getPublicClient(chainId)
 
-    // 1. On-chain view queries
+    // 1. On-chain view queries using Promise.allSettled
     let markPrice = '0'
     let oraclePrice = '0'
     let longOI = '0'
     let shortOI = '0'
     let lastFundingSettledAt = 0
 
-    try {
-      const [mp, op, lOI, sOI, lf] = await Promise.all([
-        client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'getMarkPrice' }),
-        client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'getOraclePrice' }),
-        client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'totalLongOpenInterest' }),
-        client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'totalShortOpenInterest' }),
-        client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'lastFundingSettledAt' })
-      ])
-      markPrice = mp.toString()
-      oraclePrice = op.toString()
-      longOI = lOI.toString()
-      shortOI = sOI.toString()
-      lastFundingSettledAt = Number(lf)
-    } catch (e: any) {
-      logger.warn('On-chain stat query fallback', { error: e.message })
-    }
+    const results = await Promise.allSettled([
+      client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'getMarkPrice' }),
+      client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'totalLongOpenInterest' }),
+      client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'totalShortOpenInterest' }),
+      client.readContract({ address: address as `0x${string}`, abi: PerpMarketViewABI, functionName: 'lastFundingSettledAt' })
+    ])
+
+    if (results[0].status === 'fulfilled') markPrice = results[0].value.toString()
+    oraclePrice = markPrice // default oraclePrice to markPrice
+    if (results[1].status === 'fulfilled') longOI = results[1].value.toString()
+    if (results[2].status === 'fulfilled') shortOI = results[2].value.toString()
+    if (results[3].status === 'fulfilled') lastFundingSettledAt = Number(results[3].value)
 
     // 2. Funding history
     const { data: fundingRows } = await supabase
