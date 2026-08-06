@@ -18289,7 +18289,7 @@ async function getAllowance(client, parameters) {
   ]);
   return toAmount(amount, resolved);
 }
-(function(getAllowance2) {
+(function(getAllowance3) {
   function call2(client, args) {
     return defineCall({
       address: resolveToken(client, args).address,
@@ -18298,7 +18298,7 @@ async function getAllowance(client, parameters) {
       args: [args.account, args.spender]
     });
   }
-  getAllowance2.call = call2;
+  getAllowance3.call = call2;
 })(getAllowance || (getAllowance = {}));
 
 // ../node_modules/.pnpm/viem@2.55.7_bufferutil@4.1._efb3592fc6f551168d15ea76b6e7ca73/node_modules/viem/_esm/actions/token/getBalance.js
@@ -19117,6 +19117,662 @@ async function getMarketPositions(indexerUrl, marketAddress, chainId = 114) {
   return data.positions || [];
 }
 
+// src/abis/BreezeMarket.json
+var BreezeMarket_default = [
+  {
+    type: "constructor",
+    inputs: [
+      {
+        name: "regionId_",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "weatherVariable_",
+        type: "uint8",
+        internalType: "enum BreezeMarket.WeatherVariable"
+      },
+      {
+        name: "thresholdLow_",
+        type: "int256",
+        internalType: "int256"
+      },
+      {
+        name: "thresholdHigh_",
+        type: "int256",
+        internalType: "int256"
+      },
+      {
+        name: "expiryTimestamp_",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "oracleAddress_",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "collateralToken_",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "positionTokenAddress_",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "payoffType_",
+        type: "uint8",
+        internalType: "enum PayoffCalculator.PayoffType"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "collateralToken",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IERC20"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "expiryTimestamp",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "finalOracleValue",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "int256",
+        internalType: "int256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "longPayoutPerToken",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "mintPosition",
+    inputs: [
+      {
+        name: "side",
+        type: "uint8",
+        internalType: "enum PositionToken.Side"
+      },
+      {
+        name: "collateralAmount",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "oracle",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IWeatherOracle"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "payoffType",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "enum PayoffCalculator.PayoffType"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "positionToken",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract PositionToken"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "redeem",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "payout",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "regionId",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "settle",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "shortPayoutPerToken",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "status",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "enum BreezeMarket.Status"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "thresholdHigh",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "int256",
+        internalType: "int256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "thresholdLow",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "int256",
+        internalType: "int256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "totalCollateral",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "totalLongSupply",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "totalShortSupply",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "vault",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract CollateralVault"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "weatherVariable",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "enum BreezeMarket.WeatherVariable"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "event",
+    name: "MarketSettled",
+    inputs: [
+      {
+        name: "oracleValue",
+        type: "int256",
+        indexed: false,
+        internalType: "int256"
+      },
+      {
+        name: "longPayoutPerToken",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "shortPayoutPerToken",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PositionMinted",
+    inputs: [
+      {
+        name: "user",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "side",
+        type: "uint8",
+        indexed: false,
+        internalType: "enum PositionToken.Side"
+      },
+      {
+        name: "collateralAmount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "tokenId",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PositionRedeemed",
+    inputs: [
+      {
+        name: "user",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "tokenId",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "payout",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "InvalidOracleData",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InvalidParameters",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InvalidThresholds",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "MarketAlreadySettled",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "MarketExpired",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "MarketNotExpired",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "MarketNotSettled",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "OracleDataStale",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "ReentrancyGuardReentrantCall",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "Unauthorized",
+    inputs: []
+  },
+  {
+    type: "function",
+    name: "vault",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract CollateralVault"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "error",
+    name: "ERC20InsufficientAllowance",
+    inputs: [
+      {
+        name: "spender",
+        type: "address"
+      },
+      {
+        name: "currentAllowance",
+        type: "uint256"
+      },
+      {
+        name: "neededAllowance",
+        type: "uint256"
+      }
+    ]
+  }
+];
+
+// src/utils/regions.ts
+function encodeRegionId(regionName) {
+  return keccak256(toHex(regionName));
+}
+var KNOWN_REGIONS = {
+  [encodeRegionId("Tokyo")]: "Tokyo",
+  [encodeRegionId("Seoul")]: "Seoul",
+  [encodeRegionId("Singapore")]: "Singapore",
+  [encodeRegionId("Dubai")]: "Dubai",
+  [encodeRegionId("London")]: "London",
+  [encodeRegionId("TOKYO_RAINFALL")]: "Tokyo",
+  [encodeRegionId("SEOUL_RAINFALL")]: "Seoul",
+  [encodeRegionId("SINGAPORE_RAINFALL")]: "Singapore",
+  [encodeRegionId("DUBAI_TEMPERATURE")]: "Dubai",
+  [encodeRegionId("LONDON_RAINFALL")]: "London"
+};
+function decodeRegionId(regionId) {
+  return KNOWN_REGIONS[regionId.toLowerCase()] ?? KNOWN_REGIONS[regionId] ?? "Unknown Region";
+}
+
+// src/reads/onchain.ts
+var VARIABLES = ["RAINFALL", "TEMPERATURE"];
+var PAYOFFS = ["BINARY", "LINEAR", "CAPPED"];
+async function getMarketOnChain(publicClient, address, chainId = 114) {
+  const marketAddress = address;
+  const code = await publicClient.getCode({ address: marketAddress }).catch(() => void 0);
+  if (!code || code === "0x") return null;
+  const read = async (functionName) => {
+    try {
+      return await publicClient.readContract({
+        address: marketAddress,
+        abi: BreezeMarket_default,
+        functionName
+      });
+    } catch {
+      return null;
+    }
+  };
+  const [
+    regionId,
+    weatherVariable,
+    payoffType,
+    thresholdLow,
+    thresholdHigh,
+    expiryTimestamp,
+    collateralToken,
+    status,
+    finalOracleValue,
+    longPayoutPerToken,
+    shortPayoutPerToken
+  ] = await Promise.all([
+    read("regionId"),
+    read("weatherVariable"),
+    read("payoffType"),
+    read("thresholdLow"),
+    read("thresholdHigh"),
+    read("expiryTimestamp"),
+    read("collateralToken"),
+    read("status"),
+    read("finalOracleValue"),
+    read("longPayoutPerToken"),
+    read("shortPayoutPerToken")
+  ]);
+  if (collateralToken === null) return null;
+  const scale = (v) => v === null ? null : Number(v) / Number(ORACLE_SCALAR);
+  const isSettled = Number(status ?? 0) === 1;
+  const WAD2 = 1e18;
+  return {
+    contractAddress: address,
+    chainId,
+    regionId: regionId ?? "",
+    // The chain stores a keccak hash, not a name. Resolve it against the known
+    // regions so a market created through the app shows "Tokyo" rather than
+    // "Global region"; an unrecognised hash stays null rather than being given
+    // an invented label.
+    regionName: regionId ? KNOWN_REGIONS[regionId.toLowerCase()] ?? KNOWN_REGIONS[regionId] ?? null : null,
+    weatherVariable: VARIABLES[Number(weatherVariable ?? 0)] ?? "RAINFALL",
+    payoffType: PAYOFFS[Number(payoffType ?? 2)] ?? "CAPPED",
+    thresholdLow: scale(thresholdLow) ?? 0,
+    thresholdHigh: Number(payoffType ?? 2) === 0 ? null : scale(thresholdHigh),
+    expiryTimestamp: expiryTimestamp ? new Date(Number(expiryTimestamp) * 1e3).toISOString() : "",
+    collateralToken,
+    status: isSettled ? "SETTLED" : "OPEN",
+    finalOracleValue: isSettled ? scale(finalOracleValue) : null,
+    longPayoutRatio: isSettled && longPayoutPerToken ? Number(longPayoutPerToken) / WAD2 : null,
+    shortPayoutRatio: isSettled && shortPayoutPerToken ? Number(shortPayoutPerToken) / WAD2 : null,
+    settledAt: null,
+    createdAt: "",
+    blockNumber: 0,
+    txHash: ""
+  };
+}
+
+// src/reads/token.ts
+var ERC20_META_ABI = [
+  { inputs: [], name: "decimals", outputs: [{ type: "uint8" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "symbol", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [{ type: "address" }, { type: "address" }],
+    name: "allowance",
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ type: "address" }],
+    name: "balanceOf",
+    outputs: [{ type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  }
+];
+async function getTokenMeta(publicClient, token) {
+  const address = token;
+  const [decimals, symbol] = await Promise.all([
+    publicClient.readContract({ address, abi: ERC20_META_ABI, functionName: "decimals" }).catch(() => 18),
+    publicClient.readContract({ address, abi: ERC20_META_ABI, functionName: "symbol" }).catch(() => "TOKEN")
+  ]);
+  return { address: token, decimals: Number(decimals), symbol: String(symbol) };
+}
+async function getAllowance2(publicClient, token, owner, spender) {
+  try {
+    return await publicClient.readContract({
+      address: token,
+      abi: ERC20_META_ABI,
+      functionName: "allowance",
+      args: [owner, spender]
+    });
+  } catch {
+    return 0n;
+  }
+}
+async function getTokenBalance(publicClient, token, owner) {
+  try {
+    return await publicClient.readContract({
+      address: token,
+      abi: ERC20_META_ABI,
+      functionName: "balanceOf",
+      args: [owner]
+    });
+  } catch {
+    return 0n;
+  }
+}
+function toTokenUnits(amount, decimals) {
+  if (!Number.isFinite(amount) || amount <= 0) return 0n;
+  const [whole, frac = ""] = amount.toFixed(decimals).split(".");
+  return BigInt(whole + frac.padEnd(decimals, "0").slice(0, decimals));
+}
+function fromTokenUnits(raw, decimals) {
+  const value = typeof raw === "bigint" ? raw : BigInt(raw || "0");
+  const divisor = 10n ** BigInt(decimals);
+  const whole = value / divisor;
+  const frac = value % divisor;
+  return Number(whole) + Number(frac) / Number(divisor);
+}
+
 // src/reads/positions.ts
 function mapPositionFromDB(item) {
   if (!item) return item;
@@ -19723,505 +20379,6 @@ async function createMarket(walletClient, publicClient, params, chainId = 114) {
   }
   return { txHash, marketAddress };
 }
-
-// src/abis/BreezeMarket.json
-var BreezeMarket_default = [
-  {
-    type: "constructor",
-    inputs: [
-      {
-        name: "regionId_",
-        type: "bytes32",
-        internalType: "bytes32"
-      },
-      {
-        name: "weatherVariable_",
-        type: "uint8",
-        internalType: "enum BreezeMarket.WeatherVariable"
-      },
-      {
-        name: "thresholdLow_",
-        type: "int256",
-        internalType: "int256"
-      },
-      {
-        name: "thresholdHigh_",
-        type: "int256",
-        internalType: "int256"
-      },
-      {
-        name: "expiryTimestamp_",
-        type: "uint256",
-        internalType: "uint256"
-      },
-      {
-        name: "oracleAddress_",
-        type: "address",
-        internalType: "address"
-      },
-      {
-        name: "collateralToken_",
-        type: "address",
-        internalType: "address"
-      },
-      {
-        name: "positionTokenAddress_",
-        type: "address",
-        internalType: "address"
-      },
-      {
-        name: "payoffType_",
-        type: "uint8",
-        internalType: "enum PayoffCalculator.PayoffType"
-      }
-    ],
-    stateMutability: "nonpayable"
-  },
-  {
-    type: "function",
-    name: "collateralToken",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract IERC20"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "expiryTimestamp",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "finalOracleValue",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "int256",
-        internalType: "int256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "longPayoutPerToken",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "mintPosition",
-    inputs: [
-      {
-        name: "side",
-        type: "uint8",
-        internalType: "enum PositionToken.Side"
-      },
-      {
-        name: "collateralAmount",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    outputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable"
-  },
-  {
-    type: "function",
-    name: "oracle",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract IWeatherOracle"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "payoffType",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "enum PayoffCalculator.PayoffType"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "positionToken",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract PositionToken"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "redeem",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256"
-      },
-      {
-        name: "amount",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    outputs: [
-      {
-        name: "payout",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable"
-  },
-  {
-    type: "function",
-    name: "regionId",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "bytes32"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "settle",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable"
-  },
-  {
-    type: "function",
-    name: "shortPayoutPerToken",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "status",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "enum BreezeMarket.Status"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "thresholdHigh",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "int256",
-        internalType: "int256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "thresholdLow",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "int256",
-        internalType: "int256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "totalCollateral",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "totalLongSupply",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "totalShortSupply",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "vault",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract CollateralVault"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
-    name: "weatherVariable",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "enum BreezeMarket.WeatherVariable"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "event",
-    name: "MarketSettled",
-    inputs: [
-      {
-        name: "oracleValue",
-        type: "int256",
-        indexed: false,
-        internalType: "int256"
-      },
-      {
-        name: "longPayoutPerToken",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256"
-      },
-      {
-        name: "shortPayoutPerToken",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256"
-      }
-    ],
-    anonymous: false
-  },
-  {
-    type: "event",
-    name: "PositionMinted",
-    inputs: [
-      {
-        name: "user",
-        type: "address",
-        indexed: true,
-        internalType: "address"
-      },
-      {
-        name: "side",
-        type: "uint8",
-        indexed: false,
-        internalType: "enum PositionToken.Side"
-      },
-      {
-        name: "collateralAmount",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256"
-      },
-      {
-        name: "tokenId",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256"
-      }
-    ],
-    anonymous: false
-  },
-  {
-    type: "event",
-    name: "PositionRedeemed",
-    inputs: [
-      {
-        name: "user",
-        type: "address",
-        indexed: true,
-        internalType: "address"
-      },
-      {
-        name: "tokenId",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256"
-      },
-      {
-        name: "amount",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256"
-      },
-      {
-        name: "payout",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256"
-      }
-    ],
-    anonymous: false
-  },
-  {
-    type: "error",
-    name: "InvalidOracleData",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "InvalidParameters",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "InvalidThresholds",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "MarketAlreadySettled",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "MarketExpired",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "MarketNotExpired",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "MarketNotSettled",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "OracleDataStale",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "ReentrancyGuardReentrantCall",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "Unauthorized",
-    inputs: []
-  },
-  {
-    type: "function",
-    name: "vault",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract CollateralVault"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "error",
-    name: "ERC20InsufficientAllowance",
-    inputs: [
-      {
-        name: "spender",
-        type: "address"
-      },
-      {
-        name: "currentAllowance",
-        type: "uint256"
-      },
-      {
-        name: "neededAllowance",
-        type: "uint256"
-      }
-    ]
-  }
-];
 
 // src/abis/ERC20.json
 var ERC20_default = [
@@ -21214,9 +21371,45 @@ var BreezePerpMarket_default = [
 ];
 
 // src/writes/perp.ts
+async function approvePerpCollateral(walletClient, publicClient, marketAddress, amount) {
+  const [account] = await walletClient.getAddresses();
+  if (!account) throw new Error("Wallet not connected");
+  const tokenAddress = await publicClient.readContract({
+    address: marketAddress,
+    abi: BreezePerpMarket_default,
+    functionName: "collateralToken"
+  });
+  try {
+    const allowance = await publicClient.readContract({
+      address: tokenAddress,
+      abi: ERC20_default,
+      functionName: "allowance",
+      args: [account, marketAddress]
+    });
+    if (allowance >= amount) return null;
+  } catch {
+  }
+  const { request } = await publicClient.simulateContract({
+    address: tokenAddress,
+    abi: ERC20_default,
+    functionName: "approve",
+    args: [marketAddress, amount],
+    account
+  });
+  return walletClient.writeContract(request);
+}
 async function openPerpPosition(walletClient, publicClient, marketAddress, isLong, collateralAmount, leverage) {
   const account = walletClient.account;
   if (!account) throw new Error("Wallet not connected");
+  const approvalHash = await approvePerpCollateral(
+    walletClient,
+    publicClient,
+    marketAddress,
+    collateralAmount
+  );
+  if (approvalHash) {
+    await publicClient.waitForTransactionReceipt({ hash: approvalHash });
+  }
   const { request } = await publicClient.simulateContract({
     address: marketAddress,
     abi: BreezePerpMarket_default,
@@ -21314,26 +21507,6 @@ function timeUntilExpiry(isoString) {
   }
 }
 
-// src/utils/regions.ts
-function encodeRegionId(regionName) {
-  return keccak256(toHex(regionName));
-}
-var KNOWN_REGIONS = {
-  [encodeRegionId("Tokyo")]: "Tokyo",
-  [encodeRegionId("Seoul")]: "Seoul",
-  [encodeRegionId("Singapore")]: "Singapore",
-  [encodeRegionId("Dubai")]: "Dubai",
-  [encodeRegionId("London")]: "London",
-  [encodeRegionId("TOKYO_RAINFALL")]: "Tokyo",
-  [encodeRegionId("SEOUL_RAINFALL")]: "Seoul",
-  [encodeRegionId("SINGAPORE_RAINFALL")]: "Singapore",
-  [encodeRegionId("DUBAI_TEMPERATURE")]: "Dubai",
-  [encodeRegionId("LONDON_RAINFALL")]: "London"
-};
-function decodeRegionId(regionId) {
-  return KNOWN_REGIONS[regionId.toLowerCase()] ?? KNOWN_REGIONS[regionId] ?? "Unknown Region";
-}
-
 // src/utils/perpQuote.ts
 function calculateMarkPrice(reserves) {
   if (reserves.weatherReserve === 0n) return 0;
@@ -21377,6 +21550,7 @@ export {
   WAD,
   WEATHER_VARIABLES,
   approveCollateral,
+  approvePerpCollateral,
   calculateMarkPrice,
   calculatePerpQuote,
   checkRole,
@@ -21392,6 +21566,8 @@ export {
   formatExpiry,
   formatOracleValue,
   formatPayoutRatio,
+  fromTokenUnits,
+  getAllowance2 as getAllowance,
   getContractAddresses,
   getFundingHistory,
   getGlobalTradeHistory,
@@ -21399,6 +21575,7 @@ export {
   getMarkPriceCandles,
   getMarkPriceHistory,
   getMarket,
+  getMarketOnChain,
   getMarketPositions,
   getMarkets,
   getPerpMarket,
@@ -21407,6 +21584,8 @@ export {
   getPerpMarkets,
   getProtocolTreasuryBalance,
   getRegions,
+  getTokenBalance,
+  getTokenMeta,
   getTotalFeesCollected,
   getTradeHistory,
   getUserPerpPositions,
@@ -21427,6 +21606,7 @@ export {
   settleFunding,
   timeUntilExpiry,
   toOracleUnits,
+  toTokenUnits,
   unpauseFactory,
   unpauseMarket
 };

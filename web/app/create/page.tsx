@@ -15,6 +15,7 @@ import {
 import { PayoffChart } from '../../components/PayoffChart'
 import { TxLink } from '../../components/TxLink'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
+import { explainRevert } from '../../lib/revertReason'
 
 const REGIONS = ['Tokyo', 'Seoul', 'Singapore', 'Dubai', 'London'] as const
 
@@ -106,7 +107,7 @@ export default function CreateMarketPage() {
         setTimeout(() => router.push(`/markets/${result.marketAddress}`), 1800)
       }
     } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Market creation failed.')
+      setError(explainRevert(err))
     } finally {
       setLoading(false)
     }
@@ -266,10 +267,12 @@ export default function CreateMarketPage() {
               onChange={(e) => setCollateralToken(e.target.value)}
               className="field"
             >
+              {/* FTestXRP was listed here but the registry address has no code
+                  on Coston2, so choosing it deployed a market against a token
+                  that cannot be transferred — the market would be created and
+                  then be permanently unmintable. Left out until an FAsset is
+                  actually deployed. */}
               <option value={CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].mockUsdt}>Mock USDT (mUSDT)</option>
-              <option value={CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].fTestXrp}>
-                FTestXRP (FAssets)
-              </option>
             </select>
           </div>
 

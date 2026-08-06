@@ -10,9 +10,10 @@ import {
   approveCollateral,
   mintPosition,
   settle,
-  formatCollateral,
   formatExpiry,
   timeUntilExpiry,
+  getMarketOnChain,
+  toTokenUnits,
   type Market,
   type Position,
   type WeatherReading,
@@ -22,7 +23,10 @@ import { WeatherChart } from '../../../components/WeatherChart'
 import { StatusBadge } from '../../../components/StatusBadge'
 import { TxLink } from '../../../components/TxLink'
 import { useBreezeSDK } from '../../../lib/hooks/useBreezeSDK'
+import { useCollateralToken } from '../../../lib/hooks/useCollateralToken'
+import { explainRevert } from '../../../lib/revertReason'
 import { formatMoney } from '../../../lib/chartTheme'
+import { formatTokenAmount } from '../../../lib/formatToken'
 import { demoWeatherReadings } from '../../../lib/demoData'
 import MarketABI from '../../../../sdk/src/abis/BreezeMarket.json'
 
@@ -89,6 +93,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
   const [readings, setReadings] = useState<WeatherReading[]>([])
   const [readingsAreDemo, setReadingsAreDemo] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [loadedFromChain, setLoadedFromChain] = useState(false)
 
   const [side, setSide] = useState<'LONG' | 'SHORT'>('LONG')
   const [collateralInput, setCollateralInput] = useState('10')
@@ -99,16 +104,47 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
   const [settleLoading, setSettleLoading] = useState(false)
   const [settleTxHash, setSettleTxHash] = useState<string | null>(null)
 
+  // Decimals come from the token this market was deployed against, not a
+  // constant. See lib/hooks/useCollateralToken.
+  const {
+    decimals,
+    symbol,
+    balance,
+    isReady: tokenReady,
+  } = useCollateralToken(market?.collateralToken)
+
   const loadData = useCallback(async () => {
     setLoading(true)
     let m: Market | null = null
 
     try {
       m = ensureMarketMapped(await getMarket(indexerUrl, marketAddress))
-      setMarket(m)
     } catch {
-      setMarket(null)
+      m = null
     }
+
+    /*
+      Fall back to reading the market contract directly.
+
+      Creating a market succeeded on-chain and the very next screen said
+      "Market not found", because the indexer had not seen the deployment yet —
+      and on a deployment pointed at the wrong indexer URL it never would. The
+      contract holds everything this page needs, so the indexer is treated as a
+      cache rather than the source of truth.
+    */
+    if (!m && publicClient) {
+      try {
+        const onChain = await getMarketOnChain(publicClient as any, marketAddress, 114)
+        if (onChain) {
+          m = onChain
+          setLoadedFromChain(true)
+        }
+      } catch {
+        /* Genuinely absent; the not-found state below is correct. */
+      }
+    }
+
+    setMarket(m)
 
     if (m) {
       try {
@@ -146,7 +182,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
     } finally {
       setLoading(false)
     }
-  }, [indexerUrl, marketAddress])
+  }, [indexerUrl, marketAddress, publicClient])
 
   useEffect(() => {
     loadData()
@@ -164,7 +200,8 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
     }
 
     try {
-      const amount = BigInt(Math.round(Number(collateralInput) * 1e6))
+      if (decimals === null) throw new Error('Still reading the collateral token.')
+      const amount = toTokenUnits(Number(collateralInput), decimals)
       const tokenAddress = market.collateralToken as `0x${string}`
       const marketHex = market.contractAddress as `0x${string}`
 
@@ -202,7 +239,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       setMintTxHash(hash)
       loadData()
     } catch (err: any) {
-      setMintError(err?.shortMessage || err?.message || 'Minting the position failed.')
+      setMintError(explainRevert(err))
     } finally {
       setMintLoading(false)
     }
@@ -220,7 +257,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       setSettleTxHash(hash)
       loadData()
     } catch (err: any) {
-      setMintError(err?.shortMessage || err?.message || 'Settlement failed.')
+      setMintError(explainRevert(err))
     } finally {
       setSettleLoading(false)
     }
@@ -269,6 +306,9 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
   const canSettle = market.status === 'OPEN' && isExpired
   const collateralNum = Number.parseFloat(collateralInput)
   const validCollateral = Number.isFinite(collateralNum) && collateralNum > 0
+  const collateralRaw =
+    validCollateral && decimals !== null ? toTokenUnits(collateralNum, decimals) : 0n
+  const insufficientBalance = balance !== null && collateralRaw > balance
 
   return (
     <div className="space-y-6">
@@ -287,6 +327,17 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="display-2 text-ink">{market.regionName || 'Global region'}</h1>
               <StatusBadge status={market.status} />
+              {/* This market exists on-chain but the indexer has not picked it
+                  up, so history and holders are unavailable. Saying so beats
+                  showing an empty table with no explanation. */}
+              {loadedFromChain && (
+                <span
+                  className="chip chip-info"
+                  title="Read directly from the contract — the indexer has not seen this market yet, so trade history and holders are unavailable."
+                >
+                  Live from chain
+                </span>
+              )}
             </div>
 
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink-muted">
@@ -354,7 +405,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
             <div className="inset px-4 py-3 flex items-center justify-between gap-3">
               <dt className="text-xs text-ink-muted">Collateral locked</dt>
               <dd className="numeric text-sm value-long font-medium">
-                {formatCollateral(totalCollateral.toString(), 6, 'mUSDT')}
+                {formatTokenAmount(totalCollateral, decimals, symbol)}
               </dd>
             </div>
 
@@ -467,7 +518,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
                     className="field numeric pr-16"
                   />
                   <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-faint pointer-events-none">
-                    mUSDT
+                    {symbol}
                   </span>
                 </div>
               </div>
@@ -483,12 +534,16 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
                 <button
                   type="button"
                   onClick={handleApproveAndMint}
-                  disabled={mintLoading || !validCollateral}
+                  disabled={mintLoading || !validCollateral || !tokenReady || insufficientBalance}
                   className={`btn btn-lg w-full ${side === 'LONG' ? 'btn-long' : 'btn-short'}`}
                 >
                   {mintLoading
                     ? 'Approving & minting…'
-                    : `Mint ${side === 'LONG' ? 'long' : 'short'} position`}
+                    : !tokenReady
+                      ? 'Reading collateral token…'
+                      : insufficientBalance
+                        ? `Not enough ${symbol}`
+                        : `Mint ${side === 'LONG' ? 'long' : 'short'} position`}
                 </button>
               ) : (
                 <div className="inset p-4 text-center text-xs text-ink-muted">
@@ -558,7 +613,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
                         </span>
                       </td>
                       <td className="numeric text-ink">
-                        {formatCollateral(p.collateralAmount, 6, 'mUSDT')}
+                        {formatTokenAmount(p.collateralAmount, decimals, symbol)}
                       </td>
                       <td className="numeric">
                         {p.holderAddress

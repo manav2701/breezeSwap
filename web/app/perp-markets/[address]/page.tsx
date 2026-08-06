@@ -10,12 +10,15 @@ import {
   calculatePerpQuote,
   calculateMarkPrice,
   openPerpPosition,
+  toTokenUnits,
+  fromTokenUnits,
   type PerpMarket,
   type PerpPosition,
   type Reserves,
 } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../../../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../../../lib/hooks/useNetwork'
+import { useCollateralToken } from '../../../lib/hooks/useCollateralToken'
 import { TxLink } from '../../../components/TxLink'
 import { PerpStatsHeader } from '../../../components/PerpStatsHeader'
 import { FundingRateSparkline } from '../../../components/FundingRateSparkline'
@@ -23,6 +26,7 @@ import { MarkPriceChart } from '../../../components/MarkPriceChart'
 import { DepthLadder } from '../../../components/DepthLadder'
 import { TradeHistoryTable } from '../../../components/TradeHistoryTable'
 import { formatMoney } from '../../../lib/chartTheme'
+import { explainRevert } from '../../../lib/revertReason'
 
 /**
  * Reference reserves for the quote preview.
@@ -39,8 +43,11 @@ const REFERENCE_RESERVES: Reserves = {
   weatherReserve: 40_000n * 10n ** 18n,
 }
 
-/** mUSDT has 6 decimals on-chain; the AMM works in 18. */
-const COLLATERAL_DECIMALS = 6
+/**
+ * The vAMM's own reserves are always 18-decimal, whatever the collateral token
+ * uses. Collateral is scaled INTO this space for the quote and back out for
+ * display, so the two can never drift apart.
+ */
 const AMM_DECIMALS = 18
 
 const LEVERAGE_STEPS = [1, 2, 3]
@@ -59,13 +66,19 @@ export default function PerpMarketDetailPage({
 
   const [market, setMarket] = useState<PerpMarket | null>(null)
   const [, setPositions] = useState<PerpPosition[]>([])
+  const [collateralTokenAddress, setCollateralTokenAddress] = useState<string>()
 
   const [isLong, setIsLong] = useState(true)
   const [collateralInput, setCollateralInput] = useState('100')
   const [leverage, setLeverage] = useState(2)
   const [submitting, setSubmitting] = useState(false)
+  const [status, setStatus] = useState<string | null>(null)
   const [txHash, setTxHash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // Decimals come from the token the market was actually deployed against.
+  const { decimals, symbol, balance, isReady: tokenReady } =
+    useCollateralToken(collateralTokenAddress)
 
   useEffect(() => {
     let cancelled = false
@@ -88,18 +101,54 @@ export default function PerpMarketDetailPage({
     }
   }, [indexerUrl, marketAddress, chainId])
 
+  // Read the collateral token from the market itself rather than the indexer,
+  // so the trade form works even when the indexer has never seen this market.
+  useEffect(() => {
+    let cancelled = false
+    if (!publicClient) return
+
+    publicClient
+      .readContract({
+        address: marketAddress,
+        abi: [
+          {
+            inputs: [],
+            name: 'collateralToken',
+            outputs: [{ type: 'address' }],
+            stateMutability: 'view',
+            type: 'function',
+          },
+        ],
+        functionName: 'collateralToken',
+      })
+      .then((token) => {
+        if (!cancelled) setCollateralTokenAddress(token as string)
+      })
+      .catch(() => {
+        /* No contract at this address; the form stays disabled. */
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [publicClient, marketAddress])
+
   const markPrice = useMemo(() => calculateMarkPrice(REFERENCE_RESERVES), [])
 
   const collateralNum = Number.parseFloat(collateralInput)
   const validCollateral = Number.isFinite(collateralNum) && collateralNum > 0
 
+  /** Raw units the contract will actually receive, at the token's own scale. */
+  const collateralRaw = useMemo(
+    () => (validCollateral && decimals !== null ? toTokenUnits(collateralNum, decimals) : 0n),
+    [collateralNum, validCollateral, decimals]
+  )
+
   const quote = useMemo(() => {
+    // Quote in the AMM's 18-decimal space. Scaling the *display* amount rather
+    // than the raw amount keeps the preview correct for any token decimals.
     const base = validCollateral ? collateralNum : 0
-    // Scale display units → 6dp on-chain units → 18dp AMM units, so rounding
-    // happens once and matches what the contract will actually receive.
-    const collateralWei =
-      BigInt(Math.round(base * 10 ** COLLATERAL_DECIMALS)) *
-      10n ** BigInt(AMM_DECIMALS - COLLATERAL_DECIMALS)
+    const collateralWei = toTokenUnits(base, AMM_DECIMALS)
     return calculatePerpQuote(REFERENCE_RESERVES, collateralWei, leverage, isLong, TRADING_FEE_BPS)
   }, [collateralNum, validCollateral, leverage, isLong])
 
@@ -125,23 +174,32 @@ export default function PerpMarketDetailPage({
     ? (quote.entryPrice / 0.9) * (1 - 1 / leverage)
     : (quote.entryPrice / 1.1) * (1 + 1 / leverage)
 
+  const insufficientBalance = balance !== null && collateralRaw > balance
+
   async function handleOpenTrade() {
-    if (!walletClient || !publicClient || !validCollateral) return
+    if (!walletClient || !publicClient || !validCollateral || collateralRaw === 0n) return
     setSubmitting(true)
     setError(null)
     setTxHash(null)
     try {
+      // `openPerpPosition` approves the market first when the allowance is
+      // short, and waits for that receipt before simulating the open. Without
+      // it the call reverted with ERC20InsufficientAllowance (0xfb8f41b2),
+      // which is what every first trade from a fresh wallet used to hit.
+      setStatus('Approving collateral, then opening…')
       const hash = await openPerpPosition(
         walletClient as any,
         publicClient as any,
         marketAddress,
         isLong,
-        BigInt(Math.round(collateralNum * 10 ** COLLATERAL_DECIMALS)),
+        collateralRaw,
         BigInt(leverage)
       )
       setTxHash(hash)
+      setStatus(null)
     } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Opening the position failed.')
+      setStatus(null)
+      setError(explainRevert(err))
     } finally {
       setSubmitting(false)
     }
@@ -218,9 +276,18 @@ export default function PerpMarketDetailPage({
             </div>
 
             <div>
-              <label htmlFor="margin" className="field-label">
-                Margin (mUSDT)
-              </label>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <label htmlFor="margin" className="field-label mb-0">
+                  Margin ({symbol})
+                </label>
+                {balance !== null && decimals !== null && (
+                  <span className="numeric text-[11px] text-ink-faint">
+                    Balance {fromTokenUnits(balance, decimals).toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                )}
+              </div>
               <div className="relative">
                 <input
                   id="margin"
@@ -233,7 +300,7 @@ export default function PerpMarketDetailPage({
                   className="field numeric pr-16"
                 />
                 <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-faint pointer-events-none">
-                  mUSDT
+                  {symbol}
                 </span>
               </div>
               <div className="flex gap-1.5 mt-2">
@@ -312,18 +379,46 @@ export default function PerpMarketDetailPage({
             <button
               type="button"
               onClick={handleOpenTrade}
-              disabled={submitting || !isConnected || !validCollateral}
+              disabled={
+                submitting ||
+                !isConnected ||
+                !validCollateral ||
+                !tokenReady ||
+                insufficientBalance
+              }
               className={`btn btn-lg w-full ${isLong ? 'btn-long' : 'btn-short'}`}
             >
               {submitting
                 ? 'Submitting…'
                 : !isConnected
                   ? 'Connect a wallet to trade'
-                  : `Open ${isLong ? 'long' : 'short'} · ${leverage}×`}
+                  : !tokenReady
+                    ? 'Reading collateral token…'
+                    : insufficientBalance
+                      ? `Not enough ${symbol}`
+                      : `Open ${isLong ? 'long' : 'short'} · ${leverage}×`}
             </button>
+
+            {/* Opening takes two signatures on a fresh wallet — approve, then
+                open. Saying so up front stops the second popup looking like a
+                failure of the first. */}
+            {status && <p className="text-xs text-ink-muted">{status}</p>}
 
             {!validCollateral && (
               <p className="text-xs text-warn">Enter a margin amount greater than zero.</p>
+            )}
+
+            {insufficientBalance && balance !== null && decimals !== null && (
+              <p className="text-xs text-warn">
+                You hold{' '}
+                <span className="numeric">
+                  {fromTokenUnits(balance, decimals).toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  })}{' '}
+                  {symbol}
+                </span>
+                .
+              </p>
             )}
 
             {txHash && (

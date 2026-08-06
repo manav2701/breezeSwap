@@ -4,9 +4,12 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight, CheckCircle2, Clock } from 'lucide-react'
 import type { Position } from '@breezeswap/sdk'
-import { formatCollateral, redeem } from '@breezeswap/sdk'
+import { redeem } from '@breezeswap/sdk'
 import { TxLink } from './TxLink'
 import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
+import { useCollateralToken } from '../lib/hooks/useCollateralToken'
+import { explainRevert } from '../lib/revertReason'
+import { formatTokenAmount } from '../lib/formatToken'
 
 export function PositionCard({
   position,
@@ -16,6 +19,12 @@ export function PositionCard({
   onRedeemed?: () => void
 }) {
   const { walletClient, publicClient } = useBreezeSDK()
+  // The indexer records the asset on the position row; the nested `market`
+  // summary does not carry it.
+  const { decimals, symbol } = useCollateralToken(position.collateralAsset)
+
+  const amount = (raw: string | null | undefined) =>
+    formatTokenAmount(raw ?? '0', decimals, symbol)
   const [loading, setLoading] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -39,7 +48,7 @@ export function PositionCard({
       setTxHash(hash)
       onRedeemed?.()
     } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Redemption failed.')
+      setError(explainRevert(err))
     } finally {
       setLoading(false)
     }
@@ -49,12 +58,20 @@ export function PositionCard({
     <article className="panel p-5 flex flex-col gap-4 h-full">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-1.5 min-w-0">
             {/* Word + arrow, so side never depends on colour alone. */}
-            <span className={`chip ${isLong ? 'chip-long' : 'chip-short'}`}>
+            <span className={`chip shrink-0 ${isLong ? 'chip-long' : 'chip-short'}`}>
               {isLong ? '▲ Long' : '▼ Short'}
             </span>
-            <span className="numeric text-[11px] text-ink-faint">#{position.tokenId}</span>
+            {/* ERC-1155 ids here are keccak-derived, so they run to 77 digits.
+                Printed in full one overflowed its card and painted straight
+                over the "Market" link beside it. */}
+            <span
+              className="numeric text-[11px] text-ink-faint truncate-hash max-w-[9ch]"
+              title={`Token ID ${position.tokenId}`}
+            >
+              #{position.tokenId}
+            </span>
           </div>
           <h3 className="display-3 text-ink truncate">
             {position.market?.regionName || 'Market'}
@@ -77,7 +94,7 @@ export function PositionCard({
         <div className="inset px-3 py-2.5 min-w-0">
           <dt className="metric-label">Collateral</dt>
           <dd className="numeric text-sm text-ink font-medium mt-0.5 truncate">
-            {formatCollateral(position.collateralAmount, 6, 'mUSDT')}
+            {amount(position.collateralAmount)}
           </dd>
         </div>
         <div className="inset px-3 py-2.5 min-w-0">
@@ -85,7 +102,7 @@ export function PositionCard({
           <dd className="mt-0.5 truncate">
             {isRedeemed ? (
               <span className="numeric text-sm value-long">
-                {formatCollateral(position.redeemedAmount || '0', 6, 'mUSDT')}
+                {amount(position.redeemedAmount)}
               </span>
             ) : (
               <TxLink hash={position.txHash} />
