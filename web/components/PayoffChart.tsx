@@ -1,95 +1,182 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   ResponsiveContainer,
-  ComposedChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
   CartesianGrid,
   ReferenceLine,
-  Legend
 } from 'recharts'
 import { calculatePayoffCurve } from '../lib/payoff'
+import { CHART, axisProps, gridProps, tooltipProps } from '../lib/chartTheme'
+import { ChartCard, LegendKey } from './charts/ChartCard'
 import type { Market } from '@breezeswap/sdk'
 
-export function PayoffChart({ market }: { market: Partial<Market> }) {
-  const data = calculatePayoffCurve(market)
+/**
+ * Settlement payout for each side as a function of the final oracle reading.
+ *
+ * Two series that always sum to 1, so they are drawn as filled areas rather
+ * than lines — the reader's question is "how much of the pot goes to my side",
+ * and area answers that at a glance where two crossing lines do not.
+ */
+export function PayoffChart({
+  market,
+  height = 260,
+}: {
+  market: Partial<Market>
+  height?: number
+}) {
+  const data = useMemo(() => calculatePayoffCurve(market), [market])
   const unit = market.weatherVariable === 'RAINFALL' ? 'mm' : '°C'
 
+  const hasFinal = market.finalOracleValue !== undefined && market.finalOracleValue !== null
+
   return (
-    <div className="w-full h-72 bg-[#141414] p-4 rounded-3xl border border-white/10 font-mono">
+    <ChartCard
+      title="Payoff at settlement"
+      subtitle={`Share of the collateral pot each side receives, by final oracle reading (${unit}).`}
+      height={height}
+      empty={data.length === 0}
+      emptyLabel="Set a threshold to preview the payoff curve."
+      actions={<span className="chip">{market.payoffType ?? 'CAPPED'}</span>}
+      footer={
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <LegendKey color={CHART.long} label="LONG payout" />
+          <LegendKey color={CHART.short} label="SHORT payout" />
+          {market.thresholdLow !== undefined && (
+            <span className="text-xs text-ink-faint">
+              Strike <span className="numeric text-ink-muted">{market.thresholdLow}{unit}</span>
+            </span>
+          )}
+          {market.thresholdHigh != null && (
+            <span className="text-xs text-ink-faint">
+              Cap <span className="numeric text-ink-muted">{market.thresholdHigh}{unit}</span>
+            </span>
+          )}
+        </div>
+      }
+    >
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 10, right: 20, bottom: 20, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#262626" opacity={0.6} />
+        <AreaChart data={data} margin={{ top: 8, right: 26, bottom: 4, left: -8 }}>
+          <defs>
+            <linearGradient id="payoffLong" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={CHART.long} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={CHART.long} stopOpacity={0.02} />
+            </linearGradient>
+            <linearGradient id="payoffShort" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={CHART.short} stopOpacity={0.3} />
+              <stop offset="100%" stopColor={CHART.short} stopOpacity={0.02} />
+            </linearGradient>
+          </defs>
+
+          <CartesianGrid {...gridProps} />
+
+          {/* A numeric x-axis rather than the default category axis. As a
+              category axis the ticks landed on whichever of the 100 sampled
+              points fell at the right pixel — "52.9mm", "83.8mm" — and
+              ReferenceLine could not position the strike between samples. */}
           <XAxis
+            {...axisProps}
             dataKey="x"
-            stroke="#a3a3a3"
-            fontSize={10}
-            unit={` ${unit}`}
-            tickLine={false}
+            type="number"
+            domain={['dataMin', 'dataMax']}
+            tickFormatter={(v) => `${Math.round(Number(v))}${unit}`}
+            minTickGap={28}
           />
           <YAxis
-            stroke="#a3a3a3"
-            fontSize={10}
+            {...axisProps}
             domain={[0, 1]}
-            tickFormatter={(v) => `${(v * 100).toFixed(0)}%`}
-            tickLine={false}
+            ticks={[0, 0.25, 0.5, 0.75, 1]}
+            tickFormatter={(v) => `${Math.round(v * 100)}%`}
+            width={40}
           />
-          <Tooltip
-            contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '12px', fontSize: '11px', color: '#ffffff' }}
-            formatter={(value: any, name: any) => [`${(Number(value) * 100).toFixed(1)}%`, name === 'long' ? 'LONG Payout' : 'SHORT Payout']}
-            labelFormatter={(label) => `Oracle Value: ${label} ${unit}`}
-          />
-          <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px', fontWeight: 'bold' }} />
 
-          <Line
+          <Tooltip
+            {...tooltipProps}
+            formatter={(value: number, name: string) => [
+              `${(Number(value) * 100).toFixed(1)}%`,
+              name === 'long' ? 'LONG' : 'SHORT',
+            ]}
+            labelFormatter={(label) => `Oracle reading ${label}${unit}`}
+          />
+
+          <Area
             type="monotone"
             dataKey="long"
-            stroke="#34d399"
-            strokeWidth={2.5}
-            dot={false}
-            name="LONG Side"
+            name="long"
+            stroke={CHART.long}
+            strokeWidth={2}
+            fill="url(#payoffLong)"
+            isAnimationActive={false}
           />
-          <Line
+          <Area
             type="monotone"
             dataKey="short"
-            stroke="#f87171"
-            strokeWidth={2.5}
-            dot={false}
-            name="SHORT Side"
+            name="short"
+            stroke={CHART.short}
+            strokeWidth={2}
+            fill="url(#payoffShort)"
+            isAnimationActive={false}
           />
 
+          {/* Reference lines are declared after the areas so they paint on top
+              of the fills — underneath them the dashed strike was invisible
+              against the 35%-opacity gradient.
+
+              Strike and cap can sit close together (40°C and 48°C on an 8–86°C
+              axis), which ran the two labels into each other as "StrikeCap".
+              They are stacked on separate rows rather than both hugging the
+              top, so the pair stays legible however tight the band is. */}
           {market.thresholdLow !== undefined && (
             <ReferenceLine
               x={market.thresholdLow}
-              stroke="#fde047"
+              stroke={CHART.reference}
               strokeDasharray="4 4"
-              label={{ value: `Low: ${market.thresholdLow}`, fill: '#fde047', fontSize: 10, position: 'top' }}
+              label={{
+                value: 'Strike',
+                fill: CHART.inkMuted,
+                fontSize: 10,
+                position: 'insideTopLeft',
+                offset: 8,
+              }}
             />
           )}
-
-          {market.thresholdHigh && (
+          {market.thresholdHigh != null && (
             <ReferenceLine
               x={market.thresholdHigh}
-              stroke="#c084fc"
+              stroke={CHART.reference}
               strokeDasharray="4 4"
-              label={{ value: `High: ${market.thresholdHigh}`, fill: '#c084fc', fontSize: 10, position: 'top' }}
+              label={{
+                value: 'Cap',
+                fill: CHART.inkMuted,
+                fontSize: 10,
+                position: 'insideTopLeft',
+                offset: 24,
+              }}
             />
           )}
 
-          {market.finalOracleValue !== undefined && market.finalOracleValue !== null && (
+          {/* The settled reading is the one line that must read as data, so it
+              gets the accent and a label. */}
+          {hasFinal && (
             <ReferenceLine
-              x={market.finalOracleValue}
-              stroke="#fde047"
+              x={market.finalOracleValue as number}
+              stroke={CHART.accent}
               strokeWidth={2}
-              label={{ value: `Final: ${market.finalOracleValue}`, fill: '#fde047', fontSize: 11, position: 'insideTopLeft' }}
+              label={{
+                value: `Settled ${market.finalOracleValue}${unit}`,
+                fill: CHART.accent,
+                fontSize: 10,
+                position: 'insideTopRight',
+              }}
             />
           )}
-        </ComposedChart>
+        </AreaChart>
       </ResponsiveContainer>
-    </div>
+    </ChartCard>
   )
 }

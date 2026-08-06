@@ -130,6 +130,85 @@ Every product consults the historical record before it can be traded:
 
 ---
 
+## 🖥️ Web application
+
+The frontend is a Next.js 16 App Router application. Everything below the wallet
+layer reads through `@breezeswap/sdk`, so the same calls work from a third-party
+integration.
+
+### Design system
+
+One dark canvas, one accent. Cyber Yellow (`#fde047`) is unreadable on a light
+surface — roughly 1.2:1 against cream — so it can only ever be a background
+block there. On `#0a0b0e` it reaches 14.8:1 and works as an accent, a chart
+series and a focus ring. Every colour token clears WCAG AA against the canvas.
+
+The accent is used as a **spotlight, not a coat of paint**: one yellow element
+per section, being either the primary action or the single number that matters.
+Everything else is ink on glass.
+
+Component classes live in `app/globals.css` inside `@layer components`, so
+Tailwind utilities always win over them. (They previously sat outside any layer,
+which silently defeated every utility applied alongside them — `pl-9` on a
+`.field` resolved to the component's own padding.)
+
+### Charts
+
+All charts are Recharts, driven by a single theme in `web/lib/chartTheme.ts` and
+framed by `components/charts/ChartCard.tsx`. The frame fixes each plot's pixel
+height, which is what stops a responsive SVG from widening its grid column and,
+through it, the page.
+
+Long and short are the only two-series pairing in the app. The pair was
+validated rather than eyeballed — 10.2:1 and 5.4:1 contrast against the canvas,
+with ΔE 12.0 separation under deuteranopia — and **every long/short mark also
+carries its word and a directional arrow**, so identity never rests on hue
+alone.
+
+### Sample-data fallback
+
+A fresh environment has no indexed rows, which would leave every panel blank. Where
+the indexer returns nothing, surfaces fall back to a seeded generator in
+`web/lib/demoData.ts` and render a visible **"Sample data"** chip. The generator
+is deterministic per market address, so demos and screenshots reproduce. Live
+data always takes precedence; the fallback only fills genuine gaps.
+
+---
+
+## 🔌 Indexer API
+
+The service exposes a read-only REST API under `/api`. Every route the SDK calls
+is listed here; all 19 were verified returning `200` against Coston2 data.
+
+| Route | Returns |
+|---|---|
+| `GET /api/health` | Service status and last indexed block |
+| `GET /api/markets` | Classic markets for a chain |
+| `GET /api/markets/:address` | One classic market |
+| `GET /api/markets/:address/positions` | Positions minted in a market |
+| `GET /api/users/:address/positions` | A wallet's classic positions |
+| `GET /api/users/:address/perp-positions` | A wallet's perpetual positions |
+| `GET /api/weather/regions` | Known oracle regions |
+| `GET /api/weather/:regionId` | Historical readings for a region |
+| `GET /api/perp-markets` | Perpetual markets |
+| `GET /api/perp-markets/:address` | One perpetual market |
+| `GET /api/perp-markets/:address/stats` | Mark/oracle price, funding, open interest |
+| `GET /api/perp-markets/:address/candles` | OHLC mark price candles |
+| `GET /api/perp-markets/:address/mark-price-history` | Raw mark price snapshots |
+| `GET /api/perp-markets/:address/funding-history` | Settled funding periods |
+| `GET /api/perp-markets/:address/trade-history` | Trades on one market |
+| `GET /api/perp-markets/:address/positions` | Open positions on one market |
+| `GET /api/protocol/trade-history` | Protocol-wide trade feed |
+| `GET /api/protocol/fees/total` | Cumulative fees collected |
+| `GET /api/protocol/insurance-fund` · `/treasury` | Reserve balances |
+| `GET /api/admin/audit-log` | Role and pause events |
+
+All routes accept `?chainId=` and default to `114`. Read failures in the SDK
+resolve to an empty result rather than throwing, so a degraded indexer downgrades
+the UI to its sample-data fallback instead of breaking a page.
+
+---
+
 ## 🚀 How to Run Project Locally
 
 ```bash
@@ -139,12 +218,35 @@ pnpm install
 # 2. Run Foundry smart contract tests
 cd contracts && forge test -vvv
 
-# 3. Build SDK
+# 3. Build the SDK (web imports it as a workspace dependency)
 cd ../sdk && npx tsup
 
-# 4. Start Web Application
-cd ../web && pnpm dev
+# 4. Start the indexer — applies migrations, then serves :3001
+cd ../indexer && cp .env.example .env   # fill in Supabase + DATABASE_URL
+pnpm build && pnpm start
+
+# 5. Start the web app on :3000
+cd ../web && cp .env.example .env.local
+pnpm dev
 ```
+
+The web app runs without the indexer — every page falls back to labelled sample
+data — but nothing will show real on-chain activity until step 4 is running.
+
+### Database migrations
+
+```bash
+cd indexer && pnpm migrate
+```
+
+Applied migrations are recorded in a `schema_migrations` table, so the command is
+idempotent and `pnpm start` runs it on every boot.
+
+> **`0001_init.sql` is a destructive bootstrap** — it opens with
+> `DROP TABLE ... CASCADE`. The runner skips it whenever BreezeSwap tables already
+> exist and records it as applied instead. Only `pnpm migrate --force-bootstrap`
+> will replay it, and that erases every indexed market, position, settlement and
+> weather reading.
 
 ### Deploying
 
@@ -184,14 +286,67 @@ fair-odds and opening-mark checks bind only where the data exists.
 
 ---
 
+## ☁️ Hosted deployment
+
+Two services, deployed independently from this monorepo.
+
+| Service | Platform | Directory | Config |
+|---|---|---|---|
+| Web app | Vercel | `web/` | Project settings + `web/.env.example` |
+| Indexer API | Railway | `indexer/` | `indexer/railway.json`, `indexer/.env.example` |
+
+### Railway — indexer
+
+`indexer/railway.json` sets the build and start commands and points the health
+check at `/api/health`. Set the service **root directory** to `indexer`, and
+provide every variable in `indexer/.env.example`.
+
+`DATABASE_URL` is required, not optional: `pnpm start` runs migrations before
+booting the server. A deploy without it fails fast rather than starting an API
+whose schema is behind the code — which is exactly how the perpetual and fee
+endpoints came to return `500` in production while every other route worked.
+
+Railway injects `PORT`; the server honours it and falls back to `3001`.
+
+`indexer/Dockerfile` is an alternative to Nixpacks and expects the **repository
+root** as its build context, because the pnpm lockfile lives there:
+
+```bash
+docker build -f indexer/Dockerfile -t breezeswap-indexer .
+```
+
+### Vercel — web
+
+Set the project **root directory** to `web` and enable *Include source files
+outside of the Root Directory*, since `web` depends on the `sdk` workspace
+package (`"@breezeswap/sdk": "file:../sdk"`). `sdk/dist` is committed, so Vercel
+resolves it without a separate SDK build step.
+
+Set every variable in `web/.env.example`. `NEXT_PUBLIC_*` values are **inlined at
+build time** — changing one in the dashboard does nothing until you redeploy.
+
+`NEXT_PUBLIC_INDEXER_URL` must point at the Railway service. If it is missing the
+app logs a named warning to the console and falls back to `localhost:3001`, which
+will not resolve from a browser; every panel then shows sample data. There is
+deliberately no remote default, because the previous one pointed at a retired
+host and failed silently.
+
+---
+
 ## Project Structure
 
 ```
 breezeswap/
   contracts/            # Foundry Solidity smart contracts (Unit, Fuzz, Security & Invariants)
   sdk/                  # Multi-chain TypeScript SDK (@breezeswap/sdk)
-  indexer/              # Dual-chain event watcher service & REST API
-  web/                  # Next.js App Router web application with Network Toggle
+  indexer/              # Event watcher service & REST API (Railway)
+    db/migrations/      # Ordered SQL migrations, tracked in schema_migrations
+    scripts/migrate.js  # Idempotent migration runner
+  web/                  # Next.js App Router web application (Vercel)
+    app/globals.css     # Design tokens and layered component classes
+    lib/chartTheme.ts   # Shared Recharts theme, formatters and domain helpers
+    lib/demoData.ts     # Seeded fallback series, always rendered behind a badge
+    components/charts/  # ChartCard frame and legend primitives
   docs/                 # Hackathon Submission (SUBMISSION.md) & Demo Script (DEMO_SCRIPT.md)
   weather-seed/         # Open-Meteo weather data seeder script
 ```

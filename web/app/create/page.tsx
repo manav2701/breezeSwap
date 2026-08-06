@@ -2,9 +2,7 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { PayoffChart } from '../../components/PayoffChart'
-import { TxLink } from '../../components/TxLink'
-import { PlusCircle, Layers, CheckCircle2, AlertCircle, Sparkles, UserCheck, AlertTriangle } from 'lucide-react'
+import { AlertCircle, AlertTriangle, CheckCircle2, PlusCircle } from 'lucide-react'
 import {
   createMarket,
   encodeRegionId,
@@ -12,9 +10,33 @@ import {
   CONTRACT_ADDRESSES,
   COSTON2_CHAIN_ID,
   type PayoffType,
-  type WeatherVariable
+  type WeatherVariable,
 } from '@breezeswap/sdk'
+import { PayoffChart } from '../../components/PayoffChart'
+import { TxLink } from '../../components/TxLink'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
+
+const REGIONS = ['Tokyo', 'Seoul', 'Singapore', 'Dubai', 'London'] as const
+
+const PAYOFF_TYPES: { value: PayoffType; label: string; help: string }[] = [
+  {
+    value: 'CAPPED',
+    label: 'Capped',
+    help: 'Payout ramps linearly between the strike and the cap, then flattens.',
+  },
+  {
+    value: 'BINARY',
+    label: 'Binary',
+    help: 'All or nothing — the winning side takes the whole pot at the strike.',
+  },
+  {
+    value: 'LINEAR',
+    label: 'Linear',
+    help: 'Payout scales proportionally above the strike, with no ceiling.',
+  },
+]
+
+const EXPIRY_OPTIONS = [1, 7, 14, 30]
 
 export default function CreateMarketPage() {
   const router = useRouter()
@@ -23,22 +45,31 @@ export default function CreateMarketPage() {
   const [regionName, setRegionName] = useState<string>('Tokyo')
   const [weatherVariable, setWeatherVariable] = useState<WeatherVariable>('RAINFALL')
   const [payoffType, setPayoffType] = useState<PayoffType>('CAPPED')
-  const [thresholdLowDisplay, setThresholdLowDisplay] = useState<number>(50)
-  const [thresholdHighDisplay, setThresholdHighDisplay] = useState<number>(100)
+  const [thresholdLow, setThresholdLow] = useState<number>(50)
+  const [thresholdHigh, setThresholdHigh] = useState<number>(100)
   const [expiryDays, setExpiryDays] = useState<number>(7)
-  const [collateralToken, setCollateralToken] = useState<string>(CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].mockUsdt)
+  const [collateralToken, setCollateralToken] = useState<string>(
+    CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].mockUsdt
+  )
 
   const [loading, setLoading] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
-  const [newMarketAddress, setNewMarketAddress] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const liveMarketPreview = {
+  const unit = weatherVariable === 'RAINFALL' ? 'mm' : '°C'
+
+  // A capped market whose cap sits at or below the strike has no ramp and would
+  // deploy a contract that can only ever pay 0% or 100%.
+  const capInvalid = payoffType === 'CAPPED' && thresholdHigh <= thresholdLow
+  const thresholdInvalid = !Number.isFinite(thresholdLow) || thresholdLow < 0
+  const canSubmit = isConnected && !isWrongNetwork && !capInvalid && !thresholdInvalid && !loading
+
+  const preview = {
     regionName,
     weatherVariable,
     payoffType,
-    thresholdLow: thresholdLowDisplay,
-    thresholdHigh: payoffType === 'CAPPED' ? thresholdHighDisplay : null
+    thresholdLow,
+    thresholdHigh: payoffType === 'CAPPED' ? thresholdHigh : null,
   }
 
   async function handleCreateMarket(e: React.FormEvent) {
@@ -46,247 +77,259 @@ export default function CreateMarketPage() {
     setLoading(true)
     setError(null)
     setTxHash(null)
-    setNewMarketAddress(null)
 
     if (isWrongNetwork) {
-      setError('Your wallet is on the wrong network. Please click "Switch to Flare Coston2" above.')
+      setError('Your wallet is on the wrong network. Switch to Flare Coston2 first.')
       setLoading(false)
       return
     }
 
     if (!walletClient || !publicClient) {
-      setError('Wallet client is not connected or ready. Please check your Web3 wallet extension.')
+      setError('Wallet is not ready. Check your wallet extension and try again.')
       setLoading(false)
       return
     }
 
     try {
-      const regionId = encodeRegionId(regionName)
-      const thresholdLow = toOracleUnits(thresholdLowDisplay)
-      const thresholdHigh = payoffType === 'CAPPED' ? toOracleUnits(thresholdHighDisplay) : BigInt(0)
-      const expiryTimestamp = BigInt(Math.floor(Date.now() / 1000) + expiryDays * 86400)
-
-      const result = await createMarket(
-        walletClient as any,
-        publicClient as any,
-        {
-          regionId,
-          weatherVariable,
-          payoffType,
-          thresholdLow,
-          thresholdHigh,
-          expiryTimestamp,
-          collateralToken: collateralToken as `0x${string}`
-        }
-      )
+      const result = await createMarket(walletClient as any, publicClient as any, {
+        regionId: encodeRegionId(regionName),
+        weatherVariable,
+        payoffType,
+        thresholdLow: toOracleUnits(thresholdLow),
+        thresholdHigh: payoffType === 'CAPPED' ? toOracleUnits(thresholdHigh) : BigInt(0),
+        expiryTimestamp: BigInt(Math.floor(Date.now() / 1000) + expiryDays * 86400),
+        collateralToken: collateralToken as `0x${string}`,
+      })
 
       setTxHash(result.txHash)
       if (result.marketAddress) {
-        setNewMarketAddress(result.marketAddress)
-        setTimeout(() => {
-          router.push(`/markets/${result.marketAddress}`)
-        }, 2000)
+        setTimeout(() => router.push(`/markets/${result.marketAddress}`), 1800)
       }
     } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Market creation failed. Please check wallet approval.')
+      setError(err?.shortMessage || err?.message || 'Market creation failed.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 py-4">
-      <div>
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-[#fde047] text-xs font-mono font-bold uppercase mb-3">
-          <Sparkles className="w-4 h-4 text-[#fde047]" />
-          <span>Permissionless Protocol Deployment</span>
-        </div>
-        <h1 className="text-4xl font-black uppercase tracking-tight text-white">Create Weather Derivative Market</h1>
-        <p className="text-xs text-slate-400 font-mono">Deploy a customized weather option contract on-chain with tailored settlement curves.</p>
-      </div>
+    <div className="max-w-6xl mx-auto space-y-8">
+      <header className="max-w-2xl">
+        <p className="eyebrow mb-2">Create</p>
+        <h1 className="display-2 text-ink">Deploy a weather market</h1>
+        <p className="text-sm text-ink-muted mt-2 leading-relaxed">
+          Pick a region, a reading and a payout shape. The contract deploys to Coston2 and settles
+          itself when the oracle reports.
+        </p>
+      </header>
 
       {isWrongNetwork && (
-        <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 font-mono">
-          <div className="flex items-center gap-3">
-            <AlertTriangle className="w-6 h-6 text-amber-400 shrink-0" />
-            <div>
-              <p className="text-xs font-bold uppercase">Wrong Wallet Network</p>
-              <p className="text-[11px] text-amber-300/80 font-sans">Your wallet is connected to a different network. Please switch to Flare Coston2 Testnet.</p>
+        <div className="panel p-4 flex flex-wrap items-center justify-between gap-4 border-[color:rgba(251,191,36,0.3)]">
+          <div className="flex items-center gap-3 min-w-0">
+            <AlertTriangle className="w-5 h-5 text-warn shrink-0" aria-hidden />
+            <div className="min-w-0">
+              <p className="text-sm text-ink font-medium">Wrong network</p>
+              <p className="text-xs text-ink-muted">
+                Switch your wallet to Flare Coston2 to deploy.
+              </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={switchNetwork}
-            className="btn-cyber-yellow py-2 px-5 text-xs font-extrabold shrink-0"
-          >
-            Switch Network
+          <button type="button" onClick={switchNetwork} className="btn btn-primary btn-sm">
+            Switch network
           </button>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Form Column */}
-        <form onSubmit={handleCreateMarket} className="glass-panel p-6 sm:p-8 space-y-6">
-          {/* Region Selection */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Target Region</label>
+      <div className="grid gap-6 lg:grid-cols-2 items-start">
+        <form onSubmit={handleCreateMarket} className="panel p-5 sm:p-6 space-y-5 min-w-0">
+          <div>
+            <label htmlFor="region" className="field-label">
+              Region
+            </label>
             <select
+              id="region"
               value={regionName}
               onChange={(e) => setRegionName(e.target.value)}
-              className="w-full bg-black/80 border border-white/10 text-white rounded-full px-5 py-3 text-xs font-mono focus:outline-none focus:border-[#fde047] transition-colors"
+              className="field"
             >
-              <option value="Tokyo">Tokyo 🇯🇵</option>
-              <option value="Seoul">Seoul 🇰🇷</option>
-              <option value="Singapore">Singapore 🇸🇬</option>
-              <option value="Dubai">Dubai 🇦🇪</option>
-              <option value="London">London 🇬🇧</option>
+              {REGIONS.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Weather Variable */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Weather Metric</label>
-            <div className="grid grid-cols-2 gap-3">
+          <div>
+            <span className="field-label">Weather metric</span>
+            <div className="segmented" role="group" aria-label="Weather metric">
               {(['RAINFALL', 'TEMPERATURE'] as const).map((v) => (
                 <button
                   key={v}
                   type="button"
                   onClick={() => setWeatherVariable(v)}
-                  className={`p-3 rounded-full border text-xs font-extrabold uppercase transition-all ${
-                    weatherVariable === v
-                      ? 'bg-[#fde047] border-[#fde047] text-black shadow-md'
-                      : 'bg-black/80 border-white/10 text-slate-400 hover:text-white'
-                  }`}
+                  data-active={weatherVariable === v}
+                  data-tone="accent"
+                  aria-pressed={weatherVariable === v}
                 >
-                  {v === 'RAINFALL' ? 'Rainfall (mm)' : 'Temp (°C)'}
+                  {v === 'RAINFALL' ? 'Rainfall (mm)' : 'Temperature (°C)'}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Payoff Type */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Payoff Curve Structure</label>
+          <div>
+            <label htmlFor="payoff" className="field-label">
+              Payout shape
+            </label>
             <select
+              id="payoff"
               value={payoffType}
               onChange={(e) => setPayoffType(e.target.value as PayoffType)}
-              className="w-full bg-black/80 border border-white/10 text-white rounded-full px-5 py-3 text-xs font-mono focus:outline-none focus:border-[#fde047] transition-colors"
+              className="field"
             >
-              <option value="CAPPED">Capped (Bounded Linear Slopes)</option>
-              <option value="BINARY">Binary (All-or-Nothing Step Payout)</option>
-              <option value="LINEAR">Linear (Uncapped Proportional Payout)</option>
+              {PAYOFF_TYPES.map((p) => (
+                <option key={p.value} value={p.value}>
+                  {p.label}
+                </option>
+              ))}
             </select>
+            <p className="text-xs text-ink-faint mt-1.5">
+              {PAYOFF_TYPES.find((p) => p.value === payoffType)?.help}
+            </p>
           </div>
 
-          {/* Threshold Low & High */}
-          <div className="grid grid-cols-2 gap-4 font-mono">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-slate-300 font-sans">
-                Low Threshold ({weatherVariable === 'RAINFALL' ? 'mm' : '°C'})
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="strike" className="field-label">
+                Strike ({unit})
               </label>
               <input
+                id="strike"
                 type="number"
-                value={thresholdLowDisplay}
-                onChange={(e) => setThresholdLowDisplay(Number(e.target.value))}
-                className="w-full bg-black/80 border border-white/10 text-white rounded-full px-4 py-3 text-xs font-bold focus:outline-none focus:border-[#fde047]"
+                min={0}
+                value={thresholdLow}
+                onChange={(e) => setThresholdLow(Number(e.target.value))}
+                className="field numeric"
               />
             </div>
 
             {payoffType === 'CAPPED' && (
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-300 font-sans">
-                  Cap Threshold ({weatherVariable === 'RAINFALL' ? 'mm' : '°C'})
+              <div>
+                <label htmlFor="cap" className="field-label">
+                  Cap ({unit})
                 </label>
                 <input
+                  id="cap"
                   type="number"
-                  value={thresholdHighDisplay}
-                  onChange={(e) => setThresholdHighDisplay(Number(e.target.value))}
-                  className="w-full bg-black/80 border border-white/10 text-white rounded-full px-4 py-3 text-xs font-bold focus:outline-none focus:border-[#fde047]"
+                  min={0}
+                  value={thresholdHigh}
+                  onChange={(e) => setThresholdHigh(Number(e.target.value))}
+                  aria-invalid={capInvalid}
+                  className={`field numeric ${capInvalid ? 'border-[color:rgba(244,63,94,0.5)]' : ''}`}
                 />
               </div>
             )}
           </div>
 
-          {/* Expiry Selection */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Expiry Duration</label>
+          {capInvalid && (
+            <p className="text-xs value-short">
+              The cap must sit above the strike, otherwise there is no ramp to price.
+            </p>
+          )}
+
+          <div>
+            <label htmlFor="expiry" className="field-label">
+              Expiry
+            </label>
             <select
+              id="expiry"
               value={expiryDays}
               onChange={(e) => setExpiryDays(Number(e.target.value))}
-              className="w-full bg-black/80 border border-white/10 text-white rounded-full px-5 py-3 text-xs font-mono focus:outline-none focus:border-[#fde047]"
+              className="field"
             >
-              <option value={1}>1 Day</option>
-              <option value={7}>7 Days</option>
-              <option value={14}>14 Days</option>
-              <option value={30}>30 Days</option>
+              {EXPIRY_OPTIONS.map((d) => (
+                <option key={d} value={d}>
+                  {d} {d === 1 ? 'day' : 'days'}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Collateral Token */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">Vault Collateral Token</label>
+          <div>
+            <label htmlFor="collateral" className="field-label">
+              Collateral token
+            </label>
             <select
+              id="collateral"
               value={collateralToken}
               onChange={(e) => setCollateralToken(e.target.value)}
-              className="w-full bg-black/80 border border-white/10 text-white rounded-full px-5 py-3 text-xs font-mono focus:outline-none focus:border-[#fde047]"
+              className="field"
             >
               <option value={CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].mockUsdt}>Mock USDT (mUSDT)</option>
-              <option value={CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].fTestXrp}>FTestXRP (FAssets)</option>
+              <option value={CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].fTestXrp}>
+                FTestXRP (FAssets)
+              </option>
             </select>
           </div>
 
-          {/* Submit Button */}
           {isConnected ? (
-            <button
-              type="submit"
-              disabled={loading || isWrongNetwork}
-              className="w-full btn-cyber-yellow py-4 text-xs font-extrabold uppercase tracking-wider disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              <PlusCircle className="w-4 h-4" />
-              {loading ? 'Deploying Contract...' : 'Deploy Market Contract On-Chain'}
+            <button type="submit" disabled={!canSubmit} className="btn btn-primary btn-lg w-full">
+              <PlusCircle className="w-4 h-4" aria-hidden />
+              {loading ? 'Deploying…' : 'Deploy market'}
             </button>
           ) : (
-            <div className="p-4 rounded-2xl bg-black/80 border border-white/10 text-center text-xs text-slate-400 space-y-2 font-mono">
-              <UserCheck className="w-5 h-5 text-[#fde047] mx-auto" />
-              <p>Connect your wallet to execute smart contract deployment.</p>
+            <div className="inset p-4 text-center text-xs text-ink-muted">
+              Connect a wallet from the header to deploy a contract.
             </div>
           )}
 
           {txHash && (
-            <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300 flex items-center gap-2 font-mono">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>
-                Market deployed! <TxLink hash={txHash} />
+            <div className="inset p-4 flex items-center justify-between gap-3 text-xs">
+              <span className="value-long inline-flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" aria-hidden />
+                Market deployed
               </span>
+              <TxLink hash={txHash} />
             </div>
           )}
 
           {error && (
-            <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-800/50 text-xs text-rose-300 flex items-center gap-2 font-mono">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-              <span>{error}</span>
+            <div className="inset p-4 flex items-start gap-2 text-xs value-short border-[color:rgba(244,63,94,0.3)]">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-px" aria-hidden />
+              <span className="break-words">{error}</span>
             </div>
           )}
         </form>
 
-        {/* Live Preview Column */}
-        <div className="space-y-6">
-          <div className="glass-panel p-6 sm:p-8 space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-xs font-black uppercase text-white tracking-widest flex items-center gap-2">
-                <Layers className="w-4 h-4 text-[#fde047]" />
-                Live Payoff Curve Preview
-              </h3>
-              <span className="text-[10px] bg-[#fde047] text-black px-3 py-1 rounded-full font-mono font-bold">
-                Real-Time Render
+        {/* Live preview. Redraws on every parameter change so the deployer can
+            see the contract they are about to sign for. */}
+        <div className="min-w-0 lg:sticky lg:top-24 space-y-4">
+          <PayoffChart market={preview} height={300} />
+
+          <div className="panel p-5 space-y-3">
+            <h3 className="eyebrow">Summary</h3>
+            <p className="text-sm text-ink-muted leading-relaxed">
+              A <span className="text-ink">{payoffType.toLowerCase()}</span> market on{' '}
+              <span className="text-ink">{regionName}</span>{' '}
+              {weatherVariable === 'RAINFALL' ? 'rainfall' : 'temperature'}, expiring in{' '}
+              <span className="numeric text-ink">{expiryDays}</span>{' '}
+              {expiryDays === 1 ? 'day' : 'days'}. Longs win above{' '}
+              <span className="numeric text-ink">
+                {thresholdLow}
+                {unit}
               </span>
-            </div>
-
-            <p className="text-xs text-slate-300 leading-relaxed font-mono">
-              Visual preview of how winning and losing payouts scale for LONG vs SHORT positions under your target parameters.
+              {payoffType === 'CAPPED' && !capInvalid && (
+                <>
+                  , reaching a full payout at{' '}
+                  <span className="numeric text-ink">
+                    {thresholdHigh}
+                    {unit}
+                  </span>
+                </>
+              )}
+              .
             </p>
-
-            <PayoffChart market={liveMarketPreview} />
           </div>
         </div>
       </div>

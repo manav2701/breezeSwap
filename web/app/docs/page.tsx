@@ -1,112 +1,111 @@
 'use client'
 
 import React from 'react'
-import { BookOpen, ShieldCheck, Terminal, Layers, ExternalLink, Code } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { CONTRACT_ADDRESSES, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
 
+const PAYOFF_TYPES = [
+  {
+    name: 'Binary',
+    body: 'All or nothing. If the final reading lands at or above the strike, longs take the whole pot; otherwise shorts do.',
+  },
+  {
+    name: 'Linear',
+    body: 'Payout scales proportionally above the strike, with no ceiling — the further past it the reading lands, the more longs take.',
+  },
+  {
+    name: 'Capped',
+    body: 'A bounded ramp: 0% below the strike, 100% above the cap, and a straight line between the two.',
+  },
+]
+
+const SECURITY_POINTS = [
+  ['Reentrancy', 'OpenZeppelin ReentrancyGuard on every state-mutating entry point.'],
+  ['Vault solvency', 'Global supply tracking keeps the vault balance at or above redeemable liabilities.'],
+  ['Precision', 'Fixed-point 18-decimal payout maths, so settlement leaves no dust behind.'],
+  ['Coverage', '122 Foundry tests across unit, invariant, reentrancy and economic-game properties.'],
+]
+
 export default function DocsPage() {
-  const coston2Contracts = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID]
+  const contracts = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID]
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12 py-4">
-      {/* Title */}
-      <div className="border-b border-white/10 pb-8 space-y-3">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-[#fde047] text-xs font-mono font-bold uppercase">
-          <BookOpen className="w-4 h-4 text-[#fde047]" />
-          <span>Protocol & Developer Documentation</span>
-        </div>
-        <h1 className="text-4xl font-black uppercase text-white tracking-tight">BreezeSwap Documentation</h1>
-        <p className="text-xs text-slate-400 font-mono leading-relaxed">
-          Decentralized parametric weather derivatives on Flare Network (Coston2 Testnet), settled permissionlessly by real-world weather oracle feeds.
+    <div className="max-w-4xl mx-auto space-y-14">
+      <header className="pb-6 border-b border-[color:var(--color-hairline)]">
+        <p className="eyebrow mb-2">Documentation</p>
+        <h1 className="display-2 text-ink">How BreezeSwap works</h1>
+        <p className="lede mt-3 max-w-2xl">
+          Parametric weather derivatives on Flare Coston2, settled from real oracle readings rather
+          than by an adjuster&rsquo;s judgement.
         </p>
-      </div>
+      </header>
 
-      {/* 1. What is BreezeSwap */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-black uppercase text-white flex items-center gap-3 tracking-tight">
-          <Layers className="w-6 h-6 text-[#fde047]" />
-          1. What is BreezeSwap?
-        </h2>
-        <div className="glass-panel p-6 sm:p-8 space-y-3 text-xs text-slate-300 leading-relaxed font-mono">
+        <h2 className="display-3 text-ink">The idea</h2>
+        <div className="panel p-6 space-y-4 text-sm text-ink-muted leading-relaxed">
           <p>
-            BreezeSwap is a first-of-its-kind weather derivatives protocol built for Flare Network. It enables agricultural enterprises, renewable energy producers, event planners, and retail traders to hedge or speculate on weather volatility (rainfall, temperature).
+            Farms, renewable operators, event organisers and traders all carry weather risk. The
+            traditional way to move that risk is an insurance policy, which means a claim, an
+            adjuster, and weeks of waiting to find out whether you get paid.
           </p>
           <p>
-            Traditional weather insurance requires long claim adjustment periods and manual approvals. BreezeSwap contracts are parametric: once a market expires, the oracle feed delivers verified weather readings (from Open-Meteo & Kweather) and smart contracts automatically compute payouts mathematically.
+            A BreezeSwap contract replaces that judgement call with a formula. You pick a region and
+            a threshold — 50mm of rain in Tokyo this week — and post collateral on one side. At
+            expiry the oracle publishes the reading, and the contract computes both payouts on-chain.
+            There is nobody to appeal to because there is nothing to decide.
           </p>
         </div>
       </section>
 
-      {/* 2. Payoff Types */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-black uppercase text-white flex items-center gap-3 tracking-tight">
-          <Layers className="w-6 h-6 text-purple-400" />
-          2. Payoff Curve Structures
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono">
-          <div className="glass-panel p-6 space-y-2 text-xs">
-            <h3 className="font-extrabold text-emerald-400 text-sm uppercase">BINARY</h3>
-            <p className="text-slate-400">
-              All-or-nothing step function. If final oracle reading &ge; threshold, LONG gets 100% of collateral and SHORT gets 0%. Otherwise, SHORT gets 100%.
-            </p>
-          </div>
-
-          <div className="glass-panel p-6 space-y-2 text-xs">
-            <h3 className="font-extrabold text-[#fde047] text-sm uppercase">LINEAR</h3>
-            <p className="text-slate-400">
-              Proportional payout scaling upwards from thresholdLow. Payout ratio increases linearly with the recorded weather metric.
-            </p>
-          </div>
-
-          <div className="glass-panel p-6 space-y-2 text-xs">
-            <h3 className="font-extrabold text-amber-400 text-sm uppercase">CAPPED</h3>
-            <p className="text-slate-400">
-              Bounded linear slope between thresholdLow and thresholdHigh. Payout is 0% below low threshold, 100% above high threshold, and linear in between.
-            </p>
-          </div>
+        <h2 className="display-3 text-ink">Payout shapes</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          {PAYOFF_TYPES.map((p) => (
+            <article key={p.name} className="panel p-5 space-y-2">
+              <h3 className="text-sm font-medium text-ink">{p.name}</h3>
+              <p className="text-xs text-ink-muted leading-relaxed">{p.body}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* 3. Contract Addresses */}
-      <section className="space-y-6">
-        <h2 className="text-2xl font-black uppercase text-white flex items-center gap-3 tracking-tight">
-          <Terminal className="w-6 h-6 text-emerald-400" />
-          3. Contract Registry
-        </h2>
-
-        <p className="text-xs text-slate-400 font-mono leading-relaxed">
-          BreezeSwap is deployed on Coston2 testnet only. There is no Flare Mainnet
-          deployment — mainnet is gated on a professional security audit.
+      <section className="space-y-4">
+        <h2 className="display-3 text-ink">Deployed contracts</h2>
+        <p className="text-sm text-ink-muted">
+          Coston2 testnet only, chain ID 114. There is no Flare mainnet deployment — mainnet is
+          gated on a professional security audit.
         </p>
 
-        {/* Coston2 Testnet */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-mono font-bold uppercase text-[#fde047] flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#fde047] animate-pulse" />
-            Flare Coston2 Testnet Contracts (Chain ID 114)
-          </h3>
-          <div className="glass-panel overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300 border-collapse">
-              <thead className="bg-black/60 text-slate-400 uppercase tracking-widest font-mono text-[10px] border-b border-white/10">
+        <div className="panel">
+          <div className="table-scroll">
+            <table className="data-table">
+              <thead>
                 <tr>
-                  <th className="p-4">Contract Name</th>
-                  <th className="p-4">Deployed Address</th>
-                  <th className="p-4">Block Explorer</th>
+                  <th>Contract</th>
+                  <th>Address</th>
+                  <th className="text-right">Explorer</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
-                {Object.entries(coston2Contracts).map(([name, address]) => (
-                  <tr key={name} className="hover:bg-white/5 transition-colors">
-                    <td className="p-4 font-sans font-extrabold text-white">{name}</td>
-                    <td className="p-4 text-[#fde047] font-bold">{address}</td>
-                    <td className="p-4 font-sans">
+              <tbody>
+                {Object.entries(contracts).map(([name, address]) => (
+                  <tr key={name}>
+                    <td className="text-ink font-medium">{name}</td>
+                    <td className="numeric">
+                      {/* Full address, but clipped by the scroll container
+                          rather than allowed to widen the page. */}
+                      <span className="truncate-hash block max-w-[22ch]" title={String(address)}>
+                        {String(address)}
+                      </span>
+                    </td>
+                    <td className="text-right">
                       <a
                         href={`https://coston2-explorer.flare.network/address/${address}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-slate-400 hover:text-[#fde047] transition-colors"
+                        className="inline-flex items-center gap-1 text-ink-muted hover:text-accent transition-colors"
                       >
-                        Explorer <ExternalLink className="w-3.5 h-3.5 text-[#fde047]" />
+                        View
+                        <ExternalLink className="w-3 h-3" aria-hidden />
                       </a>
                     </td>
                   </tr>
@@ -117,44 +116,33 @@ export default function DocsPage() {
         </div>
       </section>
 
-      {/* 4. SDK Integration */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-black uppercase text-white flex items-center gap-3 tracking-tight">
-          <Code className="w-6 h-6 text-amber-400" />
-          4. SDK Integration Guide
-        </h2>
-        <div className="glass-panel p-6 sm:p-8 space-y-4 text-xs font-mono text-slate-300">
-          <p className="font-sans text-slate-400">
-            Third-party developers can integrate BreezeSwap weather derivatives directly into their apps using the TypeScript SDK:
+        <h2 className="display-3 text-ink">SDK</h2>
+        <div className="panel p-6 space-y-4">
+          <p className="text-sm text-ink-muted leading-relaxed">
+            Read markets and submit transactions from your own app with the TypeScript SDK.
           </p>
-          <pre className="p-5 rounded-2xl bg-black/80 border border-white/10 overflow-x-auto text-[#fde047]">
-{`import { getMarkets, createMarket, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
+          <pre className="inset p-4 overflow-x-auto text-xs numeric text-ink leading-relaxed">
+            {`import { getMarkets, createMarket, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
 
-// 1. Fetch live markets for Coston2 (Chain ID 114)
-const markets = await getMarkets('https://breezeswap-indexer.onrender.com', COSTON2_CHAIN_ID)
+// Fetch live markets for Coston2
+const markets = await getMarkets(indexerUrl, COSTON2_CHAIN_ID)
 
-// 2. Execute contract calls against the resolved registry
-const txHash = await createMarket(walletClient, publicClient, params, COSTON2_CHAIN_ID)`}
+// Deploy a new one against the resolved registry
+const { txHash, marketAddress } = await createMarket(walletClient, publicClient, params)`}
           </pre>
         </div>
       </section>
 
-      {/* 5. Security & Invariant Testing */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-black uppercase text-white flex items-center gap-3 tracking-tight">
-          <ShieldCheck className="w-6 h-6 text-emerald-400" />
-          5. Security & Formal Invariant Audits
-        </h2>
-        <div className="glass-panel p-6 sm:p-8 space-y-3 text-xs text-slate-300 leading-relaxed font-mono">
-          <p>
-            BreezeSwap smart contracts have undergone rigorous invariant fuzz testing (256 runs &times; 64 depth) and adversarial attack vectors:
-          </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-400 pl-2">
-            <li><strong>Reentrancy Defense:</strong> Guarded with OpenZeppelin ReentrancyGuard on all state-mutating functions.</li>
-            <li><strong>Vault Solvency Guarantee:</strong> Global supply tracking ensures collateral vault balance &ge; redeemable liabilities.</li>
-            <li><strong>Precision Safety:</strong> Fixed-point 18-decimal payout math ensures 0 rounding loss or vault dust remaining.</li>
-            <li><strong>Test Coverage:</strong> 122/122 passing Foundry test suites across unit, invariant, reentrancy, and economic game properties.</li>
-          </ul>
+        <h2 className="display-3 text-ink">Security</h2>
+        <div className="panel divide-y divide-[color:var(--color-hairline)]">
+          {SECURITY_POINTS.map(([title, body]) => (
+            <div key={title} className="p-5 flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6">
+              <h3 className="text-sm font-medium text-ink sm:w-40 shrink-0">{title}</h3>
+              <p className="text-sm text-ink-muted leading-relaxed">{body}</p>
+            </div>
+          ))}
         </div>
       </section>
     </div>

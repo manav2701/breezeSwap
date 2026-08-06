@@ -1,221 +1,878 @@
 @import "tailwindcss";
 
 /*
-  BreezeSwap design system — dark-first.
+  BreezeSwap design system.
 
-  The previous palette put Cyber Yellow (#fde047) on a cream canvas (#faf8f5).
-  That pairing has a contrast ratio of roughly 1.2:1, so yellow was unreadable
-  as text or as a data colour and could only ever be a background block. That
-  forced near-black cards to float on a light page, which is why the old UI
-  read as three competing themes at once.
+  Two rules drive everything below.
 
-  On a dark canvas the same yellow reaches ~14.8:1. It finally works as an
-  accent, a chart series, and a focus ring — and dense trading data reads far
-  better on dark. Every token below clears WCAG AA (4.5:1) against the canvas.
+  1. Dark canvas, single accent. Cyber Yellow (#fde047) on cream was ~1.2:1 —
+     unreadable as text or as a data colour. On #0a0b0e it reaches ~14.8:1, so
+     it works as an accent, a chart series, and a focus ring. Every token here
+     clears WCAG AA (4.5:1) against the canvas.
+
+  2. The accent is a spotlight, not a coat of paint. One yellow element per
+     viewport section: the primary action, or the single number that matters.
+     Everything else is ink on glass. Yellow on every pill, badge, icon and
+     heading is what made the old build read as generated rather than designed.
 */
 
 @theme {
-  /* Surfaces, from furthest back to closest */
-  --color-canvas: #0b0d10;
-  --color-surface: #14171c;
-  --color-raised: #1b1f26;
-  --color-overlay: #232830;
+  /* Surfaces, furthest back to closest. Each step is a real luminance jump so
+     nesting reads as depth rather than noise. */
+  --color-canvas: #0a0b0e;
+  --color-surface: #101319;
+  --color-raised: #171b23;
+  --color-overlay: #1f242e;
+  --color-inset: #0c0e13;
 
   /* Text — contrast against --color-canvas noted per token */
-  --color-ink: #f2f4f7; /* 17.3:1 */
-  --color-ink-muted: #9ba3af; /*  7.5:1 */
-  --color-ink-faint: #6b7280; /*  4.6:1 */
+  --color-ink: #f4f6f9; /* 17.8:1 */
+  --color-ink-muted: #a2abb9; /*  8.2:1 */
+  --color-ink-faint: #7a8492; /*  5.2:1 */
 
   /* Brand */
   --color-accent: #fde047; /* 14.8:1 */
   --color-accent-deep: #eab308;
-  --color-accent-wash: rgba(253, 224, 71, 0.12);
+  --color-accent-soft: rgba(253, 224, 71, 0.14);
+  --color-accent-line: rgba(253, 224, 71, 0.32);
 
-  /* Semantic / data */
-  --color-long: #34d399; /* 11.2:1 */
-  --color-short: #f87171; /*  7.4:1 */
+  /* A cool secondary keeps the page from reading as a single-hue gradient and
+     gives charts a second series that is not a semantic long/short colour. */
+  --color-cool: #7dd3fc;
+  --color-cool-soft: rgba(125, 211, 252, 0.12);
+
+  /*
+    Semantic / data.
+
+    Long and short are the only two-series pairing in the app's charts, so the
+    pair was validated rather than eyeballed: against #0a0b0e they sit at
+    10.2:1 and 5.4:1, with a deuteranope separation of ΔE 12.0 (target ≥ 8).
+    Green/red is still a colour-vision risk at heart, so every long/short mark
+    in the UI also carries its "LONG"/"SHORT" word and a directional arrow —
+    identity is never carried by hue alone.
+  */
+  --color-long: #34d399; /* 10.2:1 */
+  --color-short: #f43f5e; /*  5.4:1 — ΔE 12.0 from --color-long under deutan */
   --color-info: #60a5fa; /*  8.0:1 */
-  --color-warn: #fbbf24;
+  --color-warn: #fbbf24; /* 11.8:1 */
 
   /* Lines */
-  --color-hairline: rgba(255, 255, 255, 0.08);
-  --color-hairline-strong: rgba(255, 255, 255, 0.16);
+  --color-hairline: rgba(255, 255, 255, 0.07);
+  --color-hairline-strong: rgba(255, 255, 255, 0.14);
 
-  --radius-panel: 1.25rem;
+  --radius-panel: 1.125rem;
+  --radius-inner: 0.75rem;
 
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
-html {
-  background-color: var(--color-canvas);
-  color-scheme: dark;
+
+/*
+  Everything below is wrapped in Tailwind's own cascade layers.
+
+  These rules previously sat outside any layer, which in the CSS cascade puts
+  them *after* `@layer utilities` — so `.field` beat `pl-9`, `.btn` beat any
+  padding utility, and every attempt to nudge a component with a utility class
+  silently did nothing. Layering them restores the expected precedence:
+  utilities always win over components.
+*/
+
+@layer base {
+  /* ------------------------------------------------------------------ */
+  /* Base                                                                */
+  /* ------------------------------------------------------------------ */
+
+  html {
+    background-color: var(--color-canvas);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Long hex addresses and hashes are the main source of horizontal blowout on
+     this app. Nothing may push the page wider than the viewport. */
+  * {
+    min-width: 0;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Ambient background                                                  */
+  /* ------------------------------------------------------------------ */
+
+  /*
+    A slow-drifting mesh gradient behind the whole app. Fixed to the viewport and
+    pointer-events:none so it never participates in layout — the "shader
+    background" look without shipping a WebGL runtime, and it degrades to a
+    static wash under reduced-motion.
+  */
+  .ambient-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ambient-mesh::before,
+  .ambient-mesh::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.55;
+    will-change: transform;
+  }
+
+  .ambient-mesh::before {
+    width: 62vw;
+    height: 62vw;
+    top: -22vw;
+    left: -10vw;
+    background: radial-gradient(circle, rgba(253, 224, 71, 0.16), transparent 66%);
+    animation: mesh-drift-a 26s var(--ease-out-quint) infinite alternate;
+  }
+
+  .ambient-mesh::after {
+    width: 52vw;
+    height: 52vw;
+    top: -8vw;
+    right: -14vw;
+    background: radial-gradient(circle, rgba(125, 211, 252, 0.14), transparent 66%);
+    animation: mesh-drift-b 32s var(--ease-out-quint) infinite alternate;
+  }
+
+  /* Fine grain over the gradients so large flat areas do not band on wide
+     displays. */
+  .ambient-grain {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  @keyframes mesh-drift-a {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(8vw, 6vw, 0) scale(1.15);
+    }
+  }
+
+  @keyframes mesh-drift-b {
+    from {
+      transform: translate3d(0, 0, 0) scale(1.1);
+    }
+    to {
+      transform: translate3d(-7vw, 9vw, 0) scale(1);
+    }
+  }
 }
 
-body {
-  background-color: var(--color-canvas);
-  color: var(--color-ink);
-  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
-  overflow-x: hidden;
-  /* Subtle depth so large dark areas do not read as flat black. */
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(253, 224, 71, 0.06), transparent),
-    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(96, 165, 250, 0.04), transparent);
-  background-attachment: fixed;
+@layer components {
+  /* ------------------------------------------------------------------ */
+  /* Panels — liquid glass                                               */
+  /* ------------------------------------------------------------------ */
+
+  /*
+    The specular top edge (the inset white hairline) is what separates "glass"
+    from "a grey box with a border". It catches the ambient gradient behind the
+    panel the way a real bevel would.
+  */
+  .panel {
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 42%),
+      color-mix(in srgb, var(--color-surface) 82%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-panel);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.4),
+      0 18px 44px -28px rgba(0, 0, 0, 0.9);
+    /* Every panel clips its own children. This is the single guarantee that
+       charts, tables and long hashes cannot spill outside their container. */
+    overflow: hidden;
+  }
+
+  /* Nested block inside a panel — readings, quote rows, stat tiles. */
+  .inset {
+    background-color: color-mix(in srgb, var(--color-inset) 78%, transparent);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-inner);
+  }
+
+  .panel-hover {
+    transition:
+      border-color 0.3s var(--ease-out-quint),
+      box-shadow 0.3s var(--ease-out-quint),
+      transform 0.3s var(--ease-out-quint);
+  }
+
+  .panel-hover:hover {
+    border-color: var(--color-accent-line);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      0 0 0 1px var(--color-accent-soft),
+      0 24px 50px -28px rgba(253, 224, 71, 0.28);
+    transform: translateY(-3px);
+  }
+
+  /* Hero band. A wash behind the content, not a block carved out of the page. */
+  .hero-band {
+    position: relative;
+    background:
+      radial-gradient(ellipse 88% 120% at 12% 0%, rgba(253, 224, 71, 0.13), transparent 62%),
+      radial-gradient(ellipse 70% 100% at 92% 18%, rgba(125, 211, 252, 0.1), transparent 64%),
+      color-mix(in srgb, var(--color-surface) 72%, transparent);
+    border: 1px solid var(--color-hairline);
+    border-radius: 1.5rem;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Typography                                                          */
+  /* ------------------------------------------------------------------ */
+
+  /*
+    Display headings are set in sentence case at weight 600–700 with negative
+    tracking. The previous build set nearly every heading to `font-black
+    uppercase tracking-tight`, which flattens hierarchy — when everything shouts,
+    nothing does.
+  */
+  .display-1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+  }
+
+  .display-2 {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.12;
+    letter-spacing: -0.028em;
+    font-weight: 650;
+  }
+
+  .display-3 {
+    font-size: 1.125rem;
+    line-height: 1.3;
+    letter-spacing: -0.018em;
+    font-weight: 620;
+  }
+
+  /* The one place small-caps still earns its keep: micro-labels above a value or
+     a section, where the shape itself signals "this is a label, not content". */
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .lede {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--color-ink-muted);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Numerals                                                            */
+  /* ------------------------------------------------------------------ */
+
+  /* Tabular figures everywhere a number can change, so digits do not reflow. */
+  .numeric,
+  .metric-value,
+  td.numeric,
+  .tabular {
+    font-family: var(--font-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1, 'zero' 1;
+  }
+
+  .metric-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    display: block;
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+    font-weight: 620;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+
+  .metric-value-lg {
+    font-size: 1.875rem;
+  }
+
+  .value-long {
+    color: var(--color-long);
+  }
+
+  .value-short {
+    color: var(--color-short);
+  }
+
+  .value-accent {
+    color: var(--color-accent);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Buttons                                                             */
+  /* ------------------------------------------------------------------ */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6875rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s var(--ease-out-quint),
+      box-shadow 0.2s ease;
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .btn-lg {
+    padding: 0.9375rem 1.75rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-sm {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.75rem;
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #0a0a0a;
+    font-weight: 650;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: #fee776;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px -10px rgba(253, 224, 71, 0.55);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0) scale(0.985);
+  }
+
+  .btn-ghost {
+    background-color: color-mix(in srgb, var(--color-raised) 70%, transparent);
+    color: var(--color-ink);
+    border: 1px solid var(--color-hairline);
+    backdrop-filter: blur(8px);
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--color-overlay);
+    border-color: var(--color-hairline-strong);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost:active:not(:disabled) {
+    transform: translateY(0) scale(0.985);
+  }
+
+  .btn-long {
+    background-color: var(--color-long);
+    color: #06281c;
+    font-weight: 650;
+  }
+
+  .btn-long:hover:not(:disabled) {
+    background-color: #4ade9f;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px -10px rgba(52, 211, 153, 0.5);
+  }
+
+  .btn-short {
+    background-color: var(--color-short);
+    color: #2b0710;
+    font-weight: 650;
+  }
+
+  .btn-short:hover:not(:disabled) {
+    background-color: #fb5c76;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px -10px rgba(244, 63, 94, 0.5);
+  }
+
+  .btn-icon {
+    padding: 0.625rem;
+    border-radius: 9999px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Chips                                                               */
+  /* ------------------------------------------------------------------ */
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    border: 1px solid var(--color-hairline);
+    background-color: color-mix(in srgb, var(--color-raised) 70%, transparent);
+    color: var(--color-ink-muted);
+  }
+
+  .chip-accent {
+    background-color: var(--color-accent-soft);
+    border-color: var(--color-accent-line);
+    color: var(--color-accent);
+  }
+
+  .chip-long {
+    background-color: rgba(52, 211, 153, 0.12);
+    border-color: rgba(52, 211, 153, 0.3);
+    color: var(--color-long);
+  }
+
+  .chip-short {
+    background-color: rgba(244, 63, 94, 0.14);
+    border-color: rgba(244, 63, 94, 0.32);
+    color: var(--color-short);
+  }
+
+  .chip-info {
+    background-color: rgba(96, 165, 250, 0.12);
+    border-color: rgba(96, 165, 250, 0.3);
+    color: var(--color-info);
+  }
+
+  .chip-warn {
+    background-color: rgba(251, 191, 36, 0.12);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: var(--color-warn);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Form fields                                                         */
+  /* ------------------------------------------------------------------ */
+
+  .field {
+    width: 100%;
+    background-color: color-mix(in srgb, var(--color-inset) 85%, transparent);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-inner);
+    color: var(--color-ink);
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .field::placeholder {
+    color: var(--color-ink-faint);
+  }
+
+  .field:hover:not(:disabled) {
+    border-color: var(--color-hairline-strong);
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: var(--color-accent-line);
+    box-shadow: 0 0 0 3px var(--color-accent-soft);
+  }
+
+  /* Native select arrow is drawn by the platform in a light colour on some
+     engines; supply our own so it reads on the dark field. */
+  select.field {
+    appearance: none;
+    padding-right: 2.25rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236f7987' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.875rem center;
+  }
+
+  select.field option {
+    background-color: var(--color-raised);
+    color: var(--color-ink);
+  }
+
+  .field-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+    margin-bottom: 0.4375rem;
+  }
+
+  /* Segmented control — the filter/interval toggles. */
+  .segmented {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+    padding: 0.25rem;
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, var(--color-inset) 85%, transparent);
+    border: 1px solid var(--color-hairline);
+  }
+
+  .segmented > button {
+    flex: 1 1 auto;
+    padding: 0.4375rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-ink-faint);
+    white-space: nowrap;
+    transition:
+      background-color 0.2s var(--ease-out-quint),
+      color 0.2s ease;
+  }
+
+  .segmented > button:hover {
+    color: var(--color-ink);
+  }
+
+  .segmented > button[data-active='true'] {
+    background-color: var(--color-overlay);
+    color: var(--color-ink);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  .segmented > button[data-active='true'][data-tone='accent'] {
+    background-color: var(--color-accent);
+    color: #0a0a0a;
+  }
+
+  .segmented > button[data-active='true'][data-tone='long'] {
+    background-color: var(--color-long);
+    color: #06281c;
+  }
+
+  .segmented > button[data-active='true'][data-tone='short'] {
+    background-color: var(--color-short);
+    color: #34090f;
+  }
+
+  /* Range slider */
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--color-overlay);
+    outline: none;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    border: 2px solid var(--color-canvas);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: transform 0.15s var(--ease-spring);
+  }
+
+  input[type='range']::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+
+  input[type='range']::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    border: 2px solid var(--color-canvas);
+    cursor: pointer;
+  }
+
+  /* Number inputs: hide spinners, they collide with the unit suffix. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  /* One visible focus treatment for every interactive element. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Tables                                                              */
+  /* ------------------------------------------------------------------ */
+
+  /*
+    Dense tables are the app's core content. The shell owns the horizontal
+    scroll so a wide table scrolls inside its panel instead of widening the page.
+  */
+  .table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  table.data-table {
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+
+  table.data-table thead th {
+    position: sticky;
+    top: 0;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    background-color: color-mix(in srgb, var(--color-inset) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-hairline);
+    white-space: nowrap;
+  }
+
+  table.data-table tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-hairline);
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+
+  table.data-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  table.data-table tbody tr {
+    transition: background-color 0.15s ease;
+  }
+
+  table.data-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.028);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Charts                                                              */
+  /* ------------------------------------------------------------------ */
+
+  /*
+    Recharts renders an SVG sized from its parent. Giving the wrapper a fixed
+    height and `min-width: 0` is what stops a chart from forcing its flex/grid
+    column wider than the panel.
+  */
+  .chart-frame {
+    width: 100%;
+    min-width: 0;
+    position: relative;
+  }
+
+  .chart-frame .recharts-wrapper {
+    max-width: 100% !important;
+  }
+
+  .chart-frame .recharts-cartesian-axis-tick text {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 10px;
+    fill: var(--color-ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chart-frame .recharts-cartesian-grid line {
+    stroke: var(--color-hairline);
+  }
+
+  .chart-frame .recharts-legend-item-text {
+    color: var(--color-ink-muted) !important;
+    font-size: 12px;
+  }
+
+  /* Recharts draws its default tooltip inline; these keep it on-theme without a
+     custom component in every chart. */
+  .chart-tooltip {
+    background-color: rgba(16, 19, 25, 0.96) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-hairline-strong) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.9);
+    font-size: 11px !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .chart-tooltip .recharts-tooltip-label {
+    color: var(--color-ink-faint) !important;
+    font-size: 10px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .chart-tooltip .recharts-tooltip-item {
+    color: var(--color-ink) !important;
+    font-variant-numeric: tabular-nums;
+    padding: 0.0625rem 0 !important;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Utilities                                                           */
+  /* ------------------------------------------------------------------ */
+
+  /* Long hashes and addresses: truncate rather than widen the container. */
+  .truncate-hash {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: color-mix(in srgb, var(--color-raised) 60%, transparent);
+  }
+
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    animation: shimmer 1.6s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Live indicator dot */
+  .pulse-dot {
+    position: relative;
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    flex-shrink: 0;
+  }
+
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-color: currentColor;
+    animation: pulse-ring 2s var(--ease-out-quint) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    70%,
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
 }
 
-/* ------------------------------------------------------------------ */
-/* Panels                                                              */
-/* ------------------------------------------------------------------ */
+@layer base {
+  /* ------------------------------------------------------------------ */
+  /* Scrollbars                                                          */
+  /* ------------------------------------------------------------------ */
 
-.glass-panel,
-.glass-card-dark {
-  background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
-  backdrop-filter: blur(12px);
-  color: var(--color-ink);
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-panel);
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset, 0 16px 40px -24px rgba(0, 0, 0, 0.8);
-  overflow: hidden;
-}
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-overlay);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-faint);
+    background-clip: content-box;
+  }
 
-/* Kept for components that still ask for a "light" card. On a dark canvas the
-   readable equivalent is a raised surface, not an inverted one. */
-.glass-card-light {
-  background-color: var(--color-raised);
-  color: var(--color-ink);
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-panel);
-  box-shadow: 0 16px 40px -24px rgba(0, 0, 0, 0.8);
-  overflow: hidden;
-}
+  /* ------------------------------------------------------------------ */
+  /* Motion                                                              */
+  /* ------------------------------------------------------------------ */
 
-.glass-panel-hover {
-  transition:
-    border-color 0.25s var(--ease-out-quint),
-    box-shadow 0.25s var(--ease-out-quint),
-    transform 0.25s var(--ease-out-quint);
-}
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
 
-.glass-panel-hover:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
-  box-shadow: 0 0 0 1px var(--color-accent-wash), 0 20px 44px -24px rgba(253, 224, 71, 0.25);
-  transform: translateY(-2px);
-}
-
-/* Hero band. The old asymmetric cutout fought the grid; a soft accent wash
-   sits behind content instead of carving the page into blocks. */
-.liquid-hero-bg {
-  background:
-    radial-gradient(ellipse 90% 100% at 20% 0%, rgba(253, 224, 71, 0.16), transparent 70%),
-    radial-gradient(ellipse 70% 90% at 85% 20%, rgba(96, 165, 250, 0.1), transparent 70%),
-    var(--color-surface);
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-panel);
-}
-
-/* ------------------------------------------------------------------ */
-/* Buttons                                                             */
-/* ------------------------------------------------------------------ */
-
-.btn-cyber-yellow {
-  background-color: var(--color-accent);
-  color: #0a0a0a;
-  font-weight: 700;
-  border-radius: 9999px;
-  transition:
-    background-color 0.18s ease,
-    transform 0.18s var(--ease-out-quint),
-    box-shadow 0.18s ease;
-}
-
-.btn-cyber-yellow:hover {
-  background-color: #fce96a;
-  transform: translateY(-1px);
-  box-shadow: 0 10px 28px -10px rgba(253, 224, 71, 0.5);
-}
-
-.btn-cyber-yellow:active {
-  transform: translateY(0) scale(0.985);
-}
-
-.btn-onyx {
-  background-color: var(--color-raised);
-  color: var(--color-ink);
-  border: 1px solid var(--color-hairline);
-  font-weight: 700;
-  border-radius: 9999px;
-  transition:
-    background-color 0.18s ease,
-    border-color 0.18s ease,
-    transform 0.18s var(--ease-out-quint);
-}
-
-.btn-onyx:hover {
-  background-color: var(--color-overlay);
-  border-color: var(--color-hairline-strong);
-  transform: translateY(-1px);
-}
-
-.btn-onyx:active {
-  transform: translateY(0) scale(0.985);
-}
-
-/* A single visible focus treatment for every interactive element. */
-:where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-
-/* ------------------------------------------------------------------ */
-/* Data display                                                        */
-/* ------------------------------------------------------------------ */
-
-.numeric {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum';
-}
-
-.value-long {
-  color: var(--color-long);
-}
-
-.value-short {
-  color: var(--color-short);
-}
-
-/* ------------------------------------------------------------------ */
-/* Scrollbars                                                          */
-/* ------------------------------------------------------------------ */
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-canvas);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-overlay);
-  border-radius: 9999px;
-  border: 2px solid var(--color-canvas);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ink-faint);
-}
-
-/* ------------------------------------------------------------------ */
-/* Motion                                                              */
-/* ------------------------------------------------------------------ */
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    .ambient-mesh::before,
+    .ambient-mesh::after {
+      animation: none;
+    }
   }
 }

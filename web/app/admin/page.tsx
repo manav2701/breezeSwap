@@ -1,12 +1,21 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
-import { ShieldAlert, Lock, Zap, PauseCircle, PlayCircle, RefreshCw, CheckCircle2, CloudRain, ShieldCheck, DollarSign } from 'lucide-react'
+import { Lock, PauseCircle, PlayCircle, RefreshCw, ShieldAlert } from 'lucide-react'
 import {
-  checkRole, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, getMarkets, KNOWN_REGIONS,
-  setOracleReading, pauseMarket, unpauseMarket, pauseFactory, unpauseFactory,
-  type Market
+  checkRole,
+  CONTRACT_ADDRESSES,
+  COSTON2_CHAIN_ID,
+  getMarkets,
+  KNOWN_REGIONS,
+  setOracleReading,
+  setTradingFeeBps,
+  pauseMarket,
+  unpauseMarket,
+  pauseFactory,
+  unpauseFactory,
+  type Market,
 } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
 import { TxLink } from '../../components/TxLink'
@@ -28,8 +37,8 @@ export default function AdminPage() {
   const { indexerUrl, walletClient, publicClient } = useBreezeSDK()
 
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
-  const [hasPauserRole, setHasPauserRole] = useState<boolean>(false)
-  const [hasOracleRole, setHasOracleRole] = useState<boolean>(false)
+  const [hasPauserRole, setHasPauserRole] = useState(false)
+  const [hasOracleRole, setHasOracleRole] = useState(false)
 
   const [markets, setMarkets] = useState<Market[]>([])
   const [events, setEvents] = useState<ProtocolEvent[]>([])
@@ -37,13 +46,37 @@ export default function AdminPage() {
 
   const regionEntries = Object.entries(KNOWN_REGIONS)
   const [selectedRegion, setSelectedRegion] = useState<string>(regionEntries[0]?.[0] || '0x00')
-  const [oracleValueInput, setOracleValueInput] = useState<string>('25.0')
+  const [oracleValue, setOracleValue] = useState('25.0')
   const [oracleLoading, setOracleLoading] = useState(false)
   const [oracleTxHash, setOracleTxHash] = useState<string | null>(null)
 
-  const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [feeBps, setFeeBps] = useState('10')
+  const [feeLoading, setFeeLoading] = useState(false)
+  const [feeTxHash, setFeeTxHash] = useState<string | null>(null)
 
-  const acAddress = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].accessControl
+  const [factoryPaused, setFactoryPaused] = useState(false)
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const addresses = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID]
+
+  const loadDashboardData = useCallback(async () => {
+    try {
+      setMarkets((await getMarkets(indexerUrl, COSTON2_CHAIN_ID)) ?? [])
+    } catch {
+      /* Leave the previous list in place. */
+    }
+
+    try {
+      const res = await fetch(`${indexerUrl}/api/admin/audit-log`)
+      if (res.ok) {
+        const data = await res.json()
+        setEvents(data.events || [])
+      }
+    } catch {
+      /* The audit feed is informational; a failure should not blank the page. */
+    }
+  }, [indexerUrl])
 
   useEffect(() => {
     async function initCheck() {
@@ -54,21 +87,18 @@ export default function AdminPage() {
       }
 
       try {
-        const [adminCheck, pauserCheck, oracleCheck] = await Promise.all([
-          checkRole(publicClient as any, acAddress, 'ADMIN_ROLE', address),
-          checkRole(publicClient as any, acAddress, 'PAUSER_ROLE', address),
-          checkRole(publicClient as any, acAddress, 'ORACLE_UPDATER_ROLE', address)
+        const [admin, pauser, oracle] = await Promise.all([
+          checkRole(publicClient as any, addresses.accessControl, 'ADMIN_ROLE', address),
+          checkRole(publicClient as any, addresses.accessControl, 'PAUSER_ROLE', address),
+          checkRole(publicClient as any, addresses.accessControl, 'ORACLE_UPDATER_ROLE', address),
         ])
 
-        setIsAdmin(adminCheck)
-        setHasPauserRole(pauserCheck)
-        setHasOracleRole(oracleCheck)
+        setIsAdmin(admin)
+        setHasPauserRole(pauser)
+        setHasOracleRole(oracle)
 
-        if (adminCheck || pauserCheck || oracleCheck) {
-          loadDashboardData()
-        }
-      } catch (err) {
-        console.error('Role verification failed:', err)
+        if (admin || pauser || oracle) loadDashboardData()
+      } catch {
         setIsAdmin(false)
       } finally {
         setLoading(false)
@@ -76,79 +106,88 @@ export default function AdminPage() {
     }
 
     initCheck()
-  }, [address, isConnected, publicClient, acAddress])
-
-  async function loadDashboardData() {
-    try {
-      const marketsList = await getMarkets(indexerUrl)
-      setMarkets(marketsList)
-    } catch (err) {
-      console.warn('Failed loading markets for admin panel:', err)
-    }
-
-    try {
-      const res = await fetch(`${indexerUrl}/api/admin/audit-log`)
-      if (res.ok) {
-        const data = await res.json()
-        setEvents(data.events || [])
-      }
-    } catch (err) {
-      console.warn('Failed loading audit log:', err)
-    }
-  }
+  }, [address, isConnected, publicClient, addresses.accessControl, loadDashboardData])
 
   async function handleSetOracleReading() {
     if (!walletClient || !publicClient) return
     setOracleLoading(true)
     setOracleTxHash(null)
+    setError(null)
     try {
-      const oracleAddr = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].oracle as `0x${string}`
-      const valScaled = BigInt(Math.round(parseFloat(oracleValueInput) * 1e6))
-      const nowSec = BigInt(Math.floor(Date.now() / 1000))
-
       const hash = await setOracleReading(
         walletClient as any,
         publicClient as any,
-        oracleAddr,
+        addresses.oracle as `0x${string}`,
         selectedRegion as `0x${string}`,
-        nowSec,
-        valScaled
+        BigInt(Math.floor(Date.now() / 1000)),
+        BigInt(Math.round(parseFloat(oracleValue) * 1e6))
       )
       setOracleTxHash(hash)
       loadDashboardData()
     } catch (err: any) {
-      alert(err?.shortMessage || err?.message || 'Oracle reading update failed')
+      setError(err?.shortMessage || err?.message || 'Oracle update failed.')
     } finally {
       setOracleLoading(false)
     }
   }
 
-  async function handlePauseMarketToggle(mAddress: string, isPaused: boolean) {
+  /**
+   * Previously this button popped an alert claiming the fee had been updated
+   * without sending anything. It now calls FeeConfig.setTradingFeeBps and
+   * surfaces the real transaction — or the real revert.
+   */
+  async function handleUpdateFee() {
     if (!walletClient || !publicClient) return
-    setActionLoading(`market-${mAddress}`)
+    const bps = Number(feeBps)
+    if (!Number.isInteger(bps) || bps < 1 || bps > 100) {
+      setError('The trading fee must be a whole number between 1 and 100 basis points.')
+      return
+    }
+
+    setFeeLoading(true)
+    setFeeTxHash(null)
+    setError(null)
     try {
-      if (isPaused) {
-        await unpauseMarket(walletClient as any, publicClient as any, mAddress as `0x${string}`)
-      } else {
-        await pauseMarket(walletClient as any, publicClient as any, mAddress as `0x${string}`)
-      }
+      const hash = await setTradingFeeBps(
+        walletClient as any,
+        publicClient as any,
+        addresses.feeConfig as `0x${string}`,
+        BigInt(bps)
+      )
+      setFeeTxHash(hash)
+    } catch (err: any) {
+      setError(err?.shortMessage || err?.message || 'Fee update failed.')
+    } finally {
+      setFeeLoading(false)
+    }
+  }
+
+  async function handleFactoryToggle() {
+    if (!walletClient || !publicClient) return
+    setActionLoading('factory')
+    setError(null)
+    try {
+      const fn = factoryPaused ? unpauseFactory : pauseFactory
+      await fn(walletClient as any, publicClient as any, addresses.factory as `0x${string}`)
+      setFactoryPaused((v) => !v)
       loadDashboardData()
     } catch (err: any) {
-      alert(err?.shortMessage || err?.message || 'Market pause toggle failed')
+      setError(err?.shortMessage || err?.message || 'Factory toggle failed.')
     } finally {
       setActionLoading(null)
     }
   }
 
-  async function handlePauseFactoryToggle() {
+  async function handleMarketPause(marketAddress: string, currentlyPaused: boolean) {
     if (!walletClient || !publicClient) return
-    setActionLoading('factory')
+    setActionLoading(`market-${marketAddress}`)
+    setError(null)
     try {
-      const factoryAddr = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].factory as `0x${string}`
-      await pauseFactory(walletClient as any, publicClient as any, factoryAddr)
+      const fn = currentlyPaused ? unpauseMarket : pauseMarket
+      await fn(walletClient as any, publicClient as any, marketAddress as `0x${string}`)
       loadDashboardData()
     } catch (err: any) {
-      alert(err?.shortMessage || err?.message || 'Factory pause failed')
+      setError(err?.shortMessage || err?.message || 'Market pause toggle failed.')
     } finally {
       setActionLoading(null)
     }
@@ -156,281 +195,301 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center space-y-4">
-        <div className="w-10 h-10 border-4 border-[#fde047] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-slate-400 font-mono">Verifying on-chain admin privileges...</p>
+      <div className="py-24 flex flex-col items-center gap-4">
+        <div className="w-8 h-8 rounded-full border-2 border-[color:var(--color-hairline-strong)] border-t-accent animate-spin" />
+        <p className="text-sm text-ink-faint">Verifying on-chain roles…</p>
       </div>
     )
   }
 
   if (!isConnected || isAdmin === false) {
     return (
-      <div className="py-20 max-w-md mx-auto text-center space-y-6">
-        <div className="w-20 h-20 rounded-3xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto shadow-2xl">
-          <Lock className="w-10 h-10" />
-        </div>
+      <div className="py-24 max-w-md mx-auto text-center space-y-6">
+        <span className="w-14 h-14 rounded-2xl inset flex items-center justify-center mx-auto">
+          <Lock className="w-6 h-6 text-short" aria-hidden />
+        </span>
         <div className="space-y-2">
-          <h2 className="text-3xl font-black uppercase text-white tracking-tight">Admin Access Restricted</h2>
-          <p className="text-xs text-slate-400 font-mono">
-            Connected address <code className="text-[#fde047]">{address || 'Not Connected'}</code> does not hold <code className="text-cyan-400">ADMIN_ROLE</code> on-chain.
+          <h1 className="display-2 text-ink">Admin access restricted</h1>
+          <p className="text-sm text-ink-muted break-words">
+            {address ? (
+              <>
+                <span className="numeric text-ink-faint">
+                  {address.slice(0, 10)}…{address.slice(-8)}
+                </span>{' '}
+                does not hold ADMIN_ROLE on-chain.
+              </>
+            ) : (
+              'Connect a wallet holding ADMIN_ROLE to continue.'
+            )}
           </p>
         </div>
-        <div className="p-6 glass-panel text-left text-xs text-slate-300 space-y-2 font-mono">
-          <span className="font-bold text-white block uppercase">Security Architecture:</span>
-          <p className="text-slate-400">
-            BreezeSwap enforces access control via standard smart contract role registries (<code className="text-[#fde047]">BreezeAccessControl.sol</code>). Admin features are strictly cryptographic signature verified.
-          </p>
+        <div className="panel p-5 text-left text-xs text-ink-muted leading-relaxed">
+          Access is checked against <span className="text-ink">BreezeAccessControl</span> at read
+          time. There is no server-side session — the gate is the contract.
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-10 py-4">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 sm:p-8 glass-panel">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <span className="p-3 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
-              <ShieldAlert className="w-7 h-7" />
-            </span>
-            <h1 className="text-3xl font-black uppercase text-white tracking-tight">Protocol Admin Portal</h1>
-          </div>
-          <p className="text-xs text-slate-400 font-mono">
-            On-chain role management, emergency circuit breakers, and oracle parameter control.
+    <div className="space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4 pb-6 border-b border-[color:var(--color-hairline)]">
+        <div>
+          <p className="eyebrow mb-2">Admin</p>
+          <h1 className="display-2 text-ink">Protocol controls</h1>
+          <p className="text-sm text-ink-muted mt-2">
+            Oracle overrides, circuit breakers and fee configuration.
           </p>
         </div>
-
-        <div className="flex items-center gap-3 text-xs">
-          <span className="px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-bold flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4" /> ADMIN VERIFIED
+        <div className="flex items-center gap-2">
+          <span className="chip chip-long">
+            <ShieldAlert className="w-3 h-3" aria-hidden />
+            Admin verified
           </span>
           <button
+            type="button"
             onClick={loadDashboardData}
-            className="p-3 rounded-full bg-black/80 border border-white/10 text-slate-300 hover:text-black hover:bg-[#fde047] transition-all"
+            className="btn btn-ghost btn-icon"
+            aria-label="Refresh"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4" aria-hidden />
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* Grid Layout: Controls + Audit Feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Column (2/3): Panels */}
-        <div className="lg:col-span-2 space-y-8">
-          
-          {/* Panel 1: Oracle Management */}
-          <div className="glass-panel p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <CloudRain className="w-5 h-5 text-[#fde047]" />
-                <h3 className="text-base font-black uppercase text-white tracking-tight">Oracle Data Feed Override</h3>
-              </div>
-              <span className="text-[10px] px-3 py-1 rounded-full bg-white/10 text-[#fde047] border border-white/10 font-mono font-bold">
-                ORACLE_UPDATER_ROLE
+      {error && (
+        <div className="panel p-4 text-sm value-short border-[color:rgba(244,63,94,0.3)] break-words">
+          {error}
+        </div>
+      )}
+
+      <div className="grid gap-6 lg:grid-cols-12 items-start">
+        <div className="lg:col-span-8 space-y-6 min-w-0">
+          {/* Oracle */}
+          <section className="panel p-5 sm:p-6 space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[color:var(--color-hairline)]">
+              <h2 className="display-3 text-ink">Oracle reading</h2>
+              <span className={`chip ${hasOracleRole ? 'chip-long' : ''}`}>
+                ORACLE_UPDATER_ROLE {hasOracleRole ? '✓' : '—'}
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-              <div className="space-y-2">
-                <label className="text-slate-400 font-bold uppercase text-[10px]">Target Weather Region</label>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="oracle-region" className="field-label">
+                  Region
+                </label>
                 <select
+                  id="oracle-region"
                   value={selectedRegion}
                   onChange={(e) => setSelectedRegion(e.target.value)}
-                  className="w-full bg-black/80 border border-white/10 text-white rounded-full p-3.5 text-xs font-bold focus:outline-none focus:border-[#fde047]"
+                  className="field"
                 >
                   {regionEntries.map(([id, name]) => (
                     <option key={id} value={id}>
-                      {name} ({id.slice(0, 10)}...)
+                      {String(name)}
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-slate-400 font-bold uppercase text-[10px]">Weather Value (mm or °C)</label>
+              <div>
+                <label htmlFor="oracle-value" className="field-label">
+                  Reading (mm or °C)
+                </label>
                 <input
+                  id="oracle-value"
                   type="number"
                   step="0.1"
-                  value={oracleValueInput}
-                  onChange={(e) => setOracleValueInput(e.target.value)}
-                  className="w-full bg-black/80 border border-white/10 text-white rounded-full p-3.5 text-xs font-bold focus:outline-none focus:border-[#fde047]"
+                  value={oracleValue}
+                  onChange={(e) => setOracleValue(e.target.value)}
+                  className="field numeric"
                 />
               </div>
             </div>
 
             <button
+              type="button"
               onClick={handleSetOracleReading}
               disabled={oracleLoading || !hasOracleRole}
-              className="w-full btn-cyber-yellow py-4 text-xs font-extrabold uppercase tracking-wider disabled:opacity-50 flex items-center justify-center gap-2"
+              className="btn btn-primary w-full"
             >
-              <Zap className="w-4 h-4" />
-              {oracleLoading ? 'Pushing Oracle Update...' : 'Push Oracle Reading On-Chain'}
+              {oracleLoading ? 'Submitting…' : 'Push reading on-chain'}
             </button>
 
             {oracleTxHash && (
-              <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800/50 text-xs text-emerald-300 flex items-center justify-between font-mono">
-                <span>Oracle reading updated successfully!</span>
+              <div className="inset p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="value-long">Reading published</span>
                 <TxLink hash={oracleTxHash} />
               </div>
             )}
-          </div>
+          </section>
 
-          {/* Panel 2: Market Emergency Circuit Breakers */}
-          <div className="glass-panel p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <PauseCircle className="w-5 h-5 text-amber-400" />
-                <h3 className="text-base font-black uppercase text-white tracking-tight">Emergency Circuit Breakers</h3>
-              </div>
-              <span className="text-[10px] px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono font-bold">
-                PAUSER_ROLE
+          {/* Circuit breakers */}
+          <section className="panel p-5 sm:p-6 space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[color:var(--color-hairline)]">
+              <h2 className="display-3 text-ink">Circuit breakers</h2>
+              <span className={`chip ${hasPauserRole ? 'chip-long' : ''}`}>
+                PAUSER_ROLE {hasPauserRole ? '✓' : '—'}
               </span>
             </div>
 
-            <div className="p-5 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-between">
-              <div className="space-y-0.5">
-                <span className="text-xs font-bold uppercase text-white block">Global Factory Pause</span>
-                <span className="text-[11px] text-slate-400 block font-mono">Halts NEW market deployments across the protocol.</span>
+            <div className="inset p-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm text-ink font-medium">Factory</p>
+                <p className="text-xs text-ink-faint">Halts deployment of new markets.</p>
               </div>
               <button
-                onClick={handlePauseFactoryToggle}
+                type="button"
+                onClick={handleFactoryToggle}
                 disabled={actionLoading === 'factory' || !hasPauserRole}
-                className="py-2.5 px-5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-extrabold uppercase tracking-wider hover:bg-amber-500/20 transition-all disabled:opacity-50"
+                className="btn btn-ghost btn-sm"
               >
-                {actionLoading === 'factory' ? 'Processing...' : 'Pause Factory'}
+                {factoryPaused ? (
+                  <PlayCircle className="w-3.5 h-3.5" aria-hidden />
+                ) : (
+                  <PauseCircle className="w-3.5 h-3.5" aria-hidden />
+                )}
+                {actionLoading === 'factory'
+                  ? 'Working…'
+                  : factoryPaused
+                    ? 'Unpause factory'
+                    : 'Pause factory'}
               </button>
             </div>
 
-            <div className="space-y-3 font-mono">
-              <h4 className="text-xs font-bold text-slate-300 uppercase tracking-widest">Active Markets Pause Control</h4>
+            <div className="space-y-2">
+              <h3 className="eyebrow">Markets</h3>
               {markets.length === 0 ? (
-                <p className="text-xs text-slate-500 py-4 text-center">No deployed markets found.</p>
+                <p className="text-xs text-ink-faint py-4 text-center">No deployed markets found.</p>
               ) : (
-                <div className="space-y-2">
-                  {markets.map((m) => (
+                markets.map((m) => {
+                  const paused = m.status !== 'OPEN'
+                  return (
                     <div
                       key={m.contractAddress}
-                      className="p-4 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-between text-xs"
+                      className="inset p-4 flex flex-wrap items-center justify-between gap-3"
                     >
-                      <div>
-                        <span className="font-bold text-white block">{m.regionName || 'Global'} — {m.weatherVariable}</span>
-                        <span className="font-mono text-[10px] text-slate-400">{m.contractAddress}</span>
+                      <div className="min-w-0">
+                        <p className="text-sm text-ink font-medium truncate">
+                          {m.regionName || 'Global'} — {m.weatherVariable}
+                        </p>
+                        <TxLink hash={m.contractAddress} type="address" />
                       </div>
-
                       <button
-                        onClick={() => handlePauseMarketToggle(m.contractAddress, m.status === 'SETTLED')}
+                        type="button"
+                        onClick={() => handleMarketPause(m.contractAddress, paused)}
                         disabled={actionLoading === `market-${m.contractAddress}` || !hasPauserRole}
-                        className="py-2 px-4 rounded-full bg-slate-900 border border-white/10 text-slate-300 text-xs font-bold hover:bg-[#fde047] hover:text-black transition-all flex items-center gap-1.5 uppercase"
+                        className="btn btn-ghost btn-sm"
                       >
-                        <PauseCircle className="w-3.5 h-3.5" />
-                        Pause Minting
+                        {actionLoading === `market-${m.contractAddress}`
+                          ? 'Working…'
+                          : paused
+                            ? 'Unpause'
+                            : 'Pause minting'}
                       </button>
                     </div>
-                  ))}
-                </div>
+                  )
+                })
               )}
             </div>
-          </div>
+          </section>
 
-          {/* Panel 3: Protocol Fee Config & Revenue Management */}
-          <div className="glass-panel p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-base font-black uppercase text-white tracking-tight">Fee Configuration & Protocol Revenue</h3>
-              </div>
-              <span className="text-[10px] px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-bold">
-                0.10% Active (Capped at 1.00%)
-              </span>
+          {/* Fees */}
+          <section className="panel p-5 sm:p-6 space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[color:var(--color-hairline)]">
+              <h2 className="display-3 text-ink">Fee configuration</h2>
+              <span className="chip">Capped at 100 bps</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono">
-              <div className="p-5 rounded-2xl bg-black/60 border border-white/10 space-y-1">
-                <span className="text-[10px] text-slate-400 uppercase font-bold block font-sans">Insurance Fund (80% Share)</span>
-                <span className="text-base font-bold text-emerald-400">Backstopping Bad Debt</span>
+            <dl className="grid sm:grid-cols-2 gap-4">
+              <div className="inset p-4">
+                <dt className="metric-label">Insurance fund</dt>
+                <dd className="text-sm text-ink mt-1">80% — backstops bad debt</dd>
               </div>
-
-              <div className="p-5 rounded-2xl bg-black/60 border border-white/10 space-y-1">
-                <span className="text-[10px] text-slate-400 uppercase font-bold block font-sans">Protocol Treasury (20% Share)</span>
-                <span className="text-base font-bold text-[#fde047]">Team Operational Reserve</span>
+              <div className="inset p-4">
+                <dt className="metric-label">Protocol treasury</dt>
+                <dd className="text-sm text-ink mt-1">20% — operational reserve</dd>
               </div>
-            </div>
+            </dl>
 
-            <div className="p-5 rounded-2xl bg-black/60 border border-white/10 space-y-4 text-xs font-mono">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-300 font-bold uppercase text-[10px]">Admin Trading Fee Rate (BPS):</span>
-                <span className="text-slate-400">1 BPS (0.01%) - 100 BPS (1.00%)</span>
-              </div>
-
-              <div className="flex gap-3">
+            <div>
+              <label htmlFor="fee-bps" className="field-label">
+                Trading fee (basis points, 1–100)
+              </label>
+              <div className="flex flex-wrap gap-3">
                 <input
+                  id="fee-bps"
                   type="number"
-                  min="1"
-                  max="100"
-                  defaultValue="10"
-                  className="bg-black border border-white/10 text-white rounded-full px-4 py-2.5 text-xs font-bold w-32 focus:outline-none focus:border-[#fde047]"
+                  min={1}
+                  max={100}
+                  value={feeBps}
+                  onChange={(e) => setFeeBps(e.target.value)}
+                  className="field numeric w-32"
                 />
                 <button
-                  disabled={!isAdmin}
-                  onClick={() => alert('Trading fee updated to 10 BPS on-chain!')}
-                  className="btn-cyber-yellow py-2.5 px-6 text-xs font-extrabold uppercase"
+                  type="button"
+                  onClick={handleUpdateFee}
+                  disabled={feeLoading || !isAdmin}
+                  className="btn btn-primary"
                 >
-                  Update Fee Rate
+                  {feeLoading ? 'Submitting…' : 'Update fee'}
                 </button>
               </div>
+              <p className="text-xs text-ink-faint mt-1.5">
+                {(Number(feeBps) / 100 || 0).toFixed(2)}% per trade.
+              </p>
             </div>
-          </div>
 
+            {feeTxHash && (
+              <div className="inset p-3.5 flex items-center justify-between gap-3 text-xs">
+                <span className="value-long">Fee updated</span>
+                <TxLink hash={feeTxHash} />
+              </div>
+            )}
+          </section>
         </div>
 
-        {/* Right Column (1/3): Audit Activity Feed */}
-        <div className="lg:col-span-1">
-          <div className="glass-panel p-6 sm:p-8 space-y-4 sticky top-24">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-xs font-black uppercase text-white tracking-widest flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                Protocol Audit Feed
-              </h3>
-              <span className="text-[10px] font-mono font-bold text-slate-400">{events.length} Events</span>
+        {/* Audit feed */}
+        <div className="lg:col-span-4 min-w-0">
+          <section className="panel p-5 sm:p-6 space-y-4 lg:sticky lg:top-24">
+            <div className="flex items-center justify-between gap-3 pb-3 border-b border-[color:var(--color-hairline)]">
+              <h2 className="display-3 text-ink">Audit feed</h2>
+              <span className="numeric text-xs text-ink-faint">{events.length}</span>
             </div>
 
             {events.length === 0 ? (
-              <div className="py-12 text-center text-xs text-slate-400 space-y-2 font-mono">
-                <CheckCircle2 className="w-6 h-6 text-slate-400 mx-auto" />
-                <p>No recent protocol events logged in audit stream.</p>
-              </div>
+              <p className="py-10 text-center text-xs text-ink-faint">
+                No protocol events recorded yet.
+              </p>
             ) : (
-              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+              <div className="space-y-2.5 max-h-[30rem] overflow-y-auto -mr-1 pr-1">
                 {events.map((e) => (
-                  <div key={e.id} className="p-4 rounded-2xl bg-black/60 border border-white/10 text-xs space-y-2 font-mono">
-                    <div className="flex items-center justify-between">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#fde047] text-black">
-                        {e.event_type}
-                      </span>
-                      <span className="text-[10px] text-slate-400">
-                        {new Date(e.occurred_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <article key={e.id} className="inset p-3.5 space-y-2 text-xs">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="chip chip-accent">{e.event_type}</span>
+                      <span className="numeric text-ink-faint">
+                        {new Date(e.occurred_at).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
                       </span>
                     </div>
-
                     {e.account && (
-                      <p className="text-[11px] text-slate-300 truncate">
-                        Account: <span className="text-[#fde047]">{e.account}</span>
+                      <p className="numeric text-ink-muted truncate" title={e.account}>
+                        {e.account}
                       </p>
                     )}
-
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/10 font-sans">
-                      <span>Block #{e.block_number}</span>
-                      <TxLink hash={e.tx_hash} label="Tx" />
+                    <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-[color:var(--color-hairline)]">
+                      <span className="numeric text-ink-faint">Block {e.block_number}</span>
+                      <TxLink hash={e.tx_hash} />
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             )}
-          </div>
+          </section>
         </div>
-
       </div>
     </div>
   )

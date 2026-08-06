@@ -1,149 +1,183 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Activity, Clock, TrendingUp, DollarSign, Layers } from 'lucide-react'
 import { getPerpMarketStats, type PerpMarketStatsData } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../lib/hooks/useNetwork'
+import { CHART, formatMoney } from '../lib/chartTheme'
+import { DemoBadge } from './DemoBadge'
+import { demoPerpStats } from '../lib/demoData'
 
 interface PerpStatsHeaderProps {
   marketAddress: string
+  basePrice?: number
 }
 
-export function PerpStatsHeader({ marketAddress }: PerpStatsHeaderProps) {
+/**
+ * The market's headline numbers.
+ *
+ * Only one value here is coloured with the accent — the mark price, because
+ * that is the number a trader is actually reading. The rest are ink, so the
+ * eye lands somewhere specific instead of bouncing between five yellow
+ * figures.
+ */
+export function PerpStatsHeader({ marketAddress, basePrice = 25 }: PerpStatsHeaderProps) {
   const { indexerUrl } = useBreezeSDK()
   const { chainId } = useBreezeNetwork()
   const [stats, setStats] = useState<PerpMarketStatsData | null>(null)
-  const [countdown, setCountdown] = useState<string>('00:00')
+  const [isDemo, setIsDemo] = useState(false)
+  const [countdown, setCountdown] = useState('—')
 
   useEffect(() => {
+    let cancelled = false
+
     async function fetchStats() {
       try {
         const data = await getPerpMarketStats(indexerUrl, marketAddress, chainId)
-        if (data) setStats(data)
-      } catch (err) {
-        console.warn('PerpStatsHeader error:', err)
+        if (cancelled) return
+        if (data) {
+          setStats(data)
+          setIsDemo(false)
+        } else {
+          setStats(demoPerpStats(marketAddress, basePrice) as unknown as PerpMarketStatsData)
+          setIsDemo(true)
+        }
+      } catch {
+        if (cancelled) return
+        setStats(demoPerpStats(marketAddress, basePrice) as unknown as PerpMarketStatsData)
+        setIsDemo(true)
       }
     }
 
     fetchStats()
-    const interval = setInterval(fetchStats, 10_000)
-    return () => clearInterval(interval)
-  }, [indexerUrl, marketAddress, chainId])
+    const timer = window.setInterval(fetchStats, 10_000)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+    }
+  }, [indexerUrl, marketAddress, chainId, basePrice])
 
-  // Live countdown timer client-side
   useEffect(() => {
     if (!stats?.nextFundingAt) return
 
-    const timer = setInterval(() => {
-      const targetMs = new Date(stats.nextFundingAt).getTime()
-      const diffSec = Math.max(0, Math.floor((targetMs - Date.now()) / 1000))
-
+    // Run once immediately so the tile does not show a placeholder for a
+    // second before the first tick.
+    const tick = () => {
+      const diffSec = Math.max(
+        0,
+        Math.floor((new Date(stats.nextFundingAt).getTime() - Date.now()) / 1000)
+      )
       const mins = Math.floor(diffSec / 60)
       const secs = diffSec % 60
-      const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-      setCountdown(formatted)
-    }, 1000)
-
-    return () => clearInterval(timer)
+      setCountdown(`${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`)
+    }
+    tick()
+    const timer = window.setInterval(tick, 1000)
+    return () => window.clearInterval(timer)
   }, [stats?.nextFundingAt])
 
-  const fundingRateNum = stats ? Number(stats.currentFundingRate) : 0
-  const oiSkew = stats?.oiSkewPercent ?? 50
+  const fundingRate = Number(stats?.currentFundingRate ?? 0)
+  const longOi = Number(stats?.openInterestLong ?? 0)
+  const shortOi = Number(stats?.openInterestShort ?? 0)
+  const totalOi = longOi + shortOi
+  // Fall back to a balanced book rather than to 50% of nothing, and guard the
+  // divide so an empty market renders a centred bar instead of NaN%.
+  const longShare = totalOi > 0 ? (longOi / totalOi) * 100 : 50
+
+  const markPrice = Number(stats?.markPrice ?? 0)
+  const oraclePrice = Number(stats?.oraclePrice ?? 0)
+  const basis = oraclePrice > 0 ? ((markPrice - oraclePrice) / oraclePrice) * 100 : 0
 
   return (
-    <div className="glass-panel p-6 sm:p-8 space-y-6">
-      {/* Top Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6 font-mono">
-        {/* Mark Price */}
-        <div className="space-y-1">
-          <div className="flex items-center gap-1.5 text-[10px] font-sans uppercase font-bold text-slate-400">
-            <Activity className="w-4 h-4 text-[#fde047]" />
-            <span>Mark Price</span>
-          </div>
-          <div className="text-2xl font-black text-[#fde047] tracking-tight">
-            ${stats ? stats.markPrice : '0.00'}
-          </div>
+    <section className="panel p-5 sm:p-6 space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="eyebrow">Market stats</h2>
+        {isDemo && <DemoBadge />}
+      </div>
+
+      <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-5">
+        <div className="min-w-0">
+          <dt className="metric-label">Mark price</dt>
+          <dd className="metric-value text-accent mt-1">{formatMoney(markPrice)}</dd>
         </div>
 
-        {/* Oracle Price */}
-        <div className="space-y-1">
-          <div className="flex items-center gap-1.5 text-[10px] font-sans uppercase font-bold text-slate-400">
-            <Layers className="w-4 h-4 text-sky-400" />
-            <span>Oracle Price</span>
-          </div>
-          <div className="text-2xl font-black text-white">
-            ${stats ? stats.oraclePrice : '0.00'}
-          </div>
+        <div className="min-w-0">
+          <dt className="metric-label">Oracle price</dt>
+          <dd className="metric-value mt-1">{formatMoney(oraclePrice)}</dd>
+          <dd className={`numeric text-xs mt-0.5 ${basis >= 0 ? 'value-long' : 'value-short'}`}>
+            {basis >= 0 ? '+' : ''}
+            {basis.toFixed(2)}% basis
+          </dd>
         </div>
 
-        {/* Funding Rate */}
-        <div className="space-y-1">
-          <div className="flex items-center gap-1.5 text-[10px] font-sans uppercase font-bold text-slate-400">
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
-            <span>Funding Rate / 15m</span>
-          </div>
-          <div
-            className={`text-2xl font-black ${
-              fundingRateNum < 0
-                ? 'text-emerald-400'
-                : fundingRateNum > 0
-                ? 'text-rose-400'
-                : 'text-slate-300'
+        <div className="min-w-0">
+          <dt className="metric-label">Funding / 15m</dt>
+          <dd
+            className={`metric-value mt-1 ${
+              fundingRate > 0 ? 'value-short' : fundingRate < 0 ? 'value-long' : ''
             }`}
           >
-            {fundingRateNum > 0 ? `+${stats?.currentFundingRate}%` : `${stats?.currentFundingRate || '0.0000'}%`}
-          </div>
+            {fundingRate > 0 ? '+' : ''}
+            {fundingRate.toFixed(4)}%
+          </dd>
+          <dd className="text-xs text-ink-faint mt-0.5">
+            {fundingRate > 0 ? 'Longs pay shorts' : fundingRate < 0 ? 'Shorts pay longs' : 'Balanced'}
+          </dd>
         </div>
 
-        {/* Next Funding Countdown */}
-        <div className="space-y-1">
-          <div className="flex items-center gap-1.5 text-[10px] font-sans uppercase font-bold text-slate-400">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <span>Next Funding</span>
-          </div>
-          <div className="text-2xl font-black text-[#fde047] animate-pulse">
-            {countdown}
-          </div>
+        <div className="min-w-0">
+          <dt className="metric-label">Next funding</dt>
+          <dd className="metric-value mt-1 numeric">{countdown}</dd>
         </div>
 
-        {/* 24h Volume */}
-        <div className="space-y-1 hidden lg:block">
-          <div className="flex items-center gap-1.5 text-[10px] font-sans uppercase font-bold text-slate-400">
-            <DollarSign className="w-4 h-4 text-purple-400" />
-            <span>24h Volume</span>
-          </div>
-          <div className="text-2xl font-black text-purple-300">
-            ${stats ? Number(stats.totalVolume24h).toLocaleString() : '0'}
-          </div>
+        <div className="min-w-0">
+          <dt className="metric-label">24h volume</dt>
+          <dd className="metric-value mt-1">{formatMoney(Number(stats?.totalVolume24h ?? 0), 0)}</dd>
         </div>
-      </div>
+      </dl>
 
-      {/* Bottom Row: Open Interest Ratio Bar */}
-      <div className="border-t border-white/10 pt-4 space-y-2 font-mono">
-        <div className="flex items-center justify-between text-xs font-bold">
-          <div className="flex items-center gap-2">
-            <span className="text-emerald-400">Long OI: ${stats ? Number(stats.openInterestLong).toLocaleString() : '0'}</span>
-            <span className="text-slate-400 text-[10px]">({oiSkew.toFixed(1)}%)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400 text-[10px]">({(100 - oiSkew).toFixed(1)}%)</span>
-            <span className="text-rose-400">Short OI: ${stats ? Number(stats.openInterestShort).toLocaleString() : '0'}</span>
-          </div>
+      {/* Open interest skew. A single 100%-wide bar split in two: the reader's
+          question is "which way is the book leaning", and proportion of a whole
+          answers that better than two separate numbers. */}
+      <div className="pt-5 border-t border-[color:var(--color-hairline)] space-y-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-xs">
+          <span className="inline-flex items-center gap-2">
+            <span
+              className="w-2.5 h-2.5 rounded-full ring-2 ring-[color:var(--color-surface)]"
+              style={{ backgroundColor: CHART.long }}
+              aria-hidden
+            />
+            <span className="text-ink-muted">Long OI</span>
+            <span className="numeric text-ink font-medium">{formatMoney(longOi, 0)}</span>
+            <span className="numeric text-ink-faint">({longShare.toFixed(1)}%)</span>
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="numeric text-ink-faint">({(100 - longShare).toFixed(1)}%)</span>
+            <span className="numeric text-ink font-medium">{formatMoney(shortOi, 0)}</span>
+            <span className="text-ink-muted">Short OI</span>
+            <span
+              className="w-2.5 h-2.5 rounded-full ring-2 ring-[color:var(--color-surface)]"
+              style={{ backgroundColor: CHART.short }}
+              aria-hidden
+            />
+          </span>
         </div>
 
-        {/* Two-color OI Skew Bar */}
-        <div className="w-full h-3 rounded-full bg-black/80 p-0.5 overflow-hidden border border-white/10 flex">
+        <div
+          className="w-full h-2 rounded-full overflow-hidden flex gap-[2px] bg-[color:var(--color-inset)]"
+          role="img"
+          aria-label={`Open interest is ${longShare.toFixed(1)} percent long and ${(100 - longShare).toFixed(1)} percent short`}
+        >
           <div
-            className="h-full bg-emerald-500 rounded-l-full transition-all duration-500"
-            style={{ width: `${oiSkew}%` }}
+            className="h-full rounded-full transition-[width] duration-500"
+            style={{ width: `${longShare}%`, backgroundColor: CHART.long }}
           />
           <div
-            className="h-full bg-rose-500 rounded-r-full transition-all duration-500"
-            style={{ width: `${100 - oiSkew}%` }}
+            className="h-full rounded-full transition-[width] duration-500"
+            style={{ width: `${100 - longShare}%`, backgroundColor: CHART.short }}
           />
         </div>
       </div>
-    </div>
+    </section>
   )
 }

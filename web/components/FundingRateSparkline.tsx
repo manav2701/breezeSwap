@@ -1,70 +1,165 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { ResponsiveContainer, BarChart, Bar, Cell, Tooltip, XAxis, YAxis } from 'recharts'
+import React, { useEffect, useMemo, useState } from 'react'
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Cell,
+  Tooltip,
+  XAxis,
+  YAxis,
+  ReferenceLine,
+} from 'recharts'
 import { getFundingHistory, type FundingHistoryItem } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../lib/hooks/useNetwork'
+import { CHART, axisProps, tooltipProps } from '../lib/chartTheme'
+import { ChartCard, LegendKey } from './charts/ChartCard'
+import { DemoBadge } from './DemoBadge'
+import { demoFunding } from '../lib/demoData'
 
-interface FundingRateSparklineProps {
+/**
+ * Settled funding rate per period.
+ *
+ * This is a *diverging* measure — the sign is the message, because it says
+ * which side is paying. Bars anchored to a zero baseline with two poles read
+ * that directly; the previous version drew them off an auto domain with no
+ * zero line, so a run of positive rates looked identical to a run of negative
+ * ones.
+ */
+export function FundingRateSparkline({
+  marketAddress,
+  height = 150,
+}: {
   marketAddress: string
-}
-
-export function FundingRateSparkline({ marketAddress }: FundingRateSparklineProps) {
+  height?: number
+}) {
   const { indexerUrl } = useBreezeSDK()
   const { chainId } = useBreezeNetwork()
   const [history, setHistory] = useState<FundingHistoryItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [isDemo, setIsDemo] = useState(false)
 
   useEffect(() => {
-    async function loadFunding() {
+    let cancelled = false
+
+    async function load() {
       try {
         const data = await getFundingHistory(indexerUrl, marketAddress, chainId)
-        setHistory(data)
-      } catch (err) {
-        console.warn('FundingRateSparkline error:', err)
+        if (cancelled) return
+        if (data && data.length > 0) {
+          setHistory(data)
+          setIsDemo(false)
+        } else {
+          setHistory(demoFunding(marketAddress) as unknown as FundingHistoryItem[])
+          setIsDemo(true)
+        }
+      } catch {
+        if (cancelled) return
+        setHistory(demoFunding(marketAddress) as unknown as FundingHistoryItem[])
+        setIsDemo(true)
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     }
-    loadFunding()
+
+    load()
+    return () => {
+      cancelled = true
+    }
   }, [indexerUrl, marketAddress, chainId])
 
-  if (history.length === 0) return null
+  const data = useMemo(
+    () =>
+      history
+        .slice(0, 24)
+        .reverse()
+        .map((item) => ({
+          time: item.settledAt
+            ? new Date(item.settledAt).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            : '',
+          // Indexer reports basis points; 1 bp = 0.01%.
+          rate: Number(item.fundingRate || 0) / 100,
+        })),
+    [history]
+  )
 
-  const chartData = history
-    .slice(0, 24)
-    .reverse()
-    .map((item) => {
-      const rateBps = Number(item.fundingRate || 0)
-      const ratePercent = rateBps / 10000
-      return {
-        time: item.settledAt ? new Date(item.settledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
-        rate: ratePercent
-      }
-    })
+  /*
+    Symmetric domain, so a +0.4% bar and a −0.4% bar are visually equal and the
+    zero line lands in the middle.
+
+    The domain is padded a step wider than the labelled ticks: a tick sitting
+    exactly on the domain edge renders its text half outside the plot area,
+    where Recharts clips it — which is why the negative half of the axis looked
+    unlabelled.
+  */
+  const { tick, axisBound } = useMemo(() => {
+    const max = Math.max(0.01, ...data.map((d) => Math.abs(d.rate)))
+    const rounded = Math.ceil(max * 100) / 100
+    return { tick: rounded, axisBound: rounded * 1.25 }
+  }, [data])
+
+  const paidByLongs = data.filter((d) => d.rate > 0).length
 
   return (
-    <div className="bg-[#141414] border border-white/10 rounded-3xl p-4 space-y-2 font-mono">
-      <div className="flex items-center justify-between text-xs font-bold text-slate-300">
-        <span className="uppercase text-white text-[11px]">Funding Rate Settlement History (24 Periods)</span>
-        <span className="text-[10px] text-[#fde047]">Green = Negative / Red = Positive</span>
-      </div>
+    <ChartCard
+      title="Funding settlements"
+      subtitle="Rate applied each 15-minute period. Positive means longs pay shorts."
+      height={height}
+      loading={loading}
+      empty={!loading && data.length === 0}
+      emptyLabel="No funding periods have settled for this market yet."
+      actions={isDemo ? <DemoBadge /> : undefined}
+      footer={
+        data.length > 0 ? (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <LegendKey color={CHART.short} label="Longs pay" />
+            <LegendKey color={CHART.long} label="Shorts pay" />
+            <span className="text-xs text-ink-faint">
+              <span className="numeric text-ink-muted">{paidByLongs}</span> of{' '}
+              <span className="numeric text-ink-muted">{data.length}</span> periods charged longs
+            </span>
+          </div>
+        ) : undefined
+      }
+    >
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 6, right: 12, bottom: 0, left: -12 }} barCategoryGap="22%">
+          <XAxis {...axisProps} dataKey="time" hide />
+          <YAxis
+            {...axisProps}
+            type="number"
+            domain={[-axisBound, axisBound]}
+            width={52}
+            tickFormatter={(v) => `${Number(v) > 0 ? '+' : ''}${Number(v).toFixed(2)}%`}
+            ticks={[-tick, 0, tick]}
+          />
 
-      <div className="h-20 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-            <XAxis dataKey="time" hide />
-            <YAxis hide domain={['auto', 'auto']} />
-            <Tooltip
-              contentStyle={{ backgroundColor: '#0a0a0a', borderColor: 'rgba(255,255,255,0.15)', borderRadius: '12px', fontSize: '11px', color: '#ffffff' }}
-              formatter={(value: any) => [`${Number(value).toFixed(4)}%`, 'Funding Rate']}
-            />
-            <Bar dataKey="rate">
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.rate < 0 ? '#34d399' : entry.rate > 0 ? '#f87171' : '#737373'} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+          <ReferenceLine y={0} stroke={CHART.reference} strokeWidth={1} />
+
+          <Tooltip
+            {...tooltipProps}
+            cursor={{ fill: 'rgba(255,255,255,0.04)' }}
+            formatter={(v: number) => [
+              `${Number(v) > 0 ? '+' : ''}${Number(v).toFixed(4)}%`,
+              Number(v) > 0 ? 'Longs pay' : 'Shorts pay',
+            ]}
+          />
+
+          <Bar dataKey="rate" radius={[3, 3, 3, 3]} isAnimationActive={false}>
+            {data.map((entry, i) => (
+              <Cell
+                key={i}
+                fill={entry.rate > 0 ? CHART.short : entry.rate < 0 ? CHART.long : CHART.neutral}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </ChartCard>
   )
 }
