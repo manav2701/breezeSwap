@@ -1,157 +1,181 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { ExternalLink, ArrowUpRight, ArrowDownRight, AlertOctagon } from 'lucide-react'
+import { AlertOctagon } from 'lucide-react'
 import { getTradeHistory, getGlobalTradeHistory, type TradeHistoryEntry } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../lib/hooks/useNetwork'
+import { formatMoney } from '../lib/chartTheme'
+import { TxLink } from './TxLink'
+import { DemoBadge } from './DemoBadge'
+import { demoTrades } from '../lib/demoData'
 
 interface TradeHistoryTableProps {
   marketAddress?: string
   isGlobal?: boolean
   limit?: number
+  basePrice?: number
 }
 
-export function TradeHistoryTable({ marketAddress, isGlobal = false, limit = 20 }: TradeHistoryTableProps) {
+function relativeTime(iso: string) {
+  if (!iso) return '—'
+  const diffSec = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
+  if (diffSec < 60) return `${diffSec}s ago`
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`
+  return `${Math.floor(diffSec / 86400)}d ago`
+}
+
+export function TradeHistoryTable({
+  marketAddress,
+  isGlobal = false,
+  limit = 20,
+  basePrice = 25,
+}: TradeHistoryTableProps) {
   const { indexerUrl } = useBreezeSDK()
   const { chainId } = useBreezeNetwork()
   const [trades, setTrades] = useState<TradeHistoryEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [isDemo, setIsDemo] = useState(false)
 
   useEffect(() => {
-    async function loadHistory() {
+    let cancelled = false
+
+    async function load() {
       try {
-        let data: TradeHistoryEntry[] = []
-        if (isGlobal) {
-          data = await getGlobalTradeHistory(indexerUrl, chainId, limit)
-        } else if (marketAddress) {
-          data = await getTradeHistory(indexerUrl, marketAddress, chainId, limit)
+        const data = isGlobal
+          ? await getGlobalTradeHistory(indexerUrl, chainId, limit)
+          : marketAddress
+            ? await getTradeHistory(indexerUrl, marketAddress, chainId, limit)
+            : []
+
+        if (cancelled) return
+        if (data && data.length > 0) {
+          setTrades(data)
+          setIsDemo(false)
+        } else {
+          setTrades(
+            demoTrades(marketAddress ?? 'global', Math.min(limit, 14), basePrice) as unknown as TradeHistoryEntry[]
+          )
+          setIsDemo(true)
         }
-        setTrades(data)
-      } catch (err) {
-        console.warn('Trade history fetch error:', err)
+      } catch {
+        if (cancelled) return
+        setTrades(
+          demoTrades(marketAddress ?? 'global', Math.min(limit, 14), basePrice) as unknown as TradeHistoryEntry[]
+        )
+        setIsDemo(true)
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
 
-    loadHistory()
-    const interval = setInterval(loadHistory, 15_000)
-    return () => clearInterval(interval)
-  }, [indexerUrl, marketAddress, isGlobal, chainId, limit])
-
-  const formatRelativeTime = (isoString: string) => {
-    if (!isoString) return '-'
-    const diffSec = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000)
-    if (diffSec < 60) return `${diffSec}s ago`
-    if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`
-    if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`
-    return `${Math.floor(diffSec / 86400)}d ago`
-  }
-
-  const formatAddr = (addr?: string) => {
-    if (!addr) return '0x...'
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`
-  }
+    load()
+    const timer = window.setInterval(load, 15_000)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+    }
+  }, [indexerUrl, marketAddress, isGlobal, chainId, limit, basePrice])
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-400 text-xs animate-pulse glass-panel">
-        Loading trade history...
+      <div className="panel p-5 space-y-2">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div key={i} className="skeleton h-9 rounded-lg" />
+        ))}
       </div>
     )
   }
 
   if (trades.length === 0) {
     return (
-      <div className="p-8 text-center text-slate-400 text-xs glass-panel">
-        No recent trades recorded for this market yet.
+      <div className="panel p-10 text-center text-sm text-ink-faint">
+        No trades recorded for this market yet.
       </div>
     )
   }
 
   return (
-    <div className="glass-panel overflow-x-auto">
-      <table className="w-full text-left text-xs text-slate-300 border-collapse">
-        <thead className="bg-black/60 text-slate-400 uppercase tracking-widest font-mono text-[10px] border-b border-white/10">
-          <tr>
-            <th className="p-4">Time</th>
-            <th className="p-4">Trader</th>
-            <th className="p-4">Type</th>
-            <th className="p-4">Side</th>
-            <th className="p-4">Size ($)</th>
-            <th className="p-4">Price</th>
-            <th className="p-4">Realized PnL</th>
-            <th className="p-4 text-right">Tx</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-white/5 font-mono">
-          {trades.map((t) => {
-            const isLong = t.side === 'LONG'
-            const isLiquidation = t.type === 'LIQUIDATION'
-            const isClose = t.type === 'CLOSE'
-            const pnlNum = t.pnl ? Number(t.pnl) : null
+    <section className="panel">
+      <header className="flex flex-wrap items-center justify-between gap-3 px-5 sm:px-6 py-4 border-b border-[color:var(--color-hairline)]">
+        <h3 className="display-3 text-ink">Trade activity</h3>
+        {isDemo ? (
+          <DemoBadge />
+        ) : (
+          <span className="chip chip-long">
+            <span className="pulse-dot" aria-hidden />
+            Live
+          </span>
+        )}
+      </header>
 
-            return (
-              <tr key={t.id} className="hover:bg-white/5 transition-colors">
-                <td className="p-4 text-slate-400 font-sans" title={t.timestamp}>
-                  {formatRelativeTime(t.timestamp)}
-                </td>
-                <td className="p-4 text-[#fde047] font-bold">{formatAddr(t.trader)}</td>
-                <td className="p-4 font-sans">
-                  {isLiquidation ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-bold">
-                      <AlertOctagon className="w-3 h-3" />
-                      LIQUIDATED
+      <div className="table-scroll max-h-[26rem] overflow-y-auto">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Trader</th>
+              <th>Action</th>
+              <th>Side</th>
+              <th>Size</th>
+              <th>Price</th>
+              <th>Realised PnL</th>
+              <th className="text-right">Tx</th>
+            </tr>
+          </thead>
+          <tbody>
+            {trades.map((t, i) => {
+              const isLong = t.side === 'LONG'
+              const pnl = t.pnl == null ? null : Number(t.pnl)
+
+              return (
+                <tr key={t.id ?? i}>
+                  <td className="text-ink-faint" title={t.timestamp}>
+                    {relativeTime(t.timestamp)}
+                  </td>
+                  <td className="numeric">
+                    {t.trader ? `${t.trader.slice(0, 6)}…${t.trader.slice(-4)}` : '0x…'}
+                  </td>
+                  <td>
+                    {t.type === 'LIQUIDATION' ? (
+                      <span className="chip chip-short">
+                        <AlertOctagon className="w-3 h-3" aria-hidden />
+                        Liquidated
+                      </span>
+                    ) : t.type === 'CLOSE' ? (
+                      <span className="chip">Close</span>
+                    ) : (
+                      <span className="chip chip-info">Open</span>
+                    )}
+                  </td>
+                  {/* Side is labelled as well as coloured. */}
+                  <td className={isLong ? 'value-long' : 'value-short'}>
+                    <span className="inline-flex items-center gap-1 font-medium">
+                      {isLong ? '▲' : '▼'} {t.side}
                     </span>
-                  ) : isClose ? (
-                    <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[10px] font-bold border border-white/10">
-                      CLOSE
-                    </span>
-                  ) : (
-                    <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-bold border border-blue-500/20">
-                      OPEN
-                    </span>
-                  )}
-                </td>
-                <td className="p-4">
-                  <span className={`inline-flex items-center gap-0.5 font-extrabold ${isLong ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {isLong ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
-                    {t.side}
-                  </span>
-                </td>
-                <td className="p-4 font-bold text-white">${Number(t.size).toLocaleString()}</td>
-                <td className="p-4 text-slate-300">${t.price}</td>
-                <td className="p-4 font-bold">
-                  {pnlNum === null ? (
-                    <span className="text-slate-500">-</span>
-                  ) : pnlNum > 0 ? (
-                    <span className="text-emerald-400">+${pnlNum.toFixed(2)}</span>
-                  ) : pnlNum < 0 ? (
-                    <span className="text-rose-400">-${Math.abs(pnlNum).toFixed(2)}</span>
-                  ) : (
-                    <span className="text-slate-400">$0.00</span>
-                  )}
-                </td>
-                <td className="p-4 text-right font-sans">
-                  {t.txHash ? (
-                    <a
-                      href={`https://coston2-explorer.flare.network/tx/${t.txHash}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-slate-400 hover:text-[#fde047] transition-colors"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5 text-[#fde047]" />
-                    </a>
-                  ) : (
-                    <span className="text-slate-600">-</span>
-                  )}
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </div>
+                  </td>
+                  <td className="numeric text-ink">{formatMoney(Number(t.size), 0)}</td>
+                  <td className="numeric">{formatMoney(Number(t.price))}</td>
+                  <td className="numeric">
+                    {pnl === null ? (
+                      <span className="text-ink-faint">—</span>
+                    ) : (
+                      <span className={pnl > 0 ? 'value-long' : pnl < 0 ? 'value-short' : ''}>
+                        {pnl > 0 ? '+' : pnl < 0 ? '−' : ''}
+                        {formatMoney(Math.abs(pnl))}
+                      </span>
+                    )}
+                  </td>
+                  <td className="text-right">
+                    <TxLink hash={t.txHash} />
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
   )
 }

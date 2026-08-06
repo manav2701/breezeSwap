@@ -16,20 +16,21 @@ export function NetworkSwitcher() {
   if (isWrongNetwork) {
     return (
       <button
+        type="button"
         onClick={switchToSupported}
         disabled={isSwitching}
-        className="flex items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-black font-mono text-white transition-all hover:bg-red-600 disabled:opacity-60"
+        className="btn btn-sm btn-short"
       >
-        <span className="w-2 h-2 rounded-full bg-white" />
+        <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden />
         {isSwitching ? 'Switching…' : 'Wrong network'}
       </button>
     )
   }
 
   return (
-    <div className="flex items-center gap-1.5 rounded-full bg-[#141414] border border-white/10 px-3 py-1.5 text-xs font-black font-mono text-white">
-      <span className="w-2 h-2 rounded-full bg-[#fde047]" />
+    <span className="chip">
+      <span className="pulse-dot text-long" aria-hidden />
       Coston2
-    </div>
+    </span>
   )
 }

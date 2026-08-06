@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { animate, useReducedMotion } from 'motion/react'
 
 type AnimatedNumberProps = {
@@ -12,11 +12,18 @@ type AnimatedNumberProps = {
   className?: string
 }
 
+const DURATION = 0.7
+
 /**
  * Counts up to `value` when it changes.
  *
  * Always renders tabular numerals so the digits do not reflow mid-count, and
  * skips straight to the final value under reduced-motion.
+ *
+ * A failsafe snaps to the target shortly after the tween should have ended.
+ * This is a number a reader will act on, so it must never be left frozen at
+ * whatever intermediate figure the animation reached if rAF is throttled —
+ * "$412" when the real open interest is "$1,340" is worse than no animation.
  */
 export function AnimatedNumber({
   value,
@@ -27,21 +34,30 @@ export function AnimatedNumber({
 }: AnimatedNumberProps) {
   const reduced = useReducedMotion()
   const [display, setDisplay] = useState(value)
+  const displayRef = useRef(value)
+
+  useEffect(() => {
+    displayRef.current = display
+  }, [display])
 
   useEffect(() => {
     if (reduced) {
       setDisplay(value)
       return
     }
-    const controls = animate(display, value, {
-      duration: 0.7,
+
+    const controls = animate(displayRef.current, value, {
+      duration: DURATION,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (v) => setDisplay(v),
     })
-    return () => controls.stop()
-    // `display` is the animation's start point, not a trigger — including it
-    // would restart the tween on every frame it emits.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    const failsafe = window.setTimeout(() => setDisplay(value), DURATION * 1000 + 250)
+
+    return () => {
+      controls.stop()
+      window.clearTimeout(failsafe)
+    }
   }, [value, reduced])
 
   return (
