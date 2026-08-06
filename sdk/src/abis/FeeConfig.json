@@ -2,26 +2,123 @@
   {
     "inputs": [],
     "name": "tradingFeeBps",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "newRateBps", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newRateBps",
+        "type": "uint256"
+      }
+    ],
     "name": "setTradingFeeBps",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "tradeAmount", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tradeAmount",
+        "type": "uint256"
+      }
+    ],
     "name": "calculateFeeSplit",
     "outputs": [
-      { "internalType": "uint256", "name": "feeAmount", "type": "uint256" },
-      { "internalType": "uint256", "name": "insuranceShare", "type": "uint256" },
-      { "internalType": "uint256", "name": "treasuryShare", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "feeAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "insuranceShare",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "firstLossShare",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "treasuryShare",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "insuranceShareBps",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "firstLossShareBps",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "treasuryShareBps",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "insuranceBps",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "firstLossBps",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "treasuryBps",
+        "type": "uint256"
+      }
+    ],
+    "name": "setFeeSplit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

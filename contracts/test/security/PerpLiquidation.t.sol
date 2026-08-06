@@ -93,6 +93,11 @@ contract PerpLiquidationTest is Test {
     }
 
     function test_paused_market_still_allows_liquidate() public {
+        // This test needs an extreme one-sided market to force a liquidation,
+        // which the skew cap exists to prevent. Opt out of the cap so the test
+        // exercises the pause/liquidation path rather than the skew guard.
+        perpMarket.setMaxSkew(0);
+
         // Alice opens 1,000 USD 3x LONG
         vm.prank(alice);
         uint256 posId = perpMarket.openPosition(true, 1_000 * 1e18, 3);

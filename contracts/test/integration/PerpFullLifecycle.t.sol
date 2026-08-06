@@ -92,8 +92,10 @@ contract PerpFullLifecycleTest is Test {
         vm.prank(bob);
         uint256 bobPos = perpMarket.openPosition(false, 5_000 * 1e18, 3);
 
-        // 3. Fast forward 15 mins for funding settlement & set oracle reading
-        vm.warp(block.timestamp + 15 minutes);
+        // 3. Fast forward one funding interval & set oracle reading. Warping the
+        // market's own interval rather than a literal keeps this correct whichever
+        // funding preset the market is configured with.
+        vm.warp(block.timestamp + perpMarket.fundingInterval());
         vm.prank(admin);
         oracle.setReading(REGION_ID, block.timestamp, 26_000_000); // 26.0 mm
 

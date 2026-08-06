@@ -2,11 +2,10 @@
 
 import React from 'react'
 import { BookOpen, ShieldCheck, Terminal, Layers, ExternalLink, Code } from 'lucide-react'
-import { CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, FLARE_MAINNET_CHAIN_ID } from '@breezeswap/sdk'
+import { CONTRACT_ADDRESSES, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
 
 export default function DocsPage() {
   const coston2Contracts = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID]
-  const mainnetContracts = CONTRACT_ADDRESSES[FLARE_MAINNET_CHAIN_ID]
 
   return (
     <div className="max-w-5xl mx-auto space-y-12 py-4">
@@ -18,7 +17,7 @@ export default function DocsPage() {
         </div>
         <h1 className="text-4xl font-black uppercase text-white tracking-tight">BreezeSwap Documentation</h1>
         <p className="text-xs text-slate-400 font-mono leading-relaxed">
-          Decentralized parametric weather derivatives on Flare Network (Coston2 Testnet & Flare Mainnet), settled permissionlessly by real-world weather oracle feeds.
+          Decentralized parametric weather derivatives on Flare Network (Coston2 Testnet), settled permissionlessly by real-world weather oracle feeds.
         </p>
       </div>
 
@@ -72,45 +71,13 @@ export default function DocsPage() {
       <section className="space-y-6">
         <h2 className="text-2xl font-black uppercase text-white flex items-center gap-3 tracking-tight">
           <Terminal className="w-6 h-6 text-emerald-400" />
-          3. Multi-Chain Contract Registry
+          3. Contract Registry
         </h2>
 
-        {/* Flare Mainnet */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-mono font-bold uppercase text-emerald-400 flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            Flare Mainnet Deployed Contracts (Chain ID 14)
-          </h3>
-          <div className="glass-panel overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300 border-collapse">
-              <thead className="bg-black/60 text-slate-400 uppercase tracking-widest font-mono text-[10px] border-b border-white/10">
-                <tr>
-                  <th className="p-4">Contract Name</th>
-                  <th className="p-4">Deployed Address</th>
-                  <th className="p-4">Block Explorer</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
-                {Object.entries(mainnetContracts).map(([name, address]) => (
-                  <tr key={name} className="hover:bg-white/5 transition-colors">
-                    <td className="p-4 font-sans font-extrabold text-white">{name}</td>
-                    <td className="p-4 text-emerald-400 font-bold">{address}</td>
-                    <td className="p-4 font-sans">
-                      <a
-                        href={`https://flare-explorer.flare.network/address/${address}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-slate-400 hover:text-[#fde047] transition-colors"
-                      >
-                        Explorer <ExternalLink className="w-3.5 h-3.5 text-[#fde047]" />
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <p className="text-xs text-slate-400 font-mono leading-relaxed">
+          BreezeSwap is deployed on Coston2 testnet only. There is no Flare Mainnet
+          deployment — mainnet is gated on a professional security audit.
+        </p>
 
         {/* Coston2 Testnet */}
         <div className="space-y-3">
@@ -154,20 +121,20 @@ export default function DocsPage() {
       <section className="space-y-4">
         <h2 className="text-2xl font-black uppercase text-white flex items-center gap-3 tracking-tight">
           <Code className="w-6 h-6 text-amber-400" />
-          4. SDK Multi-Chain Integration Guide
+          4. SDK Integration Guide
         </h2>
         <div className="glass-panel p-6 sm:p-8 space-y-4 text-xs font-mono text-slate-300">
           <p className="font-sans text-slate-400">
-            Third-party developers can integrate BreezeSwap weather derivatives directly into their apps using the multi-chain TypeScript SDK:
+            Third-party developers can integrate BreezeSwap weather derivatives directly into their apps using the TypeScript SDK:
           </p>
           <pre className="p-5 rounded-2xl bg-black/80 border border-white/10 overflow-x-auto text-[#fde047]">
-{`import { getMarkets, createMarket, FLARE_MAINNET_CHAIN_ID } from '@breezeswap/sdk'
+{`import { getMarkets, createMarket, COSTON2_CHAIN_ID } from '@breezeswap/sdk'
 
-// 1. Fetch live markets for Flare Mainnet (Chain ID 14)
-const markets = await getMarkets('https://breezeswap-indexer.onrender.com', FLARE_MAINNET_CHAIN_ID)
+// 1. Fetch live markets for Coston2 (Chain ID 114)
+const markets = await getMarkets('https://breezeswap-indexer.onrender.com', COSTON2_CHAIN_ID)
 
-// 2. Execute multi-chain contract calls
-const txHash = await createMarket(walletClient, publicClient, params, FLARE_MAINNET_CHAIN_ID)`}
+// 2. Execute contract calls against the resolved registry
+const txHash = await createMarket(walletClient, publicClient, params, COSTON2_CHAIN_ID)`}
           </pre>
         </div>
       </section>

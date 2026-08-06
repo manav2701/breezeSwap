@@ -4,7 +4,8 @@
   "main": "dist/seed.js",
   "scripts": {
     "build": "tsc",
-    "seed": "tsx src/seed.ts"
+    "seed": "tsx src/seed.ts",
+    "climatology": "tsx src/climatology.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

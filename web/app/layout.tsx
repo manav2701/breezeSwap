@@ -21,8 +21,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark scroll-smooth">
-      <body className={`${inter.className} bg-[#faf8f5] text-[#0a0a0a] antialiased min-h-screen flex flex-col selection:bg-[#fde047] selection:text-[#0a0a0a]`}>
+    // Next 16 no longer overrides scroll-behavior on navigation unless asked,
+    // so data-scroll-behavior keeps route changes jumping to top instantly
+    // while in-page anchors still scroll smoothly.
+    <html lang="en" className="dark scroll-smooth" data-scroll-behavior="smooth">
+      <body className={`${inter.className} bg-canvas text-ink antialiased min-h-screen flex flex-col selection:bg-accent selection:text-[#0a0a0a]`}>
         <Providers>
           <Navbar />
           <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
