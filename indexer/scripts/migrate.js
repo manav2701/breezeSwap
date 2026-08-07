@@ -59,6 +59,31 @@ async function isEmptySchema(client) {
   return rows[0].n === 0
 }
 
+/**
+ * TLS settings for the migration connection.
+ *
+ * This connection carries the whole schema and runs with the database owner's
+ * credentials, and it previously used `rejectUnauthorized: false` — an encrypted
+ * channel to whoever answers, with no proof it is the intended host.
+ *
+ * Supply the provider's CA in `DATABASE_CA_CERT` (Supabase publishes it under
+ * Project Settings → Database → SSL configuration) to verify the peer. Verified
+ * against the system trust store instead when `DATABASE_SSL_STRICT=true`.
+ * Without either, the old unverified behaviour is kept and announced, so an
+ * existing deploy keeps working but nobody assumes the channel is authenticated.
+ */
+function sslConfig() {
+  const ca = process.env.DATABASE_CA_CERT
+  if (ca) return { ca, rejectUnauthorized: true }
+  if (process.env.DATABASE_SSL_STRICT === 'true') return { rejectUnauthorized: true }
+
+  console.warn(
+    'WARNING: connecting to the database without verifying its certificate. ' +
+      'Set DATABASE_CA_CERT to the provider CA (or DATABASE_SSL_STRICT=true) to authenticate the host.'
+  )
+  return { rejectUnauthorized: false }
+}
+
 async function migrate() {
   const dbUrl = process.env.DATABASE_URL
   if (!dbUrl) {
@@ -68,7 +93,7 @@ async function migrate() {
 
   const force = process.argv.includes('--force-bootstrap')
 
-  const client = new Client({ connectionString: dbUrl, ssl: { rejectUnauthorized: false } })
+  const client = new Client({ connectionString: dbUrl, ssl: sslConfig() })
   await client.connect()
 
   try {

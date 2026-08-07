@@ -12,6 +12,10 @@ services:
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: ADMIN_API_KEY
+        sync: false
       - key: FACTORY_ADDRESS
         value: "0xe8969c988D4CF26AA9A98B8a95fF93D14E80615A"
       - key: POSITION_TOKEN_ADDRESS
