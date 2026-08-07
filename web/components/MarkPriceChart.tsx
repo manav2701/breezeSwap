@@ -8,6 +8,8 @@ import { useBreezeNetwork } from '../lib/hooks/useNetwork'
 import { CHART, axisProps, gridProps, tooltipProps, paddedDomain, formatMoney } from '../lib/chartTheme'
 import { ChartCard } from './charts/ChartCard'
 import { DemoBadge } from './DemoBadge'
+import { InlineError } from './LoadError'
+import { errorMessage } from '../lib/errorMessage'
 import { demoCandles } from '../lib/demoData'
 
 const INTERVALS = ['5m', '15m', '1h'] as const
@@ -31,6 +33,7 @@ export function MarkPriceChart({
   const [candles, setCandles] = useState<OHLCCandle[]>([])
   const [loading, setLoading] = useState(true)
   const [isDemo, setIsDemo] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -39,6 +42,7 @@ export function MarkPriceChart({
       try {
         const data = await getMarkPriceCandles(indexerUrl, marketAddress, interval, 100, chainId)
         if (cancelled) return
+        setError(null)
         if (data && data.length > 0) {
           setCandles(data)
           setIsDemo(false)
@@ -48,12 +52,17 @@ export function MarkPriceChart({
           )
           setIsDemo(true)
         }
-      } catch {
+      } catch (err) {
+        // A generated candle series is a plausible-looking price history. Drawing
+        // one because the request failed, every 20 seconds, with nothing but the
+        // "Sample data" chip to say so, is the most misleading fallback here.
+        console.error(`Failed to load ${interval} candles for ${marketAddress}`, err)
         if (cancelled) return
         setCandles(
           demoCandles(`${marketAddress}:${interval}`, 72, basePrice, INTERVAL_SECONDS[interval])
         )
         setIsDemo(true)
+        setError(errorMessage(err))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -96,6 +105,7 @@ export function MarkPriceChart({
       emptyLabel="No mark price snapshots for this market yet."
       actions={
         <>
+          {error && <InlineError message="Live candles unavailable" />}
           {isDemo && <DemoBadge />}
           <div className="segmented" role="group" aria-label="Candle interval">
             {INTERVALS.map((int) => (

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
+import { fail } from '../respond'
 
 // GET /api/markets
 export async function getMarkets(req: Request, res: Response) {
@@ -19,10 +20,10 @@ export async function getMarkets(req: Request, res: Response) {
     query = query.range(offset, offset + limit - 1)
 
     const { data, error } = await query
-    if (error) return res.json({ markets: [] })
+    if (error) return fail(res, 'markets query', error)
     res.json({ markets: data || [] })
-  } catch (err: any) {
-    res.json({ markets: [] })
+  } catch (err) {
+    fail(res, 'markets query', err)
   }
 }
 
@@ -38,10 +39,17 @@ export async function getMarket(req: Request, res: Response) {
       .eq('chain_id', chainId)
       .single()
 
-    if (error || !data) return res.status(404).json({ error: 'Market not found' })
+    // `.single()` reports "no rows" as an error too, so only that code is a
+    // genuine 404 — anything else is the database failing and must not be
+    // dressed up as a missing market.
+    if (error) {
+      if (error.code === 'PGRST116') return res.status(404).json({ error: 'Market not found' })
+      return fail(res, 'market query', error)
+    }
+    if (!data) return res.status(404).json({ error: 'Market not found' })
     res.json(data)
-  } catch (err: any) {
-    res.status(404).json({ error: 'Market not found' })
+  } catch (err) {
+    fail(res, 'market query', err)
   }
 }
 
@@ -55,9 +63,9 @@ export async function getMarketPositions(req: Request, res: Response) {
       .eq('market_address', address)
       .order('minted_at', { ascending: false })
 
-    if (error) return res.json({ positions: [] })
+    if (error) return fail(res, 'market positions query', error)
     res.json({ positions: data || [] })
-  } catch (err: any) {
-    res.json({ positions: [] })
+  } catch (err) {
+    fail(res, 'market positions query', err)
   }
 }

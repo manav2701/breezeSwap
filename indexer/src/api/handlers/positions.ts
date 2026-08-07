@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
+import { fail } from '../respond'
 
 // GET /api/users/:address/positions
 export async function getUserPositions(req: Request, res: Response) {
@@ -11,9 +12,11 @@ export async function getUserPositions(req: Request, res: Response) {
       .eq('holder_address', address)
       .order('minted_at', { ascending: false })
 
-    if (error) return res.json({ positions: [] })
+    // Answering an outage with an empty list told a trader they held no
+    // positions, which is the one wrong answer this endpoint must never give.
+    if (error) return fail(res, 'user positions query', error)
     res.json({ positions: data || [] })
-  } catch (err: any) {
-    res.json({ positions: [] })
+  } catch (err) {
+    fail(res, 'user positions query', err)
   }
 }

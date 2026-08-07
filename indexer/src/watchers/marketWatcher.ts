@@ -2,6 +2,7 @@ import { publicClient } from '../utils/chainClient'
 import { supabase } from '../db/client'
 import { logger } from '../utils/logger'
 import { withRetry } from '../utils/retry'
+import { assertWritten, errorMessage } from '../utils/errors'
 import MarketABI from '../abis/BreezeMarket.json'
 
 const activeWatchers = new Map<string, () => void>()
@@ -10,7 +11,7 @@ export async function handlePositionMinted(marketAddress: string, log: any) {
   const { args, blockNumber, transactionHash } = log
   const block = await withRetry(() => publicClient.getBlock({ blockNumber }))
 
-  await supabase.from('positions').upsert(
+  const { error } = await supabase.from('positions').upsert(
     {
       market_address: marketAddress.toLowerCase(),
       token_id: args.tokenId.toString(),
@@ -24,6 +25,7 @@ export async function handlePositionMinted(marketAddress: string, log: any) {
     },
     { onConflict: 'tx_hash' }
   )
+  assertWritten('positions upsert', error, { market: marketAddress, txHash: transactionHash })
 
   logger.info('Position indexed', { market: marketAddress, user: args.user, side: args.side === 0 ? 'LONG' : 'SHORT' })
 }
@@ -35,7 +37,7 @@ export async function handleMarketSettled(marketAddress: string, log: any) {
   const longPayoutRatio = (Number(args.longPayoutPerToken) / 1e18).toString()
   const shortPayoutRatio = (Number(args.shortPayoutPerToken) / 1e18).toString()
 
-  await supabase
+  const { error: marketError } = await supabase
     .from('markets')
     .update({
       status: 'SETTLED',
@@ -45,8 +47,9 @@ export async function handleMarketSettled(marketAddress: string, log: any) {
       settled_at: new Date(Number(block.timestamp) * 1000).toISOString()
     })
     .eq('contract_address', marketAddress.toLowerCase())
+  assertWritten('markets settlement update', marketError, { market: marketAddress })
 
-  await supabase.from('settlements').upsert(
+  const { error: settlementError } = await supabase.from('settlements').upsert(
     {
       market_address: marketAddress.toLowerCase(),
       oracle_value: args.oracleValue.toString(),
@@ -58,6 +61,7 @@ export async function handleMarketSettled(marketAddress: string, log: any) {
     },
     { onConflict: 'tx_hash' }
   )
+  assertWritten('settlements upsert', settlementError, { market: marketAddress, txHash: transactionHash })
 
   logger.info('Settlement indexed', { market: marketAddress, oracleValue: args.oracleValue.toString() })
 }
@@ -66,7 +70,7 @@ export async function handlePositionRedeemed(marketAddress: string, log: any) {
   const { args, blockNumber, transactionHash } = log
   const block = await withRetry(() => publicClient.getBlock({ blockNumber }))
 
-  await supabase
+  const { error } = await supabase
     .from('positions')
     .update({
       redeemed: true,
@@ -77,6 +81,7 @@ export async function handlePositionRedeemed(marketAddress: string, log: any) {
     .eq('market_address', marketAddress.toLowerCase())
     .eq('token_id', args.tokenId.toString())
     .eq('holder_address', args.user.toLowerCase())
+  assertWritten('positions redemption update', error, { market: marketAddress, txHash: transactionHash })
 
   logger.info('Redemption indexed', { market: marketAddress, user: args.user })
 }
@@ -90,12 +95,28 @@ export function startMarketWatcher(marketAddress: string) {
       address: normalizedAddress as `0x${string}`,
       abi: MarketABI,
       onLogs: (logs) => {
-        logs.forEach((log) => {
+        // `onLogs` is synchronous as far as viem is concerned, so a rejected
+        // handler here is an unhandled rejection: nothing reports it and the
+        // process can be torn down by it. Each log is handled and reported
+        // independently so one bad event does not drop the rest of the batch.
+        for (const log of logs) {
           const eventName = (log as any).eventName
-          if (eventName === 'PositionMinted') handlePositionMinted(normalizedAddress, log)
-          if (eventName === 'MarketSettled') handleMarketSettled(normalizedAddress, log)
-          if (eventName === 'PositionRedeemed') handlePositionRedeemed(normalizedAddress, log)
-        })
+          const handler =
+            eventName === 'PositionMinted' ? handlePositionMinted
+            : eventName === 'MarketSettled' ? handleMarketSettled
+            : eventName === 'PositionRedeemed' ? handlePositionRedeemed
+            : null
+          if (!handler) continue
+
+          handler(normalizedAddress, log).catch((err) => {
+            logger.error('Failed to index market event', {
+              market: normalizedAddress,
+              eventName,
+              txHash: (log as any).transactionHash,
+              err: errorMessage(err)
+            })
+          })
+        }
       },
       onError: (err) => {
         logger.error('Market watcher error, restarting in 5s...', { market: normalizedAddress, err: err.message })

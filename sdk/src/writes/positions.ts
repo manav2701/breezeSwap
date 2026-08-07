@@ -25,11 +25,15 @@ export async function approveCollateral(
     if (vaultAddress && vaultAddress !== '0x0000000000000000000000000000000000000000') {
       targetSpender = vaultAddress
     }
-  } catch {
-    // If not a market or vault query fails, fall back to spenderAddress
+  } catch (err) {
+    // Not every spender is a market, so no `vault()` is an expected outcome and
+    // the market address is the right fallback. It is still worth saying which
+    // spender the approval ended up targeting and why.
+    console.warn(
+      `Could not read vault() from ${spenderAddress}; approving the address itself.`,
+      err
+    )
   }
-
-  console.log('Target vault spender for approval:', targetSpender)
 
   // 2. Check existing allowance for targetSpender (CollateralVault)
   try {
@@ -40,12 +44,12 @@ export async function approveCollateral(
       args: [account, targetSpender]
     }) as bigint
 
-    if (allowance >= amount) {
-      console.log('Collateral allowance already sufficient for vault:', targetSpender)
-      return null
-    }
-  } catch {
-    // If allowance check fails, proceed with approve
+    if (allowance >= amount) return null
+  } catch (err) {
+    // Approving anyway is safe — worst case it is a redundant transaction — but
+    // an unreadable allowance usually means the token address or the RPC is
+    // wrong, and the approval that follows is about to fail for the same reason.
+    console.warn(`Could not read the allowance of ${tokenAddress}; requesting approval anyway.`, err)
   }
 
   // 3. Simulate and request approval for targetSpender (CollateralVault)

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getTokenMeta, getTokenBalance, type TokenMeta } from '@breezeswap/sdk'
+import { errorMessage } from '../errorMessage'
 import { useBreezeSDK } from './useBreezeSDK'
 
 /**
@@ -20,32 +21,52 @@ import { useBreezeSDK } from './useBreezeSDK'
  * `decimals` starts as `null` rather than a guess. Callers must not build a
  * transaction until it resolves, otherwise the first render would scale the
  * amount by the wrong factor.
+ *
+ * For the same reason a failed read is reported through `error` rather than
+ * swallowed: the mint form stays disabled either way, but it can now say why
+ * instead of appearing indefinitely stuck on "Loading token…".
  */
 export function useCollateralToken(tokenAddress?: string) {
   const { publicClient, address } = useBreezeSDK()
   const [meta, setMeta] = useState<TokenMeta | null>(null)
   const [balance, setBalance] = useState<bigint | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
     if (!publicClient || !tokenAddress) {
       setMeta(null)
       setBalance(null)
+      setError(null)
       return
     }
 
     async function load() {
+      setError(null)
       try {
         const m = await getTokenMeta(publicClient as any, tokenAddress as string)
         if (cancelled) return
         setMeta(m)
-
-        if (address) {
-          const b = await getTokenBalance(publicClient as any, tokenAddress as string, address)
-          if (!cancelled) setBalance(b)
+      } catch (err) {
+        console.error(`Failed to read token metadata for ${tokenAddress}`, err)
+        if (!cancelled) {
+          setMeta(null)
+          setError(errorMessage(err))
         }
-      } catch {
-        if (!cancelled) setMeta(null)
+        return
+      }
+
+      if (!address) return
+
+      // An unreadable balance is not a blocker: the amount can still be scaled
+      // and submitted, and the chain rejects an over-spend anyway. It is kept
+      // separate from `error` so it cannot disable the form.
+      try {
+        const b = await getTokenBalance(publicClient as any, tokenAddress as string, address)
+        if (!cancelled) setBalance(b)
+      } catch (err) {
+        console.warn(`Failed to read the ${tokenAddress} balance of ${address}`, err)
+        if (!cancelled) setBalance(null)
       }
     }
 
@@ -61,5 +82,7 @@ export function useCollateralToken(tokenAddress?: string) {
     symbol: meta?.symbol ?? 'tokens',
     balance,
     isReady: meta !== null,
+    /** Set when the token could not be read at all; `isReady` stays false. */
+    error,
   }
 }

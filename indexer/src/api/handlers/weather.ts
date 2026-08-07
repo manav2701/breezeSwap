@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
+import { fail } from '../respond'
 
 // GET /api/weather/regions
 export async function getRegions(req: Request, res: Response) {
@@ -9,12 +10,12 @@ export async function getRegions(req: Request, res: Response) {
       .select('region_id, region_name')
       .order('region_name')
 
-    if (error || !data) return res.json({ regions: [] })
+    if (error) return fail(res, 'regions query', error)
 
-    const unique = [...new Map(data.map((r) => [r.region_id, r])).values()]
+    const unique = [...new Map((data || []).map((r) => [r.region_id, r])).values()]
     res.json({ regions: unique })
-  } catch (err: any) {
-    res.json({ regions: [] })
+  } catch (err) {
+    fail(res, 'regions query', err)
   }
 }
 
@@ -32,15 +33,15 @@ export async function getWeatherReadings(req: Request, res: Response) {
       .gte('reading_timestamp', since)
       .order('reading_timestamp', { ascending: true })
 
-    if (error || !data) return res.json({ readings: [] })
+    if (error) return fail(res, 'weather readings query', error)
 
-    const normalized = data.map((r) => ({
+    const normalized = (data || []).map((r) => ({
       ...r,
       displayValue: Number(r.value) / 1e6
     }))
 
     res.json({ readings: normalized })
-  } catch (err: any) {
-    res.json({ readings: [] })
+  } catch (err) {
+    fail(res, 'weather readings query', err)
   }
 }

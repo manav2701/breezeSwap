@@ -25,7 +25,9 @@ import { FundingRateSparkline } from '../../../components/FundingRateSparkline'
 import { MarkPriceChart } from '../../../components/MarkPriceChart'
 import { DepthLadder } from '../../../components/DepthLadder'
 import { TradeHistoryTable } from '../../../components/TradeHistoryTable'
+import { InlineError } from '../../../components/LoadError'
 import { formatMoney } from '../../../lib/chartTheme'
+import { errorMessage } from '../../../lib/errorMessage'
 import { explainRevert } from '../../../lib/revertReason'
 
 /**
@@ -66,7 +68,9 @@ export default function PerpMarketDetailPage({
 
   const [market, setMarket] = useState<PerpMarket | null>(null)
   const [, setPositions] = useState<PerpPosition[]>([])
+  const [marketError, setMarketError] = useState<string | null>(null)
   const [collateralTokenAddress, setCollateralTokenAddress] = useState<string>()
+  const [collateralTokenError, setCollateralTokenError] = useState<string | null>(null)
 
   const [isLong, setIsLong] = useState(true)
   const [collateralInput, setCollateralInput] = useState('100')
@@ -77,8 +81,13 @@ export default function PerpMarketDetailPage({
   const [error, setError] = useState<string | null>(null)
 
   // Decimals come from the token the market was actually deployed against.
-  const { decimals, symbol, balance, isReady: tokenReady } =
-    useCollateralToken(collateralTokenAddress)
+  const {
+    decimals,
+    symbol,
+    balance,
+    isReady: tokenReady,
+    error: tokenMetaError,
+  } = useCollateralToken(collateralTokenAddress)
 
   useEffect(() => {
     let cancelled = false
@@ -91,8 +100,15 @@ export default function PerpMarketDetailPage({
         if (cancelled) return
         if (m) setMarket(m)
         setPositions(pos ?? [])
-      } catch {
-        /* The panels below each carry their own fallback. */
+        setMarketError(null)
+      } catch (err) {
+        // The page still renders — the quote comes from reference reserves, not
+        // the indexer — but the region name and oracle price shown next to it
+        // silently fell back to defaults, so a trader saw a confident "Weather"
+        // market priced off a placeholder.
+        console.error(`Failed to load perp market ${marketAddress}`, err)
+        if (cancelled) return
+        setMarketError(errorMessage(err))
       }
     }
     load()
@@ -122,10 +138,15 @@ export default function PerpMarketDetailPage({
         functionName: 'collateralToken',
       })
       .then((token) => {
-        if (!cancelled) setCollateralTokenAddress(token as string)
+        if (cancelled) return
+        setCollateralTokenAddress(token as string)
+        setCollateralTokenError(null)
       })
-      .catch(() => {
-        /* No contract at this address; the form stays disabled. */
+      .catch((err: unknown) => {
+        // The trade form stays disabled either way, but it used to sit on
+        // "Reading collateral token…" forever with nothing in the console.
+        console.error(`Failed to read collateralToken() from ${marketAddress}`, err)
+        if (!cancelled) setCollateralTokenError(errorMessage(err))
       })
 
     return () => {
@@ -197,7 +218,7 @@ export default function PerpMarketDetailPage({
       )
       setTxHash(hash)
       setStatus(null)
-    } catch (err: any) {
+    } catch (err) {
       setStatus(null)
       setError(explainRevert(err))
     } finally {
@@ -237,6 +258,13 @@ export default function PerpMarketDetailPage({
           </span>
         </div>
       </div>
+
+      {/* `regionName` and `basePrice` above fall back to "Weather" and the
+          reference mark when this fails, which is indistinguishable from real
+          market data unless it is said out loud. */}
+      {marketError && (
+        <InlineError message={`Market details unavailable: ${marketError}`} />
+      )}
 
       <PerpStatsHeader marketAddress={marketAddress} basePrice={basePrice} />
 
@@ -406,6 +434,14 @@ export default function PerpMarketDetailPage({
 
             {!validCollateral && (
               <p className="text-xs text-warn">Enter a margin amount greater than zero.</p>
+            )}
+
+            {/* Without this the button reads "Reading collateral token…"
+                indefinitely, with no indication that the read already failed. */}
+            {(collateralTokenError || tokenMetaError) && (
+              <InlineError
+                message={`Collateral token unavailable: ${collateralTokenError ?? tokenMetaError}`}
+              />
             )}
 
             {insufficientBalance && balance !== null && decimals !== null && (

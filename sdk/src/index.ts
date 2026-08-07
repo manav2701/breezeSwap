@@ -58,4 +58,5 @@ export {
   formatCollateral, formatExpiry, timeUntilExpiry
 } from './utils/formatting'
 export { encodeRegionId, decodeRegionId, KNOWN_REGIONS } from './utils/regions'
+export { IndexerError, isNotFound } from './utils/http'
 export { calculatePerpQuote, calculateMarkPrice, type Reserves } from './utils/perpQuote'

@@ -8,6 +8,8 @@ import { useBreezeNetwork } from '../lib/hooks/useNetwork'
 import { formatMoney } from '../lib/chartTheme'
 import { TxLink } from './TxLink'
 import { DemoBadge } from './DemoBadge'
+import { InlineError } from './LoadError'
+import { errorMessage } from '../lib/errorMessage'
 import { demoTrades } from '../lib/demoData'
 
 interface TradeHistoryTableProps {
@@ -37,6 +39,7 @@ export function TradeHistoryTable({
   const [trades, setTrades] = useState<TradeHistoryEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [isDemo, setIsDemo] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -50,6 +53,7 @@ export function TradeHistoryTable({
             : []
 
         if (cancelled) return
+        setError(null)
         if (data && data.length > 0) {
           setTrades(data)
           setIsDemo(false)
@@ -59,12 +63,17 @@ export function TradeHistoryTable({
           )
           setIsDemo(true)
         }
-      } catch {
+      } catch (err) {
+        // Sample trades for a market with no history are informative; sample
+        // trades because the request failed are fiction, and the "Sample data"
+        // chip alone did not tell the two apart.
+        console.error('Failed to load trade history', err)
         if (cancelled) return
         setTrades(
           demoTrades(marketAddress ?? 'global', Math.min(limit, 14), basePrice) as unknown as TradeHistoryEntry[]
         )
         setIsDemo(true)
+        setError(errorMessage(err))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -100,6 +109,7 @@ export function TradeHistoryTable({
     <section className="panel">
       <header className="flex flex-wrap items-center justify-between gap-3 px-5 sm:px-6 py-4 border-b border-[color:var(--color-hairline)]">
         <h3 className="display-3 text-ink">Trade activity</h3>
+        {error && <InlineError message={`Live trades unavailable: ${error}`} />}
         {isDemo ? (
           <DemoBadge />
         ) : (

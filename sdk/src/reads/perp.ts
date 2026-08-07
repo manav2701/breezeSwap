@@ -2,60 +2,63 @@ import {
   PerpMarket, PerpPosition, FundingHistoryItem, MarkPriceHistoryItem,
   TradeHistoryEntry, PerpMarketStatsData, OHLCCandle
 } from '../types'
+import { fetchJson, isNotFound } from '../utils/http'
 
+/**
+ * Perp reads against the indexer.
+ *
+ * Every function here used to end in `catch { return [] }` / `catch { return
+ * null }`, so a failing indexer looked exactly like a market with no history:
+ * empty charts, an empty trade tape, "no positions" on a portfolio that held
+ * some. Failures now propagate; the components that want a demo-data fallback
+ * still get one from their own catch, but they can also say when they are
+ * showing it because a read failed.
+ *
+ * `getPerpMarket` and `getPerpMarketStats` keep `null`, but only for a genuine
+ * 404 — the one case where "nothing here" is the truth.
+ */
 export async function getPerpMarkets(indexerUrl: string, chainId: number = 114): Promise<PerpMarket[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets?chainId=${chainId}`)
-    if (!res.ok) throw new Error('Failed to fetch perp markets')
-    const data = await res.json()
-    return data.markets || []
-  } catch (err) {
-    console.warn('getPerpMarkets error:', err)
-    return []
-  }
+  const data = await fetchJson<{ markets?: PerpMarket[] }>(
+    `${indexerUrl}/api/perp-markets?chainId=${chainId}`,
+    'perp markets'
+  )
+  return data.markets || []
 }
 
 export async function getPerpMarket(indexerUrl: string, address: string, chainId: number = 114): Promise<PerpMarket | null> {
   try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}?chainId=${chainId}`)
-    if (!res.ok) return null
-    return await res.json()
+    return await fetchJson<PerpMarket>(
+      `${indexerUrl}/api/perp-markets/${address}?chainId=${chainId}`,
+      `perp market ${address}`
+    )
   } catch (err) {
-    return null
+    if (isNotFound(err)) return null
+    throw err
   }
 }
 
 export async function getPerpMarketPositions(indexerUrl: string, address: string, chainId: number = 114): Promise<PerpPosition[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${address}/positions?chainId=${chainId}`)
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.positions || []
-  } catch (err) {
-    return []
-  }
+  const data = await fetchJson<{ positions?: PerpPosition[] }>(
+    `${indexerUrl}/api/perp-markets/${address}/positions?chainId=${chainId}`,
+    `positions for perp market ${address}`
+  )
+  return data.positions || []
 }
 
 export async function getUserPerpPositions(indexerUrl: string, userAddress: string, chainId: number = 114): Promise<PerpPosition[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/users/${userAddress}/perp-positions?chainId=${chainId}`)
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.positions || []
-  } catch (err) {
-    return []
-  }
+  const data = await fetchJson<{ positions?: PerpPosition[] }>(
+    `${indexerUrl}/api/users/${userAddress}/perp-positions?chainId=${chainId}`,
+    `perp positions for ${userAddress}`
+  )
+  return data.positions || []
 }
 
 export async function getFundingHistory(indexerUrl: string, marketAddress: string, chainId: number = 114): Promise<FundingHistoryItem[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/funding-history?chainId=${chainId}`)
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.history || []
-  } catch (err) {
-    return []
-  }
+  const data = await fetchJson<{ history?: FundingHistoryItem[] }>(
+    `${indexerUrl}/api/perp-markets/${marketAddress}/funding-history?chainId=${chainId}`,
+    'funding history'
+  )
+  return data.history || []
 }
 
 export async function getMarkPriceHistory(
@@ -64,14 +67,11 @@ export async function getMarkPriceHistory(
   minutes = 60,
   chainId: number = 114
 ): Promise<MarkPriceHistoryItem[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/mark-price-history?minutes=${minutes}&chainId=${chainId}`)
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.history || []
-  } catch (err) {
-    return []
-  }
+  const data = await fetchJson<{ history?: MarkPriceHistoryItem[] }>(
+    `${indexerUrl}/api/perp-markets/${marketAddress}/mark-price-history?minutes=${minutes}&chainId=${chainId}`,
+    'mark price history'
+  )
+  return data.history || []
 }
 
 export async function getTradeHistory(
@@ -81,14 +81,11 @@ export async function getTradeHistory(
   limit = 50,
   offset = 0
 ): Promise<TradeHistoryEntry[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/trade-history?limit=${limit}&offset=${offset}&chainId=${chainId}`)
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.trades || []
-  } catch (err) {
-    return []
-  }
+  const data = await fetchJson<{ trades?: TradeHistoryEntry[] }>(
+    `${indexerUrl}/api/perp-markets/${marketAddress}/trade-history?limit=${limit}&offset=${offset}&chainId=${chainId}`,
+    'trade history'
+  )
+  return data.trades || []
 }
 
 export async function getPerpMarketStats(
@@ -97,11 +94,13 @@ export async function getPerpMarketStats(
   chainId: number = 114
 ): Promise<PerpMarketStatsData | null> {
   try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/stats?chainId=${chainId}`)
-    if (!res.ok) return null
-    return await res.json()
+    return await fetchJson<PerpMarketStatsData>(
+      `${indexerUrl}/api/perp-markets/${marketAddress}/stats?chainId=${chainId}`,
+      'perp market stats'
+    )
   } catch (err) {
-    return null
+    if (isNotFound(err)) return null
+    throw err
   }
 }
 
@@ -112,12 +111,9 @@ export async function getMarkPriceCandles(
   limit = 100,
   chainId: number = 114
 ): Promise<OHLCCandle[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/perp-markets/${marketAddress}/candles?interval=${interval}&limit=${limit}&chainId=${chainId}`)
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.candles || []
-  } catch (err) {
-    return []
-  }
+  const data = await fetchJson<{ candles?: OHLCCandle[] }>(
+    `${indexerUrl}/api/perp-markets/${marketAddress}/candles?interval=${interval}&limit=${limit}&chainId=${chainId}`,
+    'mark price candles'
+  )
+  return data.candles || []
 }

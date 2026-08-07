@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
 import { publicClient } from '../../utils/chainClient'
-import { logger } from '../../utils/logger'
+import { fail } from '../respond'
 
 const ERC20_BALANCE_ABI = [
   {
@@ -20,13 +20,12 @@ const TREASURY_ADDRESS = '0xecB7Ff4dA80532F5C7803392761643bA4dDe5058' as `0x${st
 export async function getTotalFees(req: Request, res: Response) {
   try {
     const { data, error } = await supabase.from('fee_events').select('fee_amount')
-    if (error) throw error
+    if (error) return fail(res, 'total fees query', error)
 
     const total = (data || []).reduce((acc, row) => acc + BigInt(row.fee_amount || 0), 0n)
     return res.json({ totalFeesWei: total.toString() })
-  } catch (err: any) {
-    logger.error('getTotalFees error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'total fees query', err)
   }
 }
 
@@ -39,10 +38,10 @@ export async function getRecentFees(req: Request, res: Response) {
       .order('occurred_at', { ascending: false })
       .limit(limit)
 
-    if (error) throw error
+    if (error) return fail(res, 'recent fees query', error)
     return res.json({ fees: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'recent fees query', err)
   }
 }
 
@@ -55,8 +54,8 @@ export async function getInsuranceFundBalance(req: Request, res: Response) {
       args: [INSURANCE_FUND_ADDRESS]
     })
     return res.json({ balanceWei: bal.toString() })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'insurance fund balance read', err)
   }
 }
 
@@ -69,8 +68,8 @@ export async function getTreasuryBalance(req: Request, res: Response) {
       args: [TREASURY_ADDRESS]
     })
     return res.json({ balanceWei: bal.toString() })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'treasury balance read', err)
   }
 }
 
@@ -83,7 +82,7 @@ export async function getGlobalTradeHistory(req: Request, res: Response) {
       .order('opened_at', { ascending: false })
       .limit(limit)
 
-    if (error) throw error
+    if (error) return fail(res, 'global trade history query', error)
 
     const trades: any[] = []
     for (const pos of positions || []) {
@@ -118,8 +117,7 @@ export async function getGlobalTradeHistory(req: Request, res: Response) {
 
     trades.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     return res.json({ trades: trades.slice(0, limit) })
-  } catch (err: any) {
-    logger.error('getGlobalTradeHistory error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'global trade history query', err)
   }
 }

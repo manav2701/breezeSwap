@@ -13,6 +13,8 @@ import {
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../../lib/hooks/useNetwork'
 import { DemoBadge } from '../../components/DemoBadge'
+import { InlineError } from '../../components/LoadError'
+import { errorMessage } from '../../lib/errorMessage'
 import { RegionMark } from '../../components/RegionMark'
 import { Reveal } from '../../components/motion/Reveal'
 import { formatMoney } from '../../lib/chartTheme'
@@ -84,9 +86,11 @@ export default function PerpMarketsPage() {
   const [markets, setMarkets] = useState<PerpMarket[]>(FALLBACK_PERPS)
   const [loading, setLoading] = useState(true)
   const [isDemo, setIsDemo] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   async function loadPerps() {
     setLoading(true)
+    setError(null)
     try {
       const live = await getPerpMarkets(indexerUrl, chainId)
       if (live && live.length > 0) {
@@ -96,9 +100,14 @@ export default function PerpMarketsPage() {
         setMarkets(FALLBACK_PERPS)
         setIsDemo(true)
       }
-    } catch {
+    } catch (err) {
+      // The fallback markets are real addresses with placeholder prices, which is
+      // a reasonable stand-in for an indexer that has not caught up — but not for
+      // one that is broken. "Placeholder prices" alone did not say which.
+      console.error('Failed to load perpetual markets', err)
       setMarkets(FALLBACK_PERPS)
       setIsDemo(true)
+      setError(errorMessage(err))
     } finally {
       setLoading(false)
     }
@@ -121,7 +130,10 @@ export default function PerpMarketsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {error && !loading && (
+            <InlineError message={`Live prices unavailable: ${error}`} />
+          )}
           {isDemo && !loading && <DemoBadge label="Placeholder prices" />}
           <button
             type="button"

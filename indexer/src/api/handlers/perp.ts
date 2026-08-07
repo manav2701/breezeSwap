@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
-import { logger } from '../../utils/logger'
 import { getPublicClient } from '../../utils/chainClient'
+import { fail } from '../respond'
 
 const PerpMarketViewABI = [
   {
@@ -38,11 +38,10 @@ export async function getPerpMarkets(req: Request, res: Response) {
   try {
     const chainId = Number(req.query.chainId ?? 114)
     const { data, error } = await supabase.from('perp_markets').select('*').eq('chain_id', chainId).order('created_at', { ascending: false })
-    if (error) throw error
+    if (error) return fail(res, 'perp markets query', error)
     return res.json({ markets: data || [] })
-  } catch (err: any) {
-    logger.error('getPerpMarkets error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'perp markets query', err)
   }
 }
 
@@ -51,10 +50,15 @@ export async function getPerpMarket(req: Request, res: Response) {
     const address = String(req.params.address || '').toLowerCase()
     const chainId = Number(req.query.chainId ?? 114)
     const { data, error } = await supabase.from('perp_markets').select('*').eq('contract_address', address).eq('chain_id', chainId).single()
-    if (error) return res.status(404).json({ error: 'Perp market not found' })
+    // Only PostgREST's "no rows" code means the market does not exist; every
+    // other error is the database failing and used to be reported as a 404.
+    if (error) {
+      if (error.code === 'PGRST116') return res.status(404).json({ error: 'Perp market not found' })
+      return fail(res, 'perp market query', error)
+    }
     return res.json(data)
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'perp market query', err)
   }
 }
 
@@ -66,10 +70,10 @@ export async function getPerpMarketPositions(req: Request, res: Response) {
       .select('*')
       .eq('market_address', address)
       .order('opened_at', { ascending: false })
-    if (error) throw error
+    if (error) return fail(res, 'perp market positions query', error)
     return res.json({ positions: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'perp market positions query', err)
   }
 }
 
@@ -82,10 +86,10 @@ export async function getFundingHistory(req: Request, res: Response) {
       .eq('market_address', address)
       .order('settled_at', { ascending: false })
       .limit(50)
-    if (error) throw error
+    if (error) return fail(res, 'funding history query', error)
     return res.json({ history: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'funding history query', err)
   }
 }
 
@@ -102,10 +106,10 @@ export async function getMarkPriceHistory(req: Request, res: Response) {
       .gte('snapshotted_at', since)
       .order('snapshotted_at', { ascending: true })
 
-    if (error) throw error
+    if (error) return fail(res, 'mark price history query', error)
     return res.json({ history: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'mark price history query', err)
   }
 }
 
@@ -118,10 +122,10 @@ export async function getUserPerpPositions(req: Request, res: Response) {
       .eq('trader_address', address)
       .order('opened_at', { ascending: false })
 
-    if (error) throw error
+    if (error) return fail(res, 'user perp positions query', error)
     return res.json({ positions: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'user perp positions query', err)
   }
 }
 
@@ -139,7 +143,7 @@ export async function getTradeHistory(req: Request, res: Response) {
       .order('opened_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
-    if (error) throw error
+    if (error) return fail(res, 'trade history query', error)
 
     const trades: any[] = []
     for (const pos of positions || []) {
@@ -174,9 +178,8 @@ export async function getTradeHistory(req: Request, res: Response) {
 
     trades.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     return res.json({ trades: trades.slice(0, limit) })
-  } catch (err: any) {
-    logger.error('getTradeHistory error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'trade history query', err)
   }
 }
 
@@ -208,12 +211,13 @@ export async function getPerpMarketStats(req: Request, res: Response) {
     if (results[3].status === 'fulfilled') lastFundingSettledAt = Number(results[3].value)
 
     // 2. Funding history
-    const { data: fundingRows } = await supabase
+    const { data: fundingRows, error: fundingError } = await supabase
       .from('funding_history')
       .select('funding_rate')
       .eq('market_address', address)
       .order('settled_at', { ascending: false })
       .limit(1)
+    if (fundingError) return fail(res, 'perp stats funding query', fundingError)
 
     const latestFundingBps = fundingRows && fundingRows.length > 0 ? Number(fundingRows[0].funding_rate || 0) : 0
     const currentFundingRate = (latestFundingBps / 10000).toFixed(4) // e.g. 0.0012 = 0.12%
@@ -230,11 +234,14 @@ export async function getPerpMarketStats(req: Request, res: Response) {
 
     // 4. 24h Volume and Trade Count from DB
     const since24h = new Date(Date.now() - 24 * 3600 * 1000).toISOString()
-    const { data: recentPositions } = await supabase
+    // A failed query here would have been indistinguishable from a market with
+    // no trades in the last day: the stats tiles would read 0 volume, 0 trades.
+    const { data: recentPositions, error: recentError } = await supabase
       .from('perp_positions')
       .select('collateral, leverage, opened_at')
       .eq('market_address', address)
       .gte('opened_at', since24h)
+    if (recentError) return fail(res, 'perp stats volume query', recentError)
 
     let totalVolume24h = 0
     let tradeCount24h = 0
@@ -258,9 +265,8 @@ export async function getPerpMarketStats(req: Request, res: Response) {
       totalVolume24h: totalVolume24h.toFixed(2),
       tradeCount24h
     })
-  } catch (err: any) {
-    logger.error('getPerpMarketStats error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'perp market stats', err)
   }
 }
 
@@ -282,7 +288,8 @@ export async function getCandles(req: Request, res: Response) {
       .order('snapshotted_at', { ascending: true })
       .limit(1000)
 
-    if (error || !rows || rows.length === 0) {
+    if (error) return fail(res, 'candles query', error)
+    if (!rows || rows.length === 0) {
       return res.json({ candles: [] })
     }
 
@@ -305,8 +312,7 @@ export async function getCandles(req: Request, res: Response) {
     }).slice(-limit)
 
     return res.json({ candles })
-  } catch (err: any) {
-    logger.error('getCandles error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err) {
+    return fail(res, 'candles query', err)
   }
 }

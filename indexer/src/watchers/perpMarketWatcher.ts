@@ -1,6 +1,7 @@
 import { publicClient } from '../utils/chainClient'
 import { supabase } from '../db/client'
 import { logger } from '../utils/logger'
+import { assertWritten, errorMessage } from '../utils/errors'
 
 const PerpMarketABI = [
   {
@@ -77,70 +78,86 @@ export function startPerpMarketWatcher(marketAddress: string) {
     onLogs: async (logs) => {
       for (const log of logs) {
         const { eventName, args, blockNumber, transactionHash } = log as any
-        const block = await publicClient.getBlock({ blockNumber })
+        try {
+          const block = await publicClient.getBlock({ blockNumber })
 
-        if (eventName === 'PositionOpened') {
-          await supabase.from('perp_positions').insert({
-            market_address: marketAddress.toLowerCase(),
-            position_id: args.positionId.toString(),
-            trader_address: args.trader.toLowerCase(),
-            is_long: args.isLong,
-            collateral: args.collateral.toString(),
-            leverage: Number(args.leverage),
-            virtual_size: args.virtualSize.toString(),
-            entry_mark_price: args.markPrice.toString(),
-            opened_at: new Date(Number(block.timestamp) * 1000).toISOString(),
-            open_tx_hash: transactionHash,
-            is_open: true
-          })
-          logger.info('Perp PositionOpened indexed', { marketAddress, positionId: args.positionId.toString() })
-        } else if (eventName === 'PositionClosed') {
-          await supabase
-            .from('perp_positions')
-            .update({
-              is_open: false,
-              closed_at: new Date(Number(block.timestamp) * 1000).toISOString(),
-              close_tx_hash: transactionHash,
-              realized_pnl: args.pnl.toString()
+          if (eventName === 'PositionOpened') {
+            const { error } = await supabase.from('perp_positions').insert({
+              market_address: marketAddress.toLowerCase(),
+              position_id: args.positionId.toString(),
+              trader_address: args.trader.toLowerCase(),
+              is_long: args.isLong,
+              collateral: args.collateral.toString(),
+              leverage: Number(args.leverage),
+              virtual_size: args.virtualSize.toString(),
+              entry_mark_price: args.markPrice.toString(),
+              opened_at: new Date(Number(block.timestamp) * 1000).toISOString(),
+              open_tx_hash: transactionHash,
+              is_open: true
             })
-            .match({ market_address: marketAddress.toLowerCase(), position_id: args.positionId.toString() })
-          logger.info('Perp PositionClosed indexed', { marketAddress, positionId: args.positionId.toString() })
-        } else if (eventName === 'PositionLiquidated') {
-          await supabase
-            .from('perp_positions')
-            .update({
-              is_open: false,
-              was_liquidated: true,
-              closed_at: new Date(Number(block.timestamp) * 1000).toISOString(),
-              close_tx_hash: transactionHash
+            assertWritten('perp_positions insert', error, { marketAddress, txHash: transactionHash })
+            logger.info('Perp PositionOpened indexed', { marketAddress, positionId: args.positionId.toString() })
+          } else if (eventName === 'PositionClosed') {
+            const { error } = await supabase
+              .from('perp_positions')
+              .update({
+                is_open: false,
+                closed_at: new Date(Number(block.timestamp) * 1000).toISOString(),
+                close_tx_hash: transactionHash,
+                realized_pnl: args.pnl.toString()
+              })
+              .match({ market_address: marketAddress.toLowerCase(), position_id: args.positionId.toString() })
+            assertWritten('perp_positions close update', error, { marketAddress, txHash: transactionHash })
+            logger.info('Perp PositionClosed indexed', { marketAddress, positionId: args.positionId.toString() })
+          } else if (eventName === 'PositionLiquidated') {
+            const { error } = await supabase
+              .from('perp_positions')
+              .update({
+                is_open: false,
+                was_liquidated: true,
+                closed_at: new Date(Number(block.timestamp) * 1000).toISOString(),
+                close_tx_hash: transactionHash
+              })
+              .match({ market_address: marketAddress.toLowerCase(), position_id: args.positionId.toString() })
+            assertWritten('perp_positions liquidation update', error, { marketAddress, txHash: transactionHash })
+            logger.info('Perp PositionLiquidated indexed', { marketAddress, positionId: args.positionId.toString() })
+          } else if (eventName === 'FundingSettled') {
+            const { error } = await supabase.from('funding_history').insert({
+              market_address: marketAddress.toLowerCase(),
+              funding_rate: args.fundingRate.toString(),
+              cumulative_index: args.newCumulativeIndex.toString(),
+              mark_price: '0',
+              oracle_price: '0',
+              settled_at: new Date(Number(args.timestamp) * 1000).toISOString(),
+              block_number: Number(blockNumber),
+              tx_hash: transactionHash
             })
-            .match({ market_address: marketAddress.toLowerCase(), position_id: args.positionId.toString() })
-          logger.info('Perp PositionLiquidated indexed', { marketAddress, positionId: args.positionId.toString() })
-        } else if (eventName === 'FundingSettled') {
-          await supabase.from('funding_history').insert({
-            market_address: marketAddress.toLowerCase(),
-            funding_rate: args.fundingRate.toString(),
-            cumulative_index: args.newCumulativeIndex.toString(),
-            mark_price: '0',
-            oracle_price: '0',
-            settled_at: new Date(Number(args.timestamp) * 1000).toISOString(),
-            block_number: Number(blockNumber),
-            tx_hash: transactionHash
+            assertWritten('funding_history insert', error, { marketAddress, txHash: transactionHash })
+            logger.info('Perp FundingSettled indexed', { marketAddress, rate: args.fundingRate.toString() })
+          } else if (eventName === 'FeeCollected') {
+            const { error } = await supabase.from('fee_events').insert({
+              market_address: marketAddress.toLowerCase(),
+              trader_address: args.trader.toLowerCase(),
+              fee_amount: args.feeAmount.toString(),
+              insurance_share: args.insuranceShare.toString(),
+              first_loss_share: args.firstLossShare.toString(),
+              treasury_share: args.treasuryShare.toString(),
+              block_number: Number(blockNumber),
+              tx_hash: transactionHash,
+              occurred_at: new Date(Number(block.timestamp) * 1000).toISOString()
+            })
+            assertWritten('fee_events insert', error, { marketAddress, txHash: transactionHash })
+            logger.info('FeeCollected indexed', { marketAddress, feeAmount: args.feeAmount.toString() })
+          }
+        } catch (err) {
+          // Nothing awaits this callback, so an escaping rejection would be
+          // reported nowhere and would abandon the rest of the batch.
+          logger.error('Failed to index perp market event', {
+            marketAddress,
+            eventName,
+            txHash: transactionHash,
+            err: errorMessage(err)
           })
-          logger.info('Perp FundingSettled indexed', { marketAddress, rate: args.fundingRate.toString() })
-        } else if (eventName === 'FeeCollected') {
-          await supabase.from('fee_events').insert({
-            market_address: marketAddress.toLowerCase(),
-            trader_address: args.trader.toLowerCase(),
-            fee_amount: args.feeAmount.toString(),
-            insurance_share: args.insuranceShare.toString(),
-            first_loss_share: args.firstLossShare.toString(),
-            treasury_share: args.treasuryShare.toString(),
-            block_number: Number(blockNumber),
-            tx_hash: transactionHash,
-            occurred_at: new Date(Number(block.timestamp) * 1000).toISOString()
-          })
-          logger.info('FeeCollected indexed', { marketAddress, feeAmount: args.feeAmount.toString() })
         }
       }
     },

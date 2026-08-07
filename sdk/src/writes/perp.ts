@@ -40,8 +40,10 @@ export async function approvePerpCollateral(
       args: [account, marketAddress],
     })) as bigint
     if (allowance >= amount) return null
-  } catch {
-    // Fall through and approve.
+  } catch (err) {
+    // Approving anyway is harmless, but an unreadable allowance is usually the
+    // first symptom of a bad token address or a failing RPC.
+    console.warn(`Could not read the allowance of ${tokenAddress}; requesting approval anyway.`, err)
   }
 
   const { request } = await publicClient.simulateContract({

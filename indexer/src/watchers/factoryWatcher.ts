@@ -3,6 +3,7 @@ import { publicClient } from '../utils/chainClient'
 import { supabase } from '../db/client'
 import { logger } from '../utils/logger'
 import { withRetry } from '../utils/retry'
+import { assertWritten, errorMessage } from '../utils/errors'
 import { getRegionName } from '../utils/regionNames'
 import { startMarketWatcher } from './marketWatcher'
 import FactoryABI from '../abis/BreezeMarketFactory.json'
@@ -21,6 +22,11 @@ export async function handleMarketCreated(log: Log) {
   let thresholdHigh = args.thresholdHigh
 
   if (thresholdLow === undefined || thresholdLow === null) {
+    // Defaulting the thresholds to zero on a failed read used to write a market
+    // whose payoff terms were wrong in the database while the row itself looked
+    // complete — the worst possible outcome, because nothing downstream could
+    // tell it apart from a real market. Fail instead: the caller logs it and
+    // the backfill will pick the market up on a later pass.
     try {
       const [wv, tl, th] = await Promise.all([
         publicClient.readContract({ address: args.market, abi: MarketABI as any, functionName: 'weatherVariable' }),
@@ -30,11 +36,10 @@ export async function handleMarketCreated(log: Log) {
       weatherVar = wv
       thresholdLow = tl
       thresholdHigh = th
-    } catch (e: any) {
-      logger.error('Failed to read contract values for market', { market: args.market, err: e.message })
-      weatherVar = 0
-      thresholdLow = 0n
-      thresholdHigh = 0n
+    } catch (err) {
+      throw new Error(
+        `Failed to read market terms from ${args.market}: ${errorMessage(err)}`
+      )
     }
   }
 
@@ -58,10 +63,7 @@ export async function handleMarketCreated(log: Log) {
     { onConflict: 'contract_address' }
   )
 
-  if (error) {
-    logger.error('Failed to insert market', { error, market: args.market })
-    return
-  }
+  assertWritten('markets upsert', error, { market: args.market })
 
   logger.info('Market indexed', { market: args.market, region: getRegionName(args.regionId) })
 
@@ -75,7 +77,16 @@ export function startFactoryWatcher() {
     address: FACTORY_ADDRESS,
     abi: FactoryABI,
     eventName: 'MarketCreated',
-    onLogs: (logs) => logs.forEach(handleMarketCreated),
+    onLogs: (logs) => {
+      for (const log of logs) {
+        handleMarketCreated(log).catch((err) => {
+          logger.error('Failed to index MarketCreated', {
+            txHash: (log as any).transactionHash,
+            err: errorMessage(err)
+          })
+        })
+      }
+    },
     onError: (err) => {
       logger.error('Factory watcher error, restarting in 5s...', { err: err.message })
       unwatch()

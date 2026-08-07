@@ -37,6 +37,11 @@ export interface TokenMeta {
  * Decimals are a property of whichever token a market was actually deployed
  * against, and different markets on this deployment use different tokens. The
  * only correct source is the token itself.
+ *
+ * A failed `decimals()` read therefore has to propagate. Defaulting it to 18 on
+ * an RPC hiccup reintroduces exactly the bug above for any 6-decimal token, and
+ * silently: the caller cannot tell a real 18 from a guessed one. `symbol()` is
+ * cosmetic, so an unreadable symbol still falls back to a placeholder.
  */
 export async function getTokenMeta(
   publicClient: PublicClient,
@@ -45,9 +50,7 @@ export async function getTokenMeta(
   const address = token as `0x${string}`
 
   const [decimals, symbol] = await Promise.all([
-    publicClient
-      .readContract({ address, abi: ERC20_META_ABI, functionName: 'decimals' })
-      .catch(() => 18),
+    publicClient.readContract({ address, abi: ERC20_META_ABI, functionName: 'decimals' }),
     publicClient
       .readContract({ address, abi: ERC20_META_ABI, functionName: 'symbol' })
       .catch(() => 'TOKEN'),
@@ -56,22 +59,26 @@ export async function getTokenMeta(
   return { address: token, decimals: Number(decimals), symbol: String(symbol) }
 }
 
+/**
+ * Both of these used to answer a failed read with `0n`.
+ *
+ * That is not a safe default for either: a zero allowance sends the user through
+ * a redundant approval, and a zero balance tells them they hold nothing and
+ * disables the form they were about to use. Callers that want to render a
+ * placeholder can do so from the rejection, knowing it is a placeholder.
+ */
 export async function getAllowance(
   publicClient: PublicClient,
   token: string,
   owner: string,
   spender: string
 ): Promise<bigint> {
-  try {
-    return (await publicClient.readContract({
-      address: token as `0x${string}`,
-      abi: ERC20_META_ABI,
-      functionName: 'allowance',
-      args: [owner as `0x${string}`, spender as `0x${string}`],
-    })) as bigint
-  } catch {
-    return 0n
-  }
+  return (await publicClient.readContract({
+    address: token as `0x${string}`,
+    abi: ERC20_META_ABI,
+    functionName: 'allowance',
+    args: [owner as `0x${string}`, spender as `0x${string}`],
+  })) as bigint
 }
 
 export async function getTokenBalance(
@@ -79,16 +86,12 @@ export async function getTokenBalance(
   token: string,
   owner: string
 ): Promise<bigint> {
-  try {
-    return (await publicClient.readContract({
-      address: token as `0x${string}`,
-      abi: ERC20_META_ABI,
-      functionName: 'balanceOf',
-      args: [owner as `0x${string}`],
-    })) as bigint
-  } catch {
-    return 0n
-  }
+  return (await publicClient.readContract({
+    address: token as `0x${string}`,
+    abi: ERC20_META_ABI,
+    functionName: 'balanceOf',
+    args: [owner as `0x${string}`],
+  })) as bigint
 }
 
 /** Convert a human-entered amount to raw units for a token of `decimals`. */
