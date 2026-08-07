@@ -17,6 +17,8 @@ import { useBreezeNetwork } from '../lib/hooks/useNetwork'
 import { CHART, axisProps, tooltipProps } from '../lib/chartTheme'
 import { ChartCard, LegendKey } from './charts/ChartCard'
 import { DemoBadge } from './DemoBadge'
+import { InlineError } from './LoadError'
+import { errorMessage } from '../lib/errorMessage'
 import { demoFunding } from '../lib/demoData'
 
 /**
@@ -40,6 +42,7 @@ export function FundingRateSparkline({
   const [history, setHistory] = useState<FundingHistoryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [isDemo, setIsDemo] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -48,6 +51,7 @@ export function FundingRateSparkline({
       try {
         const data = await getFundingHistory(indexerUrl, marketAddress, chainId)
         if (cancelled) return
+        setError(null)
         if (data && data.length > 0) {
           setHistory(data)
           setIsDemo(false)
@@ -55,10 +59,15 @@ export function FundingRateSparkline({
           setHistory(demoFunding(marketAddress) as unknown as FundingHistoryItem[])
           setIsDemo(true)
         }
-      } catch {
+      } catch (err) {
+        // Sample settlements are fine for a market that has not funded yet, but
+        // they were also drawn for a failed request — and the summary below the
+        // chart then counts invented periods as if they had settled.
+        console.error(`Failed to load funding history for ${marketAddress}`, err)
         if (cancelled) return
         setHistory(demoFunding(marketAddress) as unknown as FundingHistoryItem[])
         setIsDemo(true)
+        setError(errorMessage(err))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -113,7 +122,16 @@ export function FundingRateSparkline({
       loading={loading}
       empty={!loading && data.length === 0}
       emptyLabel="No funding periods have settled for this market yet."
-      actions={isDemo ? <DemoBadge /> : undefined}
+      actions={
+        error ? (
+          <>
+            <InlineError message="Live funding unavailable" />
+            <DemoBadge />
+          </>
+        ) : isDemo ? (
+          <DemoBadge />
+        ) : undefined
+      }
       footer={
         data.length > 0 ? (
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">

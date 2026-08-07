@@ -1,4 +1,5 @@
 import type { WeatherReading } from '../types'
+import { fetchJson } from '../utils/http'
 
 export async function getWeatherReadings(
   indexerUrl: string,
@@ -6,9 +7,10 @@ export async function getWeatherReadings(
   days = 30,
   chainId: number = 114
 ): Promise<WeatherReading[]> {
-  const res = await fetch(`${indexerUrl}/api/weather/${regionId}?days=${days}&chainId=${chainId}`)
-  if (!res.ok) throw new Error(`Failed to fetch weather data for region: ${regionId}`)
-  const data = await res.json()
+  const data = await fetchJson<{ readings?: any[] }>(
+    `${indexerUrl}/api/weather/${regionId}?days=${days}&chainId=${chainId}`,
+    `weather readings for ${regionId}`
+  )
   return (data.readings || []).map((r: any) => ({
     regionId,
     regionName: r.region_name || null,
@@ -19,8 +21,9 @@ export async function getWeatherReadings(
 }
 
 export async function getRegions(indexerUrl: string, chainId: number = 114) {
-  const res = await fetch(`${indexerUrl}/api/weather/regions?chainId=${chainId}`)
-  if (!res.ok) throw new Error('Failed to fetch regions')
-  const data = await res.json()
+  const data = await fetchJson<{ regions?: any[] }>(
+    `${indexerUrl}/api/weather/regions?chainId=${chainId}`,
+    'regions'
+  )
   return data.regions || []
 }

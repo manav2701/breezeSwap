@@ -22,7 +22,9 @@ const PAYOFFS = ['BINARY', 'LINEAR', 'CAPPED'] as const
  * when the indexer is down.
  *
  * Returns `null` when there is no contract at the address, so a genuine typo
- * still reports not-found.
+ * still reports not-found. An RPC that cannot answer at all throws, because
+ * "there is no market here" and "nobody could tell me" send the user to very
+ * different places.
  */
 export async function getMarketOnChain(
   publicClient: PublicClient,
@@ -31,9 +33,11 @@ export async function getMarketOnChain(
 ): Promise<Market | null> {
   const marketAddress = address as `0x${string}`
 
-  const code = await publicClient.getCode({ address: marketAddress }).catch(() => undefined)
+  const code = await publicClient.getCode({ address: marketAddress })
   if (!code || code === '0x') return null
 
+  // Optional fields only: a market deployed from an older factory may not expose
+  // all of them, and the detail page renders fine without them.
   const read = async <T>(functionName: string): Promise<T | null> => {
     try {
       return (await publicClient.readContract({
@@ -41,10 +45,21 @@ export async function getMarketOnChain(
         abi: MarketABI,
         functionName,
       })) as T
-    } catch {
+    } catch (err) {
+      console.warn(`Could not read ${functionName}() from market ${address}`, err)
       return null
     }
   }
+
+  // Required: without these there is no market to describe, and substituting
+  // defaults produced a plausible-looking market with a zero threshold and no
+  // expiry out of what was really a failed RPC call.
+  const required = async <T>(functionName: string): Promise<T> =>
+    (await publicClient.readContract({
+      address: marketAddress,
+      abi: MarketABI,
+      functionName,
+    })) as T
 
   const [
     regionId,
@@ -59,20 +74,18 @@ export async function getMarketOnChain(
     longPayoutPerToken,
     shortPayoutPerToken,
   ] = await Promise.all([
-    read<`0x${string}`>('regionId'),
-    read<number>('weatherVariable'),
-    read<number>('payoffType'),
-    read<bigint>('thresholdLow'),
+    required<`0x${string}`>('regionId'),
+    required<number>('weatherVariable'),
+    required<number>('payoffType'),
+    required<bigint>('thresholdLow'),
     read<bigint>('thresholdHigh'),
-    read<bigint>('expiryTimestamp'),
-    read<`0x${string}`>('collateralToken'),
-    read<number>('status'),
+    required<bigint>('expiryTimestamp'),
+    required<`0x${string}`>('collateralToken'),
+    required<number>('status'),
     read<bigint>('finalOracleValue'),
     read<bigint>('longPayoutPerToken'),
     read<bigint>('shortPayoutPerToken'),
   ])
-
-  if (collateralToken === null) return null
 
   const scale = (v: bigint | null): number | null =>
     v === null ? null : Number(v) / Number(ORACLE_SCALAR)

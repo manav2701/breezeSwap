@@ -27,6 +27,8 @@ import { useBreezeNetwork } from '../lib/hooks/useNetwork'
 import { MarketCard } from '../components/MarketCard'
 import { TxLink } from '../components/TxLink'
 import { DemoBadge } from '../components/DemoBadge'
+import { InlineError, LoadError } from '../components/LoadError'
+import { errorMessage } from '../lib/errorMessage'
 import { Reveal } from '../components/motion/Reveal'
 import { AnimatedNumber } from '../components/motion/AnimatedNumber'
 import { OracleGlobe } from '../components/hero/OracleGlobe'
@@ -76,6 +78,7 @@ export default function Home() {
   const [trades, setTrades] = useState<TradeHistoryEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [tradesAreDemo, setTradesAreDemo] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -94,6 +97,7 @@ export default function Home() {
 
         setClassicMarkets(cMarkets ?? [])
         setPerpMarkets(pMarkets ?? [])
+        setLoadError(null)
 
         if (history && history.length > 0) {
           setTrades(history)
@@ -103,10 +107,15 @@ export default function Home() {
           setTradesAreDemo(true)
         }
       } catch (err) {
+        // The market lists and the open-interest tile are left as they were, but
+        // the failure has to be named: a landing page that reports "0 open
+        // markets" and a sample trade feed on a 15-second timer looked like a
+        // protocol with no activity rather than an unreachable indexer.
+        console.error('Failed to load landing page data', err)
         if (cancelled) return
-        console.warn('Landing data unavailable, showing sample feed:', err)
         setTrades(demoTrades('protocol-feed', 6) as unknown as TradeHistoryEntry[])
         setTradesAreDemo(true)
+        setLoadError(errorMessage(err))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -296,7 +305,8 @@ export default function Home() {
                 Positions opened, closed and liquidated across the protocol.
               </p>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {loadError && <InlineError message="Live feed unavailable" />}
               {tradesAreDemo ? (
                 <DemoBadge />
               ) : (
@@ -459,6 +469,8 @@ export default function Home() {
               <div key={i} className="panel skeleton h-56" />
             ))}
           </div>
+        ) : loadError && classicMarkets.length === 0 ? (
+          <LoadError message={loadError} what="markets" />
         ) : classicMarkets.length === 0 ? (
           <div className="panel p-12 text-center space-y-3">
             <p className="text-sm text-ink-muted">No classic markets deployed on this chain yet.</p>

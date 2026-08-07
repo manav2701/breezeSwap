@@ -6,6 +6,8 @@ import { useBreezeSDK } from '../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../lib/hooks/useNetwork'
 import { CHART, formatMoney } from '../lib/chartTheme'
 import { DemoBadge } from './DemoBadge'
+import { InlineError } from './LoadError'
+import { errorMessage } from '../lib/errorMessage'
 import { demoPerpStats } from '../lib/demoData'
 
 interface PerpStatsHeaderProps {
@@ -26,15 +28,23 @@ export function PerpStatsHeader({ marketAddress, basePrice = 25 }: PerpStatsHead
   const { chainId } = useBreezeNetwork()
   const [stats, setStats] = useState<PerpMarketStatsData | null>(null)
   const [isDemo, setIsDemo] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [countdown, setCountdown] = useState('—')
 
   useEffect(() => {
     let cancelled = false
 
+    /**
+     * Sample data stands in for an unindexed market, which is legitimate — but it
+     * used to stand in for a *failed* read too, on a 10-second timer, so a dead
+     * indexer showed plausible mark prices and open interest behind nothing more
+     * than a "Sample data" chip. The failure is now named next to the chip.
+     */
     async function fetchStats() {
       try {
         const data = await getPerpMarketStats(indexerUrl, marketAddress, chainId)
         if (cancelled) return
+        setError(null)
         if (data) {
           setStats(data)
           setIsDemo(false)
@@ -42,10 +52,12 @@ export function PerpStatsHeader({ marketAddress, basePrice = 25 }: PerpStatsHead
           setStats(demoPerpStats(marketAddress, basePrice) as unknown as PerpMarketStatsData)
           setIsDemo(true)
         }
-      } catch {
+      } catch (err) {
+        console.error(`Failed to load stats for perp market ${marketAddress}`, err)
         if (cancelled) return
         setStats(demoPerpStats(marketAddress, basePrice) as unknown as PerpMarketStatsData)
         setIsDemo(true)
+        setError(errorMessage(err))
       }
     }
 
@@ -90,9 +102,12 @@ export function PerpStatsHeader({ marketAddress, basePrice = 25 }: PerpStatsHead
 
   return (
     <section className="panel p-5 sm:p-6 space-y-6">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="eyebrow">Market stats</h2>
-        {isDemo && <DemoBadge />}
+        <span className="flex flex-wrap items-center gap-3">
+          {error && <InlineError message={`Live stats unavailable: ${error}`} />}
+          {isDemo && <DemoBadge />}
+        </span>
       </div>
 
       <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-5">

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
-import { logger } from '../../utils/logger'
+import { fail } from '../respond'
 
 export async function getAuditLog(req: Request, res: Response) {
   try {
@@ -11,14 +11,13 @@ export async function getAuditLog(req: Request, res: Response) {
       .order('occurred_at', { ascending: false })
       .limit(limit)
 
-    if (error) {
-      logger.warn(`Audit log query returned error: ${error.message}`)
-      return res.json({ events: [] })
-    }
+    // An audit log that answers a query failure with "no events" is worse than
+    // no audit log at all, so the failure is reported rather than logged as a
+    // warning and hidden behind an empty list.
+    if (error) return fail(res, 'audit log query', error)
 
     return res.json({ events: data || [] })
-  } catch (err: any) {
-    logger.error('Audit log endpoint error:', err)
-    return res.status(500).json({ error: err.message || 'Internal server error' })
+  } catch (err) {
+    return fail(res, 'audit log query', err)
   }
 }

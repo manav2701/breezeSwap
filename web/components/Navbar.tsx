@@ -43,9 +43,19 @@ export function Navbar() {
         return
       }
       const acAddr = getContractAddresses(chainId).accessControl
-      if (acAddr && acAddr !== '0x0000000000000000000000000000000000000000') {
+      if (!acAddr || acAddr === '0x0000000000000000000000000000000000000000') {
+        setIsAdmin(false)
+        return
+      }
+
+      try {
         setIsAdmin(await checkRole(publicClient as any, acAddr, 'ADMIN_ROLE', address))
-      } else {
+      } catch (err) {
+        // Hiding the link is the safe default, but the failure belongs in the
+        // console: an admin whose Admin tab silently vanished has no other clue
+        // that the RPC, not their wallet, is the problem. The /admin page still
+        // gates on its own check and reports the failure there.
+        console.error('Could not verify ADMIN_ROLE for the nav', err)
         setIsAdmin(false)
       }
     }

@@ -47,7 +47,7 @@ export function PositionCard({
       )
       setTxHash(hash)
       onRedeemed?.()
-    } catch (err: any) {
+    } catch (err) {
       setError(explainRevert(err))
     } finally {
       setLoading(false)

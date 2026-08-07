@@ -1,36 +1,36 @@
 import { TradeHistoryEntry } from '../types'
+import { fetchJson } from '../utils/http'
 
+/**
+ * Protocol-level aggregates.
+ *
+ * These used to answer every failure with `'0'` or `[]`, which put a confident
+ * "0 mUSDT collected" on the protocol page whenever the indexer was unreachable.
+ * A zero fee total and an unknown fee total are different claims and only one of
+ * them is safe to render.
+ */
 export async function getTotalFeesCollected(indexerUrl: string, chainId: number = 114): Promise<string> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/protocol/fees/total?chainId=${chainId}`)
-    if (!res.ok) return '0'
-    const data = await res.json()
-    return data.totalFeesWei || '0'
-  } catch {
-    return '0'
-  }
+  const data = await fetchJson<{ totalFeesWei?: string }>(
+    `${indexerUrl}/api/protocol/fees/total?chainId=${chainId}`,
+    'total fees'
+  )
+  return data.totalFeesWei || '0'
 }
 
 export async function getInsuranceFundBalance(indexerUrl: string, chainId: number = 114): Promise<string> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/protocol/insurance-fund?chainId=${chainId}`)
-    if (!res.ok) return '0'
-    const data = await res.json()
-    return data.balanceWei || '0'
-  } catch {
-    return '0'
-  }
+  const data = await fetchJson<{ balanceWei?: string }>(
+    `${indexerUrl}/api/protocol/insurance-fund?chainId=${chainId}`,
+    'insurance fund balance'
+  )
+  return data.balanceWei || '0'
 }
 
 export async function getProtocolTreasuryBalance(indexerUrl: string, chainId: number = 114): Promise<string> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/protocol/treasury?chainId=${chainId}`)
-    if (!res.ok) return '0'
-    const data = await res.json()
-    return data.balanceWei || '0'
-  } catch {
-    return '0'
-  }
+  const data = await fetchJson<{ balanceWei?: string }>(
+    `${indexerUrl}/api/protocol/treasury?chainId=${chainId}`,
+    'treasury balance'
+  )
+  return data.balanceWei || '0'
 }
 
 export async function getGlobalTradeHistory(
@@ -38,12 +38,9 @@ export async function getGlobalTradeHistory(
   chainId: number = 114,
   limit = 50
 ): Promise<TradeHistoryEntry[]> {
-  try {
-    const res = await fetch(`${indexerUrl}/api/protocol/trade-history?limit=${limit}&chainId=${chainId}`)
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.trades || []
-  } catch {
-    return []
-  }
+  const data = await fetchJson<{ trades?: TradeHistoryEntry[] }>(
+    `${indexerUrl}/api/protocol/trade-history?limit=${limit}&chainId=${chainId}`,
+    'global trade history'
+  )
+  return data.trades || []
 }

@@ -5,7 +5,9 @@ import Link from 'next/link'
 import { PlusCircle, RefreshCw, Search } from 'lucide-react'
 import { getMarkets, type Market } from '@breezeswap/sdk'
 import { MarketCard } from '../../components/MarketCard'
+import { LoadError } from '../../components/LoadError'
 import { Reveal } from '../../components/motion/Reveal'
+import { errorMessage } from '../../lib/errorMessage'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../../lib/hooks/useNetwork'
 
@@ -31,6 +33,7 @@ export default function MarketsPage() {
 
   const [markets, setMarkets] = useState<Market[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<(typeof STATUSES)[number]>('ALL')
   const [region, setRegion] = useState<string>('ALL')
   const [variable, setVariable] = useState<(typeof VARIABLES)[number]>('ALL')
@@ -38,10 +41,16 @@ export default function MarketsPage() {
 
   async function loadMarkets() {
     setLoading(true)
+    setError(null)
     try {
       setMarkets((await getMarkets(indexerUrl, chainId)) ?? [])
-    } catch {
+    } catch (err) {
+      // Clearing the list on failure rendered "No classic markets deployed on
+      // this chain yet" — a claim about the chain — whenever the indexer was
+      // simply unreachable.
+      console.error('Failed to load markets', err)
       setMarkets([])
+      setError(errorMessage(err))
     } finally {
       setLoading(false)
     }
@@ -163,6 +172,8 @@ export default function MarketsPage() {
             <div key={i} className="panel skeleton h-56" />
           ))}
         </div>
+      ) : error ? (
+        <LoadError message={error} onRetry={loadMarkets} what="markets" />
       ) : filtered.length === 0 ? (
         <div className="panel p-14 text-center space-y-3">
           <p className="text-sm text-ink-muted">

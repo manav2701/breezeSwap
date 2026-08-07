@@ -13,6 +13,7 @@ import {
   formatExpiry,
   timeUntilExpiry,
   getMarketOnChain,
+  isNotFound,
   toTokenUnits,
   type Market,
   type Position,
@@ -22,6 +23,8 @@ import { PayoffChart } from '../../../components/PayoffChart'
 import { WeatherChart } from '../../../components/WeatherChart'
 import { StatusBadge } from '../../../components/StatusBadge'
 import { TxLink } from '../../../components/TxLink'
+import { InlineError, LoadError } from '../../../components/LoadError'
+import { errorMessage } from '../../../lib/errorMessage'
 import { useBreezeSDK } from '../../../lib/hooks/useBreezeSDK'
 import { useCollateralToken } from '../../../lib/hooks/useCollateralToken'
 import { explainRevert } from '../../../lib/revertReason'
@@ -94,6 +97,9 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
   const [readingsAreDemo, setReadingsAreDemo] = useState(false)
   const [loading, setLoading] = useState(true)
   const [loadedFromChain, setLoadedFromChain] = useState(false)
+  const [marketError, setMarketError] = useState<string | null>(null)
+  const [positionsError, setPositionsError] = useState<string | null>(null)
+  const [readingsError, setReadingsError] = useState<string | null>(null)
 
   const [side, setSide] = useState<'LONG' | 'SHORT'>('LONG')
   const [collateralInput, setCollateralInput] = useState('10')
@@ -111,16 +117,27 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
     symbol,
     balance,
     isReady: tokenReady,
+    error: tokenError,
   } = useCollateralToken(market?.collateralToken)
 
   const loadData = useCallback(async () => {
     setLoading(true)
+    setMarketError(null)
+    setPositionsError(null)
+    setReadingsError(null)
+
     let m: Market | null = null
+    // Kept separate from "the indexer has no such market": only the latter should
+    // ever render the not-found page.
+    let readFailure: string | null = null
 
     try {
       m = ensureMarketMapped(await getMarket(indexerUrl, marketAddress))
-    } catch {
-      m = null
+    } catch (err) {
+      if (!isNotFound(err)) {
+        console.error(`Failed to load market ${marketAddress} from the indexer`, err)
+        readFailure = errorMessage(err)
+      }
     }
 
     /*
@@ -138,13 +155,19 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
         if (onChain) {
           m = onChain
           setLoadedFromChain(true)
+          readFailure = null
         }
-      } catch {
-        /* Genuinely absent; the not-found state below is correct. */
+      } catch (err) {
+        // `getMarketOnChain` returns null for an address with no contract, so
+        // reaching here means the RPC itself failed. Reporting that as "market
+        // not found" sent people looking for a market that does exist.
+        console.error(`Failed to read market ${marketAddress} from the chain`, err)
+        readFailure = errorMessage(err)
       }
     }
 
     setMarket(m)
+    if (!m && readFailure) setMarketError(readFailure)
 
     if (m) {
       try {
@@ -162,7 +185,11 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
           )
           setReadingsAreDemo(true)
         }
-      } catch {
+      } catch (err) {
+        // Sample readings are fine for a region with no oracle history, but they
+        // were also drawn for a failed fetch — an invented rainfall series next
+        // to a real threshold, with only the "Sample data" chip to distinguish it.
+        console.error(`Failed to load weather readings for ${m.regionId}`, err)
         setReadings(
           demoWeatherReadings(
             marketAddress,
@@ -171,14 +198,19 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
           ) as unknown as WeatherReading[]
         )
         setReadingsAreDemo(true)
+        setReadingsError(errorMessage(err))
       }
     }
 
     try {
       const pos = await getMarketPositions(indexerUrl, marketAddress)
       setPositions((pos ?? []).map(ensurePositionMapped))
-    } catch {
+    } catch (err) {
+      // The pool size and holder list are summed from this, so a silent [] made
+      // a funded market look empty.
+      console.error(`Failed to load positions for market ${marketAddress}`, err)
       setPositions([])
+      setPositionsError(errorMessage(err))
     } finally {
       setLoading(false)
     }
@@ -215,8 +247,11 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
           functionName: 'vault',
         })) as `0x${string}`
         if (v && v !== '0x0000000000000000000000000000000000000000') vaultAddress = v
-      } catch {
-        /* Fall back to the market address. */
+      } catch (err) {
+        // Older markets hold collateral themselves and have no vault(), so this
+        // fallback is legitimate — but if the read failed for another reason the
+        // approval is about to target the wrong spender, which is worth a line.
+        console.warn(`Could not read vault() from ${marketHex}; approving the market itself.`, err)
       }
 
       const approveTxHash = await approveCollateral(
@@ -238,7 +273,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
 
       setMintTxHash(hash)
       loadData()
-    } catch (err: any) {
+    } catch (err) {
       setMintError(explainRevert(err))
     } finally {
       setMintLoading(false)
@@ -256,7 +291,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       )
       setSettleTxHash(hash)
       loadData()
-    } catch (err: any) {
+    } catch (err) {
       setMintError(explainRevert(err))
     } finally {
       setSettleLoading(false)
@@ -268,6 +303,21 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       <div className="py-24 flex flex-col items-center gap-4">
         <div className="w-8 h-8 rounded-full border-2 border-[color:var(--color-hairline-strong)] border-t-accent animate-spin" />
         <p className="text-sm text-ink-faint">Loading market…</p>
+      </div>
+    )
+  }
+
+  // A failed read is not a missing market, and telling someone their market does
+  // not exist is the most alarming way to report an RPC timeout.
+  if (!market && marketError) {
+    return (
+      <div className="py-24 max-w-xl mx-auto space-y-4">
+        <LoadError message={marketError} onRetry={loadData} what="this market" />
+        <div className="text-center">
+          <Link href="/markets" className="btn btn-ghost btn-sm">
+            Back to markets
+          </Link>
+        </div>
       </div>
     )
   }
@@ -393,6 +443,11 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
             variable={market.weatherVariable}
             isDemo={readingsAreDemo}
           />
+          {readingsError && (
+            <p className="mt-2">
+              <InlineError message={`Oracle history unavailable: ${readingsError}`} />
+            </p>
+          )}
         </div>
       </div>
 
@@ -400,6 +455,11 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       <div className="grid gap-6 lg:grid-cols-12 items-start">
         <section className="lg:col-span-4 panel p-5 sm:p-6 space-y-5 min-w-0">
           <h2 className="display-3 text-ink">Market statistics</h2>
+
+          {/* Both tiles below are summed from the position list. */}
+          {positionsError && (
+            <InlineError message={`Totals unavailable: ${positionsError}`} />
+          )}
 
           <dl className="space-y-3">
             <div className="inset px-4 py-3 flex items-center justify-between gap-3">
@@ -561,6 +621,12 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
                 </div>
               )}
 
+              {tokenError && (
+                <div className="inset p-4 text-xs">
+                  <InlineError message={`Collateral token could not be read: ${tokenError}`} />
+                </div>
+              )}
+
               {mintError && (
                 <div className="inset p-4 flex items-start gap-2 text-xs value-short border-[color:rgba(244,63,94,0.3)]">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-px" aria-hidden />
@@ -586,7 +652,9 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
       <section className="space-y-4">
         <h2 className="display-3 text-ink">Position holders</h2>
 
-        {positions.length === 0 ? (
+        {positionsError ? (
+          <LoadError message={positionsError} onRetry={loadData} what="position holders" />
+        ) : positions.length === 0 ? (
           <div className="panel p-10 text-center text-sm text-ink-faint">
             No positions minted in this market yet.
           </div>

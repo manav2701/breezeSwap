@@ -1,4 +1,5 @@
 import type { Market } from '../types'
+import { fetchJson } from '../utils/http'
 
 export function mapMarketFromDB(item: any): Market {
   if (!item) return item
@@ -40,22 +41,29 @@ export async function getMarkets(
   if (params?.limit) url.searchParams.set('limit', String(params.limit))
   if (params?.offset) url.searchParams.set('offset', String(params.offset))
 
-  const res = await fetch(url.toString())
-  if (!res.ok) throw new Error(`Failed to fetch markets: ${res.statusText}`)
-  const data = await res.json()
+  const data = await fetchJson<{ markets?: any[] }>(url.toString(), 'markets')
   return (data.markets || []).map(mapMarketFromDB)
 }
 
+/**
+ * Reads a market from the indexer.
+ *
+ * Every failure used to be reported as `Market not found`, so an indexer that
+ * was down or erroring was indistinguishable from a mistyped address. The
+ * status now survives on the thrown `IndexerError`.
+ */
 export async function getMarket(indexerUrl: string, address: string, chainId: number = 114): Promise<Market> {
-  const res = await fetch(`${indexerUrl}/api/markets/${address.toLowerCase()}?chainId=${chainId}`)
-  if (!res.ok) throw new Error(`Market not found: ${address}`)
-  const data = await res.json()
+  const data = await fetchJson<any>(
+    `${indexerUrl}/api/markets/${address.toLowerCase()}?chainId=${chainId}`,
+    `market ${address}`
+  )
   return mapMarketFromDB(data)
 }
 
 export async function getMarketPositions(indexerUrl: string, marketAddress: string, chainId: number = 114) {
-  const res = await fetch(`${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions?chainId=${chainId}`)
-  if (!res.ok) throw new Error(`Failed to fetch positions for market: ${marketAddress}`)
-  const data = await res.json()
+  const data = await fetchJson<{ positions?: any[] }>(
+    `${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions?chainId=${chainId}`,
+    `positions for market ${marketAddress}`
+  )
   return data.positions || []
 }

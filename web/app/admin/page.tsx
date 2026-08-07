@@ -19,6 +19,9 @@ import {
 } from '@breezeswap/sdk'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
 import { TxLink } from '../../components/TxLink'
+import { InlineError } from '../../components/LoadError'
+import { errorMessage } from '../../lib/errorMessage'
+import { explainRevert } from '../../lib/revertReason'
 
 interface ProtocolEvent {
   id: string
@@ -41,7 +44,10 @@ export default function AdminPage() {
   const [hasOracleRole, setHasOracleRole] = useState(false)
 
   const [markets, setMarkets] = useState<Market[]>([])
+  const [marketsError, setMarketsError] = useState<string | null>(null)
   const [events, setEvents] = useState<ProtocolEvent[]>([])
+  const [eventsError, setEventsError] = useState<string | null>(null)
+  const [roleCheckError, setRoleCheckError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   const regionEntries = Object.entries(KNOWN_REGIONS)
@@ -61,20 +67,30 @@ export default function AdminPage() {
   const addresses = CONTRACT_ADDRESSES[COSTON2_CHAIN_ID]
 
   const loadDashboardData = useCallback(async () => {
+    setMarketsError(null)
+    setEventsError(null)
+
     try {
       setMarkets((await getMarkets(indexerUrl, COSTON2_CHAIN_ID)) ?? [])
-    } catch {
-      /* Leave the previous list in place. */
+    } catch (err) {
+      // The previous list stays on screen — stale markets are more useful than
+      // none — but an operator about to pause a market needs to know the list
+      // they are looking at may no longer be current.
+      console.error('Failed to load markets for admin dashboard', err)
+      setMarketsError(errorMessage(err))
     }
 
     try {
       const res = await fetch(`${indexerUrl}/api/admin/audit-log`)
-      if (res.ok) {
-        const data = await res.json()
-        setEvents(data.events || [])
-      }
-    } catch {
-      /* The audit feed is informational; a failure should not blank the page. */
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
+      const data = await res.json()
+      setEvents(data.events || [])
+    } catch (err) {
+      // A non-ok response used to be dropped without even a console line, so a
+      // broken audit endpoint read as "no protocol events recorded yet" on the
+      // one page where that distinction matters most.
+      console.error('Failed to load the audit feed', err)
+      setEventsError(errorMessage(err))
     }
   }, [indexerUrl])
 
@@ -86,6 +102,7 @@ export default function AdminPage() {
         return
       }
 
+      setRoleCheckError(null)
       try {
         const [admin, pauser, oracle] = await Promise.all([
           checkRole(publicClient as any, addresses.accessControl, 'ADMIN_ROLE', address),
@@ -98,8 +115,13 @@ export default function AdminPage() {
         setHasOracleRole(oracle)
 
         if (admin || pauser || oracle) loadDashboardData()
-      } catch {
+      } catch (err) {
+        // The gate stays closed — an unverified wallet must not get the controls
+        // — but it now says the check itself failed rather than telling an actual
+        // admin they do not hold ADMIN_ROLE.
+        console.error('Role check failed', err)
         setIsAdmin(false)
+        setRoleCheckError(errorMessage(err))
       } finally {
         setLoading(false)
       }
@@ -124,8 +146,8 @@ export default function AdminPage() {
       )
       setOracleTxHash(hash)
       loadDashboardData()
-    } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Oracle update failed.')
+    } catch (err) {
+      setError(explainRevert(err))
     } finally {
       setOracleLoading(false)
     }
@@ -155,8 +177,8 @@ export default function AdminPage() {
         BigInt(bps)
       )
       setFeeTxHash(hash)
-    } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Fee update failed.')
+    } catch (err) {
+      setError(explainRevert(err))
     } finally {
       setFeeLoading(false)
     }
@@ -171,8 +193,8 @@ export default function AdminPage() {
       await fn(walletClient as any, publicClient as any, addresses.factory as `0x${string}`)
       setFactoryPaused((v) => !v)
       loadDashboardData()
-    } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Factory toggle failed.')
+    } catch (err) {
+      setError(explainRevert(err))
     } finally {
       setActionLoading(null)
     }
@@ -186,8 +208,8 @@ export default function AdminPage() {
       const fn = currentlyPaused ? unpauseMarket : pauseMarket
       await fn(walletClient as any, publicClient as any, marketAddress as `0x${string}`)
       loadDashboardData()
-    } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Market pause toggle failed.')
+    } catch (err) {
+      setError(explainRevert(err))
     } finally {
       setActionLoading(null)
     }
@@ -211,7 +233,9 @@ export default function AdminPage() {
         <div className="space-y-2">
           <h1 className="display-2 text-ink">Admin access restricted</h1>
           <p className="text-sm text-ink-muted break-words">
-            {address ? (
+            {roleCheckError ? (
+              'Your on-chain roles could not be verified, so the controls stay locked.'
+            ) : address ? (
               <>
                 <span className="numeric text-ink-faint">
                   {address.slice(0, 10)}…{address.slice(-8)}
@@ -222,6 +246,7 @@ export default function AdminPage() {
               'Connect a wallet holding ADMIN_ROLE to continue.'
             )}
           </p>
+          {roleCheckError && <InlineError message={roleCheckError} />}
         </div>
         <div className="panel p-5 text-left text-xs text-ink-muted leading-relaxed">
           Access is checked against <span className="text-ink">BreezeAccessControl</span> at read
@@ -360,8 +385,11 @@ export default function AdminPage() {
 
             <div className="space-y-2">
               <h3 className="eyebrow">Markets</h3>
+              {marketsError && <InlineError message={`Market list may be stale: ${marketsError}`} />}
               {markets.length === 0 ? (
-                <p className="text-xs text-ink-faint py-4 text-center">No deployed markets found.</p>
+                <p className="text-xs text-ink-faint py-4 text-center">
+                  {marketsError ? 'The market list could not be loaded.' : 'No deployed markets found.'}
+                </p>
               ) : (
                 markets.map((m) => {
                   const paused = m.status !== 'OPEN'
@@ -458,7 +486,11 @@ export default function AdminPage() {
               <span className="numeric text-xs text-ink-faint">{events.length}</span>
             </div>
 
-            {events.length === 0 ? (
+            {eventsError ? (
+              <p className="py-10 text-center">
+                <InlineError message={eventsError} />
+              </p>
+            ) : events.length === 0 ? (
               <p className="py-10 text-center text-xs text-ink-faint">
                 No protocol events recorded yet.
               </p>

@@ -13,6 +13,9 @@ import {
   type PerpPosition,
 } from '@breezeswap/sdk'
 import { PositionCard } from '../../components/PositionCard'
+import { InlineError, LoadError } from '../../components/LoadError'
+import { errorMessage } from '../../lib/errorMessage'
+import { explainRevert } from '../../lib/revertReason'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
 import { useBreezeNetwork } from '../../lib/hooks/useNetwork'
 import { calculateUnrealizedPnl } from '../../lib/perpPnl'
@@ -31,23 +34,45 @@ export default function PortfolioPage() {
   const [loading, setLoading] = useState(true)
   const [closingId, setClosingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [classicError, setClassicError] = useState<string | null>(null)
+  const [perpError, setPerpError] = useState<string | null>(null)
 
+  /**
+   * Loads both position feeds.
+   *
+   * A failure used to clear both lists, so the page told a trader they had no
+   * positions when it had merely failed to ask. The two feeds are settled
+   * independently: one failing indexer table should not blank the other section,
+   * and each section reports its own failure instead of rendering "none".
+   */
   const loadPositions = useCallback(async () => {
     if (!address) return
     setLoading(true)
-    try {
-      const [classic, perp] = await Promise.all([
-        getUserPositions(indexerUrl, address, chainId),
-        getUserPerpPositions(indexerUrl, address, chainId),
-      ])
-      setPositions(classic ?? [])
-      setPerpPositions(perp ?? [])
-    } catch {
+    setClassicError(null)
+    setPerpError(null)
+
+    const [classic, perp] = await Promise.allSettled([
+      getUserPositions(indexerUrl, address, chainId),
+      getUserPerpPositions(indexerUrl, address, chainId),
+    ])
+
+    if (classic.status === 'fulfilled') {
+      setPositions(classic.value ?? [])
+    } else {
+      console.error('Failed to load classic positions', classic.reason)
       setPositions([])
-      setPerpPositions([])
-    } finally {
-      setLoading(false)
+      setClassicError(errorMessage(classic.reason))
     }
+
+    if (perp.status === 'fulfilled') {
+      setPerpPositions(perp.value ?? [])
+    } else {
+      console.error('Failed to load perp positions', perp.reason)
+      setPerpPositions([])
+      setPerpError(errorMessage(perp.reason))
+    }
+
+    setLoading(false)
   }, [indexerUrl, address, chainId])
 
   useEffect(() => {
@@ -97,8 +122,11 @@ export default function PortfolioPage() {
         BigInt(positionId)
       )
       loadPositions()
-    } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Closing the position failed.')
+    } catch (err) {
+      // `explainRevert` maps the revert selectors this contract actually uses;
+      // reading `err.message` off an unknown value produced "undefined" or, for
+      // a raw revert, an unreadable hex blob.
+      setError(explainRevert(err))
     } finally {
       setClosingId(null)
     }
@@ -166,6 +194,14 @@ export default function PortfolioPage() {
             </dd>
           </div>
         </dl>
+
+        {/* These tiles are summed from the perp feed, so with that feed missing
+            they would read a confident $0.00 portfolio. */}
+        {perpError && (
+          <p className="text-xs">
+            <InlineError message={`Totals exclude perpetual positions: ${perpError}`} />
+          </p>
+        )}
       </section>
 
       {error && (
@@ -189,6 +225,8 @@ export default function PortfolioPage() {
               <div key={i} className="panel skeleton h-40" />
             ))}
           </div>
+        ) : perpError ? (
+          <LoadError message={perpError} onRetry={loadPositions} what="perpetual positions" />
         ) : activePerps.length === 0 ? (
           <div className="panel p-10 text-center space-y-3">
             <p className="text-sm text-ink-muted">No open perpetual positions on this chain.</p>
@@ -318,6 +356,8 @@ export default function PortfolioPage() {
               <div key={i} className="panel skeleton h-52" />
             ))}
           </div>
+        ) : classicError ? (
+          <LoadError message={classicError} onRetry={loadPositions} what="classic positions" />
         ) : positions.length === 0 ? (
           <div className="panel p-10 text-center space-y-3">
             <p className="text-sm text-ink-muted">No classic positions on this chain.</p>

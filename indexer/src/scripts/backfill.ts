@@ -5,6 +5,7 @@ import { publicClient } from '../utils/chainClient'
 import { supabase } from '../db/client'
 import { logger } from '../utils/logger'
 import { withRetry } from '../utils/retry'
+import { assertWritten, errorMessage } from '../utils/errors'
 import { handleMarketCreated } from '../watchers/factoryWatcher'
 import { handlePositionMinted, handleMarketSettled, handlePositionRedeemed } from '../watchers/marketWatcher'
 import { getRegionName } from '../utils/regionNames'
@@ -22,6 +23,13 @@ export async function runBackfill() {
   const startBlock = currentBlock > 500n ? currentBlock - 500n : 0n
 
   logger.info('Starting backfill', { fromBlock: startBlock.toString(), toBlock: currentBlock.toString() })
+
+  // Chunks are allowed to fail — a Coston2 RPC drops range queries regularly —
+  // but the events in a failed chunk are then missing, so the run must not
+  // claim to have indexed up to `currentBlock`. `failures` gates the state
+  // update below, which is what makes the next run retry that range instead of
+  // skipping past it forever.
+  let failures = 0
 
   for (let from = startBlock; from <= currentBlock; from += CHUNK_SIZE) {
     const to = from + CHUNK_SIZE - 1n < currentBlock ? from + CHUNK_SIZE - 1n : currentBlock
@@ -43,13 +51,15 @@ export async function runBackfill() {
       for (const log of marketCreatedLogs) {
         await handleMarketCreated(log)
       }
-    } catch (err: any) {
-      logger.warn('MarketCreated fetch warning', { from: from.toString(), err: err.message })
+    } catch (err) {
+      failures++
+      logger.error('MarketCreated backfill chunk failed', { from: from.toString(), to: to.toString(), err: errorMessage(err) })
     }
 
     // 2. For each known market, fetch PositionMinted / MarketSettled / PositionRedeemed
     try {
-      const { data: markets } = await supabase.from('markets').select('contract_address')
+      const { data: markets, error } = await supabase.from('markets').select('contract_address')
+      if (error) throw new Error(`markets query failed: ${error.message}`)
       for (const market of markets ?? []) {
         const marketLogs = await withRetry(() =>
           publicClient.getContractEvents({
@@ -67,8 +77,9 @@ export async function runBackfill() {
           if (eventName === 'PositionRedeemed') await handlePositionRedeemed(market.contract_address, log)
         }
       }
-    } catch (err: any) {
-      logger.warn('Market events fetch warning', { err: err.message })
+    } catch (err) {
+      failures++
+      logger.error('Market events backfill chunk failed', { from: from.toString(), to: to.toString(), err: errorMessage(err) })
     }
 
     // 3. Fetch oracle ReadingSet logs
@@ -85,7 +96,7 @@ export async function runBackfill() {
 
       for (const log of oracleLogs) {
         const { args, blockNumber, transactionHash } = log as any
-        await supabase.from('weather_readings').upsert(
+        const { error } = await supabase.from('weather_readings').upsert(
           {
             region_id: args.regionId,
             region_name: getRegionName(args.regionId),
@@ -97,32 +108,36 @@ export async function runBackfill() {
           },
           { onConflict: 'tx_hash' }
         )
+        assertWritten('weather_readings upsert', error, { txHash: transactionHash })
       }
-    } catch (err: any) {
-      logger.warn('Oracle ReadingSet fetch warning', { err: err.message })
+    } catch (err) {
+      failures++
+      logger.error('Oracle ReadingSet backfill chunk failed', { from: from.toString(), to: to.toString(), err: errorMessage(err) })
     }
   }
 
-  // Update indexer_state
-  try {
-    await supabase.from('indexer_state').upsert(
-      {
-        id: 'coston2_main',
-        last_block: Number(currentBlock),
-        updated_at: new Date().toISOString()
-      },
-      { onConflict: 'id' }
+  if (failures > 0) {
+    throw new Error(
+      `Backfill finished with ${failures} failed chunk(s); indexer_state left at its previous block so the range is retried`
     )
-  } catch (err: any) {
-    logger.warn('Indexer state update skipped', { err: err.message })
   }
+
+  const { error } = await supabase.from('indexer_state').upsert(
+    {
+      id: 'coston2_main',
+      last_block: Number(currentBlock),
+      updated_at: new Date().toISOString()
+    },
+    { onConflict: 'id' }
+  )
+  assertWritten('indexer_state upsert', error, { lastBlock: Number(currentBlock) })
 
   logger.info('Backfill complete', { finalBlock: currentBlock.toString() })
 }
 
 if (require.main === module) {
   runBackfill().catch((err) => {
-    logger.error('Backfill failed', { error: err.message })
+    logger.error('Backfill failed', { error: errorMessage(err) })
     process.exit(1)
   })
 }

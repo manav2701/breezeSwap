@@ -25928,8 +25928,15 @@ declare function getMarkets(indexerUrl: string, chainId?: number, params?: {
     limit?: number;
     offset?: number;
 }): Promise<Market[]>;
+/**
+ * Reads a market from the indexer.
+ *
+ * Every failure used to be reported as `Market not found`, so an indexer that
+ * was down or erroring was indistinguishable from a mistyped address. The
+ * status now survives on the thrown `IndexerError`.
+ */
 declare function getMarket(indexerUrl: string, address: string, chainId?: number): Promise<Market>;
-declare function getMarketPositions(indexerUrl: string, marketAddress: string, chainId?: number): Promise<any>;
+declare function getMarketPositions(indexerUrl: string, marketAddress: string, chainId?: number): Promise<any[]>;
 
 /**
  * Read a classic market straight from its contract.
@@ -25946,7 +25953,9 @@ declare function getMarketPositions(indexerUrl: string, marketAddress: string, c
  * when the indexer is down.
  *
  * Returns `null` when there is no contract at the address, so a genuine typo
- * still reports not-found.
+ * still reports not-found. An RPC that cannot answer at all throws, because
+ * "there is no market here" and "nobody could tell me" send the user to very
+ * different places.
  */
 declare function getMarketOnChain(publicClient: PublicClient, address: string, chainId?: number): Promise<Market | null>;
 
@@ -25967,8 +25976,21 @@ interface TokenMeta {
  * Decimals are a property of whichever token a market was actually deployed
  * against, and different markets on this deployment use different tokens. The
  * only correct source is the token itself.
+ *
+ * A failed `decimals()` read therefore has to propagate. Defaulting it to 18 on
+ * an RPC hiccup reintroduces exactly the bug above for any 6-decimal token, and
+ * silently: the caller cannot tell a real 18 from a guessed one. `symbol()` is
+ * cosmetic, so an unreadable symbol still falls back to a placeholder.
  */
 declare function getTokenMeta(publicClient: PublicClient, token: string): Promise<TokenMeta>;
+/**
+ * Both of these used to answer a failed read with `0n`.
+ *
+ * That is not a safe default for either: a zero allowance sends the user through
+ * a redundant approval, and a zero balance tells them they hold nothing and
+ * disables the form they were about to use. Callers that want to render a
+ * placeholder can do so from the rejection, knowing it is a placeholder.
+ */
 declare function getAllowance(publicClient: PublicClient, token: string, owner: string, spender: string): Promise<bigint>;
 declare function getTokenBalance(publicClient: PublicClient, token: string, owner: string): Promise<bigint>;
 /** Convert a human-entered amount to raw units for a token of `decimals`. */
@@ -25979,11 +26001,24 @@ declare function fromTokenUnits(raw: bigint | string, decimals: number): number;
 declare function getUserPositions(indexerUrl: string, walletAddress: string, chainId?: number): Promise<Position[]>;
 
 declare function getWeatherReadings(indexerUrl: string, regionId: string, days?: number, chainId?: number): Promise<WeatherReading[]>;
-declare function getRegions(indexerUrl: string, chainId?: number): Promise<any>;
+declare function getRegions(indexerUrl: string, chainId?: number): Promise<any[]>;
 
 type BreezeRole = 'ADMIN_ROLE' | 'PAUSER_ROLE' | 'ORACLE_UPDATER_ROLE' | 'MARKET_CREATOR_ROLE';
 declare function checkRole(publicClient: PublicClient, accessControlAddress: string, role: BreezeRole, account: string): Promise<boolean>;
 
+/**
+ * Perp reads against the indexer.
+ *
+ * Every function here used to end in `catch { return [] }` / `catch { return
+ * null }`, so a failing indexer looked exactly like a market with no history:
+ * empty charts, an empty trade tape, "no positions" on a portfolio that held
+ * some. Failures now propagate; the components that want a demo-data fallback
+ * still get one from their own catch, but they can also say when they are
+ * showing it because a read failed.
+ *
+ * `getPerpMarket` and `getPerpMarketStats` keep `null`, but only for a genuine
+ * 404 — the one case where "nothing here" is the truth.
+ */
 declare function getPerpMarkets(indexerUrl: string, chainId?: number): Promise<PerpMarket[]>;
 declare function getPerpMarket(indexerUrl: string, address: string, chainId?: number): Promise<PerpMarket | null>;
 declare function getPerpMarketPositions(indexerUrl: string, address: string, chainId?: number): Promise<PerpPosition[]>;
@@ -25994,6 +26029,14 @@ declare function getTradeHistory(indexerUrl: string, marketAddress: string, chai
 declare function getPerpMarketStats(indexerUrl: string, marketAddress: string, chainId?: number): Promise<PerpMarketStatsData | null>;
 declare function getMarkPriceCandles(indexerUrl: string, marketAddress: string, interval?: string, limit?: number, chainId?: number): Promise<OHLCCandle[]>;
 
+/**
+ * Protocol-level aggregates.
+ *
+ * These used to answer every failure with `'0'` or `[]`, which put a confident
+ * "0 mUSDT collected" on the protocol page whenever the indexer was unreachable.
+ * A zero fee total and an unknown fee total are different claims and only one of
+ * them is safe to render.
+ */
 declare function getTotalFeesCollected(indexerUrl: string, chainId?: number): Promise<string>;
 declare function getInsuranceFundBalance(indexerUrl: string, chainId?: number): Promise<string>;
 declare function getProtocolTreasuryBalance(indexerUrl: string, chainId?: number): Promise<string>;
@@ -26001,7 +26044,7 @@ declare function getGlobalTradeHistory(indexerUrl: string, chainId?: number, lim
 
 declare function createMarket(walletClient: WalletClient, publicClient: PublicClient, params: CreateMarketParams, chainId?: number): Promise<{
     txHash: `0x${string}`;
-    marketAddress: string;
+    marketAddress: string | null;
 }>;
 
 declare function approveCollateral(walletClient: WalletClient, publicClient: PublicClient, tokenAddress: `0x${string}`, spenderAddress: `0x${string}`, amount: bigint): Promise<`0x${string}` | null>;
@@ -26057,6 +26100,14 @@ declare function encodeRegionId(regionName: string): `0x${string}`;
 declare const KNOWN_REGIONS: Record<string, string>;
 declare function decodeRegionId(regionId: string): string;
 
+/** A failed indexer request, carrying the HTTP status when there was one. */
+declare class IndexerError extends Error {
+    readonly status?: number;
+    constructor(message: string, status?: number);
+}
+/** `true` when the request failed because the record does not exist. */
+declare function isNotFound(err: unknown): boolean;
+
 interface Reserves {
     collateralReserve: bigint;
     weatherReserve: bigint;
@@ -26071,4 +26122,4 @@ declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, le
     entryPrice: number;
 };
 
-export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, DEPLOYED_CHAIN_IDS, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TokenMeta, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, approvePerpCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, fromTokenUnits, getAllowance, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketOnChain, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTokenBalance, getTokenMeta, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, isChainDeployed, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, toTokenUnits, unpauseFactory, unpauseMarket };
+export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, DEPLOYED_CHAIN_IDS, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, IndexerError, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TokenMeta, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, approvePerpCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, fromTokenUnits, getAllowance, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketOnChain, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTokenBalance, getTokenMeta, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, isChainDeployed, isNotFound, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, toTokenUnits, unpauseFactory, unpauseMarket };

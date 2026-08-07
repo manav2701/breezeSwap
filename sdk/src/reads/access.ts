@@ -10,22 +10,21 @@ export async function checkRole(
   account: string
 ): Promise<boolean> {
   if (!accessControlAddress || !account || accessControlAddress === '0x0000000000000000000000000000000000000000') return false
-  try {
-    const roleHash = (await publicClient.readContract({
-      address: accessControlAddress as `0x${string}`,
-      abi: AccessControlABI,
-      functionName: role
-    })) as `0x${string}`
 
-    const has = (await publicClient.readContract({
-      address: accessControlAddress as `0x${string}`,
-      abi: AccessControlABI,
-      functionName: 'hasRole',
-      args: [roleHash, account as `0x${string}`]
-    })) as boolean
+  // A failed read is not the same as "this wallet does not hold the role", and
+  // reporting it as `false` locked admins out of the admin page with no
+  // explanation whenever the RPC was briefly unavailable. Callers decide how to
+  // present the failure; they cannot if it never reaches them.
+  const roleHash = (await publicClient.readContract({
+    address: accessControlAddress as `0x${string}`,
+    abi: AccessControlABI,
+    functionName: role
+  })) as `0x${string}`
 
-    return has
-  } catch (err) {
-    return false
-  }
+  return (await publicClient.readContract({
+    address: accessControlAddress as `0x${string}`,
+    abi: AccessControlABI,
+    functionName: 'hasRole',
+    args: [roleHash, account as `0x${string}`]
+  })) as boolean
 }

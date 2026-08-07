@@ -14,6 +14,7 @@ import {
 } from '@breezeswap/sdk'
 import { PayoffChart } from '../../components/PayoffChart'
 import { TxLink } from '../../components/TxLink'
+import { InlineError } from '../../components/LoadError'
 import { useBreezeSDK } from '../../lib/hooks/useBreezeSDK'
 import { explainRevert } from '../../lib/revertReason'
 
@@ -55,6 +56,7 @@ export default function CreateMarketPage() {
 
   const [loading, setLoading] = useState(false)
   const [txHash, setTxHash] = useState<string | null>(null)
+  const [addressUnresolved, setAddressUnresolved] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const unit = weatherVariable === 'RAINFALL' ? 'mm' : '°C'
@@ -77,6 +79,7 @@ export default function CreateMarketPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setAddressUnresolved(false)
     setTxHash(null)
 
     if (isWrongNetwork) {
@@ -103,10 +106,14 @@ export default function CreateMarketPage() {
       })
 
       setTxHash(result.txHash)
+      // The deploy succeeded but its MarketCreated event could not be decoded,
+      // so there is nowhere to navigate. Without saying so the page just sat on
+      // "Market deployed" and never moved.
+      setAddressUnresolved(!result.marketAddress)
       if (result.marketAddress) {
         setTimeout(() => router.push(`/markets/${result.marketAddress}`), 1800)
       }
-    } catch (err: any) {
+    } catch (err) {
       setError(explainRevert(err))
     } finally {
       setLoading(false)
@@ -295,6 +302,10 @@ export default function CreateMarketPage() {
               </span>
               <TxLink hash={txHash} />
             </div>
+          )}
+
+          {addressUnresolved && (
+            <InlineError message="The market address could not be read from the receipt, so this page cannot open it. Find it from the transaction above or the markets list." />
           )}
 
           {error && (
