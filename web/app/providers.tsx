@@ -25,8 +25,11 @@ function getWagmiConfig(): Config {
           process.env.NEXT_PUBLIC_COSTON2_RPC || 'https://coston2-api.flare.network/ext/C/rpc'
         ),
       },
-      walletConnectProjectId:
-        process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '3a8170812b534d0ff9d794f19a901d64',
+      // Left empty rather than defaulted: the previous fallback pointed every
+      // deployment that forgot the variable at a third party's WalletConnect
+      // project, sending this app's connection metadata through it. Empty simply
+      // disables the WalletConnect transport; injected wallets still work.
+      walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
       appName: 'BreezeSwap',
       appDescription: 'Weather derivatives protocol on Flare Network',
       appUrl: 'https://breezeswap.xyz',

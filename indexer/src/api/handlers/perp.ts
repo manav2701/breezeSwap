@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
-import { logger } from '../../utils/logger'
 import { getPublicClient } from '../../utils/chainClient'
+import { parseChainId, parseEnum, parseInteger, requireAddress } from '../validate'
+import { respondWithError } from '../errors'
 
 const PerpMarketViewABI = [
   {
@@ -34,48 +35,56 @@ const PerpMarketViewABI = [
   }
 ] as const
 
+const CANDLE_INTERVALS = ['5m', '15m', '1h'] as const
+const CANDLE_BUCKET_MS: Record<(typeof CANDLE_INTERVALS)[number], number> = {
+  '5m': 5 * 60 * 1000,
+  '15m': 15 * 60 * 1000,
+  '1h': 60 * 60 * 1000
+}
+
 export async function getPerpMarkets(req: Request, res: Response) {
   try {
-    const chainId = Number(req.query.chainId ?? 114)
+    const chainId = parseChainId(req.query.chainId)
     const { data, error } = await supabase.from('perp_markets').select('*').eq('chain_id', chainId).order('created_at', { ascending: false })
     if (error) throw error
     return res.json({ markets: data || [] })
-  } catch (err: any) {
-    logger.error('getPerpMarkets error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getPerpMarkets')
   }
 }
 
 export async function getPerpMarket(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
-    const chainId = Number(req.query.chainId ?? 114)
+    const address = requireAddress(req.params.address)
+    const chainId = parseChainId(req.query.chainId)
     const { data, error } = await supabase.from('perp_markets').select('*').eq('contract_address', address).eq('chain_id', chainId).single()
     if (error) return res.status(404).json({ error: 'Perp market not found' })
     return res.json(data)
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getPerpMarket')
   }
 }
 
 export async function getPerpMarketPositions(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
+    const address = requireAddress(req.params.address)
+    const limit = parseInteger(req.query.limit, { fallback: 200, min: 1, max: 500, name: 'limit' })
     const { data, error } = await supabase
       .from('perp_positions')
       .select('*')
       .eq('market_address', address)
       .order('opened_at', { ascending: false })
+      .limit(limit)
     if (error) throw error
     return res.json({ positions: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getPerpMarketPositions')
   }
 }
 
 export async function getFundingHistory(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
+    const address = requireAddress(req.params.address)
     const { data, error } = await supabase
       .from('funding_history')
       .select('*')
@@ -84,15 +93,15 @@ export async function getFundingHistory(req: Request, res: Response) {
       .limit(50)
     if (error) throw error
     return res.json({ history: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getFundingHistory')
   }
 }
 
 export async function getMarkPriceHistory(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
-    const minutes = Number(req.query.minutes) || 60
+    const address = requireAddress(req.params.address)
+    const minutes = parseInteger(req.query.minutes, { fallback: 60, min: 1, max: 60 * 24 * 30, name: 'minutes' })
     const since = new Date(Date.now() - minutes * 60 * 1000).toISOString()
 
     const { data, error } = await supabase
@@ -104,33 +113,35 @@ export async function getMarkPriceHistory(req: Request, res: Response) {
 
     if (error) throw error
     return res.json({ history: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getMarkPriceHistory')
   }
 }
 
 export async function getUserPerpPositions(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
+    const address = requireAddress(req.params.address)
+    const limit = parseInteger(req.query.limit, { fallback: 200, min: 1, max: 500, name: 'limit' })
     const { data, error } = await supabase
       .from('perp_positions')
       .select('*')
       .eq('trader_address', address)
       .order('opened_at', { ascending: false })
+      .limit(limit)
 
     if (error) throw error
     return res.json({ positions: data || [] })
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getUserPerpPositions')
   }
 }
 
 // GET /api/perp-markets/:address/trade-history?limit=50&offset=0&chainId=114
 export async function getTradeHistory(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
-    const limit = Math.min(Number(req.query.limit) || 50, 100)
-    const offset = Number(req.query.offset) || 0
+    const address = requireAddress(req.params.address)
+    const limit = parseInteger(req.query.limit, { fallback: 50, min: 1, max: 100, name: 'limit' })
+    const offset = parseInteger(req.query.offset, { fallback: 0, min: 0, max: 100_000, name: 'offset' })
 
     const { data: positions, error } = await supabase
       .from('perp_positions')
@@ -174,17 +185,16 @@ export async function getTradeHistory(req: Request, res: Response) {
 
     trades.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     return res.json({ trades: trades.slice(0, limit) })
-  } catch (err: any) {
-    logger.error('getTradeHistory error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getTradeHistory')
   }
 }
 
 // GET /api/perp-markets/:address/stats?chainId=114
 export async function getPerpMarketStats(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
-    const chainId = Number(req.query.chainId ?? 114)
+    const address = requireAddress(req.params.address)
+    const chainId = parseChainId(req.query.chainId)
     const client = getPublicClient(chainId)
 
     // 1. On-chain view queries using Promise.allSettled for fault tolerance
@@ -258,22 +268,21 @@ export async function getPerpMarketStats(req: Request, res: Response) {
       totalVolume24h: totalVolume24h.toFixed(2),
       tradeCount24h
     })
-  } catch (err: any) {
-    logger.error('getPerpMarketStats error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getPerpMarketStats')
   }
 }
 
 // GET /api/perp-markets/:address/candles?interval=5m&limit=100&chainId=114
 export async function getCandles(req: Request, res: Response) {
   try {
-    const address = String(req.params.address || '').toLowerCase()
-    const limit = Math.min(Number(req.query.limit) || 100, 200)
-    const intervalStr = String(req.query.interval || '5m')
+    const address = requireAddress(req.params.address)
+    const limit = parseInteger(req.query.limit, { fallback: 100, min: 1, max: 200, name: 'limit' })
+    const interval = req.query.interval === undefined || req.query.interval === ''
+      ? '5m'
+      : parseEnum(req.query.interval, CANDLE_INTERVALS, 'interval')
 
-    let bucketMs = 5 * 60 * 1000
-    if (intervalStr === '15m') bucketMs = 15 * 60 * 1000
-    else if (intervalStr === '1h') bucketMs = 60 * 60 * 1000
+    const bucketMs = CANDLE_BUCKET_MS[interval]
 
     const { data: rows, error } = await supabase
       .from('mark_price_history')
@@ -305,8 +314,7 @@ export async function getCandles(req: Request, res: Response) {
     }).slice(-limit)
 
     return res.json({ candles })
-  } catch (err: any) {
-    logger.error('getCandles error:', err)
-    return res.status(500).json({ error: err.message || 'Internal error' })
+  } catch (err: unknown) {
+    return respondWithError(res, err, 'getCandles')
   }
 }

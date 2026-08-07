@@ -1,36 +1,41 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
+import { parseChainId, parseEnum, parseInteger, parseShortString, requireAddress } from '../validate'
+import { respondWithError } from '../errors'
+
+/** The only values the watchers ever write to `markets.status`. */
+const MARKET_STATUSES = ['OPEN', 'SETTLED'] as const
 
 // GET /api/markets
 export async function getMarkets(req: Request, res: Response) {
   try {
-    const chainId = Number(req.query.chainId ?? 114)
+    const chainId = parseChainId(req.query.chainId)
     let query = supabase.from('markets').select('*').eq('chain_id', chainId).order('created_at', { ascending: false })
 
     if (req.query.status) {
-      query = query.eq('status', String(req.query.status).toUpperCase())
+      query = query.eq('status', parseEnum(req.query.status, MARKET_STATUSES, 'status'))
     }
     if (req.query.region) {
-      query = query.eq('region_name', String(req.query.region))
+      query = query.eq('region_name', parseShortString(req.query.region, 'region'))
     }
 
-    const offset = Number(req.query.offset ?? 0)
-    const limit = Number(req.query.limit ?? 20)
+    const offset = parseInteger(req.query.offset, { fallback: 0, min: 0, max: 100_000, name: 'offset' })
+    const limit = parseInteger(req.query.limit, { fallback: 20, min: 1, max: 100, name: 'limit' })
     query = query.range(offset, offset + limit - 1)
 
     const { data, error } = await query
-    if (error) return res.json({ markets: [] })
+    if (error) throw error
     res.json({ markets: data || [] })
-  } catch (err: any) {
-    res.json({ markets: [] })
+  } catch (err: unknown) {
+    respondWithError(res, err, 'getMarkets', { markets: [] })
   }
 }
 
 // GET /api/markets/:address
 export async function getMarket(req: Request, res: Response) {
   try {
-    const address = String(req.params.address).toLowerCase()
-    const chainId = Number(req.query.chainId ?? 114)
+    const address = requireAddress(req.params.address)
+    const chainId = parseChainId(req.query.chainId)
     const { data, error } = await supabase
       .from('markets')
       .select('*, settlements(*)')
@@ -40,24 +45,26 @@ export async function getMarket(req: Request, res: Response) {
 
     if (error || !data) return res.status(404).json({ error: 'Market not found' })
     res.json(data)
-  } catch (err: any) {
-    res.status(404).json({ error: 'Market not found' })
+  } catch (err: unknown) {
+    respondWithError(res, err, 'getMarket')
   }
 }
 
 // GET /api/markets/:address/positions
 export async function getMarketPositions(req: Request, res: Response) {
   try {
-    const address = String(req.params.address).toLowerCase()
+    const address = requireAddress(req.params.address)
+    const limit = parseInteger(req.query.limit, { fallback: 100, min: 1, max: 500, name: 'limit' })
     const { data, error } = await supabase
       .from('positions')
       .select('*')
       .eq('market_address', address)
       .order('minted_at', { ascending: false })
+      .limit(limit)
 
-    if (error) return res.json({ positions: [] })
+    if (error) throw error
     res.json({ positions: data || [] })
-  } catch (err: any) {
-    res.json({ positions: [] })
+  } catch (err: unknown) {
+    respondWithError(res, err, 'getMarketPositions', { positions: [] })
   }
 }

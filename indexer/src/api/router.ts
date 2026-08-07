@@ -13,6 +13,7 @@ import {
   getGlobalTradeHistory
 } from './handlers/protocol'
 import { healthHandler } from './handlers/health'
+import { requireAdminKey } from './adminAuth'
 
 export const router = Router()
 
@@ -23,7 +24,7 @@ router.get('/markets/:address/positions', getMarketPositions)
 router.get('/users/:address/positions', getUserPositions)
 router.get('/weather/regions', getRegions)
 router.get('/weather/:regionId', getWeatherReadings)
-router.get('/admin/audit-log', getAuditLog)
+router.get('/admin/audit-log', requireAdminKey, getAuditLog)
 
 // Perp routes
 router.get('/perp-markets', getPerpMarkets)

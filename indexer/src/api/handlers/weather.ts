@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
 import { supabase } from '../../db/client'
+import { parseInteger, requireRegionId } from '../validate'
+import { respondWithError } from '../errors'
 
 // GET /api/weather/regions
 export async function getRegions(req: Request, res: Response) {
@@ -13,17 +15,17 @@ export async function getRegions(req: Request, res: Response) {
 
     const unique = [...new Map(data.map((r) => [r.region_id, r])).values()]
     res.json({ regions: unique })
-  } catch (err: any) {
-    res.json({ regions: [] })
+  } catch (err: unknown) {
+    respondWithError(res, err, 'getRegions', { regions: [] })
   }
 }
 
 // GET /api/weather/:regionId
 export async function getWeatherReadings(req: Request, res: Response) {
   try {
-    const days = Number(req.query.days ?? 30)
+    const regionId = requireRegionId(req.params.regionId)
+    const days = parseInteger(req.query.days, { fallback: 30, min: 1, max: 365, name: 'days' })
     const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
-    const regionId = String(req.params.regionId)
 
     const { data, error } = await supabase
       .from('weather_readings')
@@ -40,7 +42,7 @@ export async function getWeatherReadings(req: Request, res: Response) {
     }))
 
     res.json({ readings: normalized })
-  } catch (err: any) {
-    res.json({ readings: [] })
+  } catch (err: unknown) {
+    respondWithError(res, err, 'getWeatherReadings', { readings: [] })
   }
 }

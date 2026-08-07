@@ -68,7 +68,9 @@ export default function AdminPage() {
     }
 
     try {
-      const res = await fetch(`${indexerUrl}/api/admin/audit-log`)
+      // Proxied through this app's own server route so the indexer admin key
+      // never ships to the browser — see app/api/admin/audit-log/route.ts.
+      const res = await fetch('/api/admin/audit-log')
       if (res.ok) {
         const data = await res.json()
         setEvents(data.events || [])

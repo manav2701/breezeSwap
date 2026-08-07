@@ -4,6 +4,8 @@ dotenv.config()
 import express from 'express'
 import cors from 'cors'
 import { router } from './api/router'
+import { buildCorsOptions } from './api/cors'
+import { rateLimit } from './api/rateLimit'
 import { startFactoryWatcher } from './watchers/factoryWatcher'
 import { startMarketWatcher } from './watchers/marketWatcher'
 import { startOracleWatcher } from './watchers/oracleWatcher'
@@ -27,11 +29,17 @@ const PerpMarketABI = [
 async function main() {
   logger.info('BreezeSwap indexer starting (Chain ID: 114 — Coston2)...')
 
-  // 1. Start API server with CORS enabled immediately
+  // 1. Start API server immediately, behind an origin allow-list and a per-IP cap
   const app = express()
-  app.use(cors())
-  app.use(express.json())
-  app.use('/api', router)
+  app.disable('x-powered-by')
+  // Behind Railway/Render the peer address is the proxy, so `req.ip` must come
+  // from `X-Forwarded-For` for the rate limit to be per-client. Exactly one hop
+  // is trusted; trusting the whole chain would let a client spoof its own IP by
+  // prepending entries and reset its own limit.
+  app.set('trust proxy', 1)
+  app.use(cors(buildCorsOptions()))
+  app.use(express.json({ limit: '32kb' }))
+  app.use('/api', rateLimit, router)
 
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
