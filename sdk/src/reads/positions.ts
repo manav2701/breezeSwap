@@ -1,5 +1,6 @@
 import type { Position } from '../types'
 import { mapMarketFromDB } from './markets'
+import { fetchJson } from './http'
 
 export function mapPositionFromDB(item: any): Position {
   if (!item) return item
@@ -27,8 +28,9 @@ export async function getUserPositions(
   walletAddress: string,
   chainId: number = 114
 ): Promise<Position[]> {
-  const res = await fetch(`${indexerUrl}/api/users/${walletAddress.toLowerCase()}/positions?chainId=${chainId}`)
-  if (!res.ok) throw new Error(`Failed to fetch positions for user: ${walletAddress}`)
-  const data = await res.json()
+  const data = await fetchJson<{ positions?: any[] }>(
+    `${indexerUrl}/api/users/${walletAddress.toLowerCase()}/positions?chainId=${chainId}`,
+    () => `Failed to fetch positions for user: ${walletAddress}`
+  )
   return (data.positions || []).map(mapPositionFromDB)
 }

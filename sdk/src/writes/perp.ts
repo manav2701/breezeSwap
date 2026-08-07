@@ -1,6 +1,6 @@
 import { WalletClient, PublicClient } from 'viem'
 import BreezePerpMarketABI from '../abis/BreezePerpMarket.json'
-import ERC20ABI from '../abis/ERC20.json'
+import { requireAccount, sendTx, ensureAllowance } from './tx'
 
 /**
  * Ensure the perp market may pull `amount` of its collateral token.
@@ -23,8 +23,7 @@ export async function approvePerpCollateral(
   marketAddress: `0x${string}`,
   amount: bigint
 ): Promise<`0x${string}` | null> {
-  const [account] = await walletClient.getAddresses()
-  if (!account) throw new Error('Wallet not connected')
+  const account = requireAccount(walletClient)
 
   const tokenAddress = (await publicClient.readContract({
     address: marketAddress,
@@ -32,26 +31,15 @@ export async function approvePerpCollateral(
     functionName: 'collateralToken',
   })) as `0x${string}`
 
-  try {
-    const allowance = (await publicClient.readContract({
-      address: tokenAddress,
-      abi: ERC20ABI,
-      functionName: 'allowance',
-      args: [account, marketAddress],
-    })) as bigint
-    if (allowance >= amount) return null
-  } catch {
-    // Fall through and approve.
-  }
-
-  const { request } = await publicClient.simulateContract({
-    address: tokenAddress,
-    abi: ERC20ABI,
-    functionName: 'approve',
-    args: [marketAddress, amount],
-    account,
-  })
-  return walletClient.writeContract(request)
+  return ensureAllowance(
+    walletClient,
+    publicClient,
+    tokenAddress,
+    account.address,
+    marketAddress,
+    amount,
+    account
+  )
 }
 
 /**
@@ -69,8 +57,7 @@ export async function openPerpPosition(
   collateralAmount: bigint,
   leverage: bigint
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
+  const account = requireAccount(walletClient)
 
   const approvalHash = await approvePerpCollateral(
     walletClient,
@@ -82,15 +69,13 @@ export async function openPerpPosition(
     await publicClient.waitForTransactionReceipt({ hash: approvalHash })
   }
 
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: BreezePerpMarketABI,
     functionName: 'openPosition',
     args: [isLong, collateralAmount, leverage],
-    account
+    account,
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function closePerpPosition(
@@ -99,18 +84,13 @@ export async function closePerpPosition(
   marketAddress: `0x${string}`,
   positionId: bigint
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: BreezePerpMarketABI,
     functionName: 'closePosition',
     args: [positionId],
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function liquidatePerpPosition(
@@ -119,18 +99,13 @@ export async function liquidatePerpPosition(
   marketAddress: `0x${string}`,
   positionId: bigint
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: BreezePerpMarketABI,
     functionName: 'liquidate',
     args: [positionId],
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function settleFunding(
@@ -138,15 +113,10 @@ export async function settleFunding(
   publicClient: PublicClient,
   marketAddress: `0x${string}`
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: BreezePerpMarketABI,
     functionName: 'settleFunding',
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }

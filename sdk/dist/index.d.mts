@@ -25929,7 +25929,7 @@ declare function getMarkets(indexerUrl: string, chainId?: number, params?: {
     offset?: number;
 }): Promise<Market[]>;
 declare function getMarket(indexerUrl: string, address: string, chainId?: number): Promise<Market>;
-declare function getMarketPositions(indexerUrl: string, marketAddress: string, chainId?: number): Promise<any>;
+declare function getMarketPositions(indexerUrl: string, marketAddress: string, chainId?: number): Promise<any[]>;
 
 /**
  * Read a classic market straight from its contract.
@@ -25979,7 +25979,7 @@ declare function fromTokenUnits(raw: bigint | string, decimals: number): number;
 declare function getUserPositions(indexerUrl: string, walletAddress: string, chainId?: number): Promise<Position[]>;
 
 declare function getWeatherReadings(indexerUrl: string, regionId: string, days?: number, chainId?: number): Promise<WeatherReading[]>;
-declare function getRegions(indexerUrl: string, chainId?: number): Promise<any>;
+declare function getRegions(indexerUrl: string, chainId?: number): Promise<any[]>;
 
 type BreezeRole = 'ADMIN_ROLE' | 'PAUSER_ROLE' | 'ORACLE_UPDATER_ROLE' | 'MARKET_CREATOR_ROLE';
 declare function checkRole(publicClient: PublicClient, accessControlAddress: string, role: BreezeRole, account: string): Promise<boolean>;

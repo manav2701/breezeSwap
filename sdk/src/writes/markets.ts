@@ -2,6 +2,7 @@ import { type WalletClient, type PublicClient, decodeEventLog } from 'viem'
 import FactoryABI from '../abis/BreezeMarketFactory.json'
 import { getContractAddresses, WEATHER_VARIABLES, PAYOFF_TYPES } from '../constants'
 import type { CreateMarketParams } from '../types'
+import { requireAccountAddress, sendTx } from './tx'
 
 export async function createMarket(
   walletClient: WalletClient,
@@ -9,14 +10,13 @@ export async function createMarket(
   params: CreateMarketParams,
   chainId: number = 114
 ): Promise<{ txHash: `0x${string}`; marketAddress: string }> {
-  const [account] = await walletClient.getAddresses()
-  if (!account) throw new Error('No wallet connected')
+  const account = await requireAccountAddress(walletClient)
 
   const addresses = getContractAddresses(chainId)
   const factoryAddress = addresses.factory
   const oracleAddress = params.oracleAddress || addresses.mockWeatherOracle
 
-  const { request } = await publicClient.simulateContract({
+  const txHash = await sendTx(walletClient, publicClient, {
     address: factoryAddress,
     abi: FactoryABI,
     functionName: 'createMarket',
@@ -32,8 +32,6 @@ export async function createMarket(
     ],
     account
   })
-
-  const txHash = await walletClient.writeContract(request)
 
   const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash })
   let marketAddress = ''

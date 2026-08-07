@@ -1,8 +1,8 @@
 import { type WalletClient, type PublicClient } from 'viem'
 import MarketABI from '../abis/BreezeMarket.json'
-import ERC20ABI from '../abis/ERC20.json'
 import { SIDES } from '../constants'
 import type { MintPositionParams } from '../types'
+import { requireAccountAddress, sendTx, ensureAllowance } from './tx'
 
 export async function approveCollateral(
   walletClient: WalletClient,
@@ -11,10 +11,10 @@ export async function approveCollateral(
   spenderAddress: `0x${string}`,
   amount: bigint
 ): Promise<`0x${string}` | null> {
-  const [account] = await walletClient.getAddresses()
-  if (!account) throw new Error('No wallet connected')
+  const account = await requireAccountAddress(walletClient)
 
-  // 1. Resolve CollateralVault address if spenderAddress is a BreezeMarket
+  // Resolve CollateralVault address if spenderAddress is a BreezeMarket — a
+  // market delegates custody to its vault, so the vault is the real spender.
   let targetSpender = spenderAddress
   try {
     const vaultAddress = await publicClient.readContract({
@@ -31,32 +31,7 @@ export async function approveCollateral(
 
   console.log('Target vault spender for approval:', targetSpender)
 
-  // 2. Check existing allowance for targetSpender (CollateralVault)
-  try {
-    const allowance = await publicClient.readContract({
-      address: tokenAddress,
-      abi: ERC20ABI,
-      functionName: 'allowance',
-      args: [account, targetSpender]
-    }) as bigint
-
-    if (allowance >= amount) {
-      console.log('Collateral allowance already sufficient for vault:', targetSpender)
-      return null
-    }
-  } catch {
-    // If allowance check fails, proceed with approve
-  }
-
-  // 3. Simulate and request approval for targetSpender (CollateralVault)
-  const { request } = await publicClient.simulateContract({
-    address: tokenAddress,
-    abi: ERC20ABI,
-    functionName: 'approve',
-    args: [targetSpender, amount],
-    account
-  })
-  return walletClient.writeContract(request)
+  return ensureAllowance(walletClient, publicClient, tokenAddress, account, targetSpender, amount, account)
 }
 
 export async function mintPosition(
@@ -64,18 +39,13 @@ export async function mintPosition(
   publicClient: PublicClient,
   params: MintPositionParams
 ): Promise<`0x${string}`> {
-  const [account] = await walletClient.getAddresses()
-  if (!account) throw new Error('No wallet connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: params.marketAddress,
     abi: MarketABI,
     functionName: 'mintPosition',
     args: [SIDES[params.side], params.collateralAmount],
-    account
+    account: await requireAccountAddress(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function redeem(
@@ -85,18 +55,13 @@ export async function redeem(
   tokenId: bigint,
   amount: bigint
 ): Promise<`0x${string}`> {
-  const [account] = await walletClient.getAddresses()
-  if (!account) throw new Error('No wallet connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: MarketABI,
     functionName: 'redeem',
     args: [tokenId, amount],
-    account
+    account: await requireAccountAddress(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function settle(
@@ -104,16 +69,11 @@ export async function settle(
   publicClient: PublicClient,
   marketAddress: `0x${string}`
 ): Promise<`0x${string}`> {
-  const [account] = await walletClient.getAddresses()
-  if (!account) throw new Error('No wallet connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: MarketABI,
     functionName: 'settle',
     args: [],
-    account
+    account: await requireAccountAddress(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }

@@ -5,6 +5,7 @@ import MarketABI from '../abis/BreezeMarket.json'
 import FactoryABI from '../abis/BreezeMarketFactory.json'
 import FeeConfigABI from '../abis/FeeConfig.json'
 import { BreezeRole } from '../reads/access'
+import { requireAccount, sendTx, readRoleHash } from './tx'
 
 export async function setTradingFeeBps(
   walletClient: WalletClient,
@@ -12,18 +13,13 @@ export async function setTradingFeeBps(
   feeConfigAddress: `0x${string}`,
   newRateBps: bigint
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: feeConfigAddress,
     abi: FeeConfigABI,
     functionName: 'setTradingFeeBps',
     args: [newRateBps],
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function setOracleReading(
@@ -34,18 +30,13 @@ export async function setOracleReading(
   timestamp: bigint,
   value: bigint
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: oracleAddress,
     abi: OracleABI,
     functionName: 'setReading',
     args: [regionId, timestamp, value],
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function pauseMarket(
@@ -53,17 +44,12 @@ export async function pauseMarket(
   publicClient: PublicClient,
   marketAddress: `0x${string}`
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: MarketABI,
     functionName: 'pauseMarket',
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function unpauseMarket(
@@ -71,17 +57,12 @@ export async function unpauseMarket(
   publicClient: PublicClient,
   marketAddress: `0x${string}`
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: marketAddress,
     abi: MarketABI,
     functionName: 'unpauseMarket',
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function pauseFactory(
@@ -89,17 +70,12 @@ export async function pauseFactory(
   publicClient: PublicClient,
   factoryAddress: `0x${string}`
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: factoryAddress,
     abi: FactoryABI,
     functionName: 'pauseFactory',
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function unpauseFactory(
@@ -107,17 +83,12 @@ export async function unpauseFactory(
   publicClient: PublicClient,
   factoryAddress: `0x${string}`
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: factoryAddress,
     abi: FactoryABI,
     functionName: 'unpauseFactory',
-    account
+    account: requireAccount(walletClient),
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function grantRole(
@@ -127,24 +98,16 @@ export async function grantRole(
   role: BreezeRole,
   accountToGrant: `0x${string}`
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
+  const account = requireAccount(walletClient)
+  const roleHash = await readRoleHash(publicClient, accessControlAddress, role)
 
-  const roleHash = await publicClient.readContract({
-    address: accessControlAddress,
-    abi: AccessControlABI,
-    functionName: role
-  }) as `0x${string}`
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: accessControlAddress,
     abi: AccessControlABI,
     functionName: 'grantRole',
     args: [roleHash, accountToGrant],
-    account
+    account,
   })
-
-  return walletClient.writeContract(request)
 }
 
 export async function revokeRole(
@@ -154,22 +117,14 @@ export async function revokeRole(
   role: BreezeRole,
   accountToRevoke: `0x${string}`
 ): Promise<`0x${string}`> {
-  const account = walletClient.account
-  if (!account) throw new Error('Wallet not connected')
+  const account = requireAccount(walletClient)
+  const roleHash = await readRoleHash(publicClient, accessControlAddress, role)
 
-  const roleHash = await publicClient.readContract({
-    address: accessControlAddress,
-    abi: AccessControlABI,
-    functionName: role
-  }) as `0x${string}`
-
-  const { request } = await publicClient.simulateContract({
+  return sendTx(walletClient, publicClient, {
     address: accessControlAddress,
     abi: AccessControlABI,
     functionName: 'revokeRole',
     args: [roleHash, accountToRevoke],
-    account
+    account,
   })
-
-  return walletClient.writeContract(request)
 }
