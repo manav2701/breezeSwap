@@ -1,4 +1,5 @@
 import type { Market } from '../types'
+import { fetchJson } from './http'
 
 export function mapMarketFromDB(item: any): Market {
   if (!item) return item
@@ -40,22 +41,25 @@ export async function getMarkets(
   if (params?.limit) url.searchParams.set('limit', String(params.limit))
   if (params?.offset) url.searchParams.set('offset', String(params.offset))
 
-  const res = await fetch(url.toString())
-  if (!res.ok) throw new Error(`Failed to fetch markets: ${res.statusText}`)
-  const data = await res.json()
+  const data = await fetchJson<{ markets?: any[] }>(
+    url.toString(),
+    (res) => `Failed to fetch markets: ${res.statusText}`
+  )
   return (data.markets || []).map(mapMarketFromDB)
 }
 
 export async function getMarket(indexerUrl: string, address: string, chainId: number = 114): Promise<Market> {
-  const res = await fetch(`${indexerUrl}/api/markets/${address.toLowerCase()}?chainId=${chainId}`)
-  if (!res.ok) throw new Error(`Market not found: ${address}`)
-  const data = await res.json()
+  const data = await fetchJson(
+    `${indexerUrl}/api/markets/${address.toLowerCase()}?chainId=${chainId}`,
+    () => `Market not found: ${address}`
+  )
   return mapMarketFromDB(data)
 }
 
 export async function getMarketPositions(indexerUrl: string, marketAddress: string, chainId: number = 114) {
-  const res = await fetch(`${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions?chainId=${chainId}`)
-  if (!res.ok) throw new Error(`Failed to fetch positions for market: ${marketAddress}`)
-  const data = await res.json()
+  const data = await fetchJson<{ positions?: any[] }>(
+    `${indexerUrl}/api/markets/${marketAddress.toLowerCase()}/positions?chainId=${chainId}`,
+    () => `Failed to fetch positions for market: ${marketAddress}`
+  )
   return data.positions || []
 }
