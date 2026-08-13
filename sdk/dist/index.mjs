@@ -19639,9 +19639,11 @@ var LEGACY_REGION_IDS = new Set(
   SUPPORTED_REGIONS.map((name) => keccak256(toHex(name)))
 );
 function isLegacyRegionId(regionId) {
+  if (!regionId) return false;
   return LEGACY_REGION_IDS.has(regionId.toLowerCase()) || LEGACY_REGION_IDS.has(regionId);
 }
 function decodeRegionId(regionId) {
+  if (!regionId) return "Unknown Region";
   return KNOWN_REGIONS[regionId.toLowerCase()] ?? KNOWN_REGIONS[regionId] ?? "Unknown Region";
 }
 

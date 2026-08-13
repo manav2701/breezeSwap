@@ -202,7 +202,11 @@ export async function getPerpMarketStats(req: Request, res: Response) {
     ])
 
     if (results[0].status === 'fulfilled') markPrice = results[0].value.toString()
-    oraclePrice = markPrice // default oraclePrice to markPrice
+    // Stands in for the index until a real oracle read is wired here, so it carries the
+    // MARK price's 1e18 scale and must be divided by 1e18 below. It was being divided by
+    // 1e6, the oracle's scale, which reported a $25 index as $25,000,000,000,000. Same
+    // class of defect as the funding scale bug: two units, one variable, no conversion.
+    oraclePrice = markPrice
     if (results[1].status === 'fulfilled') longOI = results[1].value.toString()
     if (results[2].status === 'fulfilled') shortOI = results[2].value.toString()
     if (results[3].status === 'fulfilled') lastFundingSettledAt = Number(results[3].value)
@@ -248,7 +252,8 @@ export async function getPerpMarketStats(req: Request, res: Response) {
 
     return res.json({
       markPrice: (Number(markPrice) / 1e18).toFixed(2),
-      oraclePrice: (Number(oraclePrice) / 1e6).toFixed(2),
+      // 1e18, matching where this value comes from. See the note at its assignment.
+      oraclePrice: (Number(oraclePrice) / 1e18).toFixed(2),
       currentFundingRate,
       nextFundingAt,
       fundingInterval,

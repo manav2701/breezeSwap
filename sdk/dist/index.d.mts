@@ -26102,8 +26102,18 @@ type SupportedRegion = (typeof SUPPORTED_REGIONS)[number];
 declare const KNOWN_REGIONS: Record<string, string>;
 /** Ids from the city-only scheme, which cannot distinguish the two variables. */
 declare const LEGACY_REGION_IDS: ReadonlySet<string>;
-declare function isLegacyRegionId(regionId: string): boolean;
-declare function decodeRegionId(regionId: string): string;
+declare function isLegacyRegionId(regionId: string | null | undefined): boolean;
+/**
+ * Display name for a region id.
+ *
+ * @dev Tolerates a missing id rather than throwing. The indexer returns snake_case
+ * (`region_id`) and the SDK's types are camelCase, so a caller that forgets to normalise
+ * passes `undefined` here. Throwing on that took down the whole perpetuals page with
+ * "Cannot read properties of undefined", because a render-time throw in a client component
+ * escapes to the error boundary rather than degrading to a missing label. A name is
+ * cosmetic; it is never worth an unrenderable page.
+ */
+declare function decodeRegionId(regionId: string | null | undefined): string;
 
 interface Reserves {
     collateralReserve: bigint;

@@ -63,11 +63,23 @@ export const LEGACY_REGION_IDS: ReadonlySet<string> = new Set(
   SUPPORTED_REGIONS.map((name) => keccak256(toHex(name)))
 )
 
-export function isLegacyRegionId(regionId: string): boolean {
+export function isLegacyRegionId(regionId: string | null | undefined): boolean {
+  if (!regionId) return false
   return LEGACY_REGION_IDS.has(regionId.toLowerCase() as `0x${string}`)
     || LEGACY_REGION_IDS.has(regionId as `0x${string}`)
 }
 
-export function decodeRegionId(regionId: string): string {
+/**
+ * Display name for a region id.
+ *
+ * @dev Tolerates a missing id rather than throwing. The indexer returns snake_case
+ * (`region_id`) and the SDK's types are camelCase, so a caller that forgets to normalise
+ * passes `undefined` here. Throwing on that took down the whole perpetuals page with
+ * "Cannot read properties of undefined", because a render-time throw in a client component
+ * escapes to the error boundary rather than degrading to a missing label. A name is
+ * cosmetic; it is never worth an unrenderable page.
+ */
+export function decodeRegionId(regionId: string | null | undefined): string {
+  if (!regionId) return 'Unknown Region'
   return KNOWN_REGIONS[regionId.toLowerCase()] ?? KNOWN_REGIONS[regionId] ?? 'Unknown Region'
 }

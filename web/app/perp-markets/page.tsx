@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, RefreshCw } from 'lucide-react'
 import {
   getPerpMarkets,
+  getPerpMarketStats,
   CONTRACT_ADDRESSES,
   COSTON2_CHAIN_ID,
   decodeRegionId,
@@ -67,6 +68,36 @@ function oiToNumber(raw?: string) {
   return Number.isFinite(n) ? n : 0
 }
 
+/**
+ * Normalise an indexer row into the SDK's shape.
+ *
+ * @dev The indexer serves Postgres columns verbatim, so every field arrives snake_case
+ * while `PerpMarket` is camelCase. Reading `m.regionId` off a raw row therefore yields
+ * `undefined`, and passing that to `decodeRegionId` threw, which took the entire page to
+ * the error boundary rather than losing one label.
+ *
+ * It stayed hidden because the page falls back to hardcoded markets whenever the API
+ * returns an empty list, and the perp table was empty: the fallback rows are already
+ * camelCase, so the mapping was never exercised until real rows existed. The classic
+ * market list has had `ensureMarketMapped` for exactly this reason; perps never got one.
+ */
+function ensurePerpMapped(m: any): PerpMarket {
+  return {
+    ...m,
+    contractAddress: m.contractAddress ?? m.contract_address ?? '',
+    chainId: m.chainId ?? m.chain_id ?? 114,
+    regionId: m.regionId ?? m.region_id ?? '',
+    regionName: m.regionName ?? m.region_name ?? null,
+    collateralToken: m.collateralToken ?? m.collateral_token ?? '',
+    status: m.status ?? 'ACTIVE',
+    createdAt: m.createdAt ?? m.created_at ?? '',
+    blockNumber: m.blockNumber ?? m.block_number ?? 0,
+    txHash: m.txHash ?? m.tx_hash ?? '',
+    totalLongOpenInterest: m.totalLongOpenInterest ?? m.total_long_open_interest ?? '0',
+    totalShortOpenInterest: m.totalShortOpenInterest ?? m.total_short_open_interest ?? '0',
+  }
+}
+
 export default function PerpMarketsPage() {
   const { indexerUrl } = useBreezeSDK()
   const { chainId } = useBreezeNetwork()
@@ -79,7 +110,33 @@ export default function PerpMarketsPage() {
     try {
       const live = await getPerpMarkets(indexerUrl, chainId)
       if (live && live.length > 0) {
-        setMarkets(live)
+        const mapped = live.map(ensurePerpMapped)
+
+        // The list endpoint returns table rows only, so mark price, funding and open
+        // interest live behind a per-market stats call. Without this every card rendered
+        // "$0.00", which reads as a broken market rather than an idle one. Settled, not
+        // awaited in sequence, so one slow market cannot hold up the grid, and a failure
+        // leaves that card's figures at zero instead of emptying the page.
+        const withStats = await Promise.all(
+          mapped.map(async (m) => {
+            try {
+              const s = await getPerpMarketStats(indexerUrl, m.contractAddress, chainId)
+              if (!s) return m
+              return {
+                ...m,
+                markPrice: Number(s.markPrice),
+                oraclePrice: Number(s.oraclePrice),
+                fundingRate: Number(s.currentFundingRate),
+                totalLongOpenInterest: s.openInterestLong,
+                totalShortOpenInterest: s.openInterestShort,
+              }
+            } catch {
+              return m
+            }
+          })
+        )
+
+        setMarkets(withStats)
         setIsDemo(false)
       } else {
         setMarkets(FALLBACK_PERPS)
