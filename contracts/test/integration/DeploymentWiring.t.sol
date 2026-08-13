@@ -274,6 +274,12 @@ contract DeploymentWiringTest is Test {
     /// 24,576. It could not be deployed to any chain, and every test here passed anyway,
     /// because Foundry does not enforce the code size limit. A green suite is not evidence
     /// that a deployment can happen, so assert it directly.
+    ///
+    /// EXCLUDED FROM `forge coverage`, deliberately, and it must stay excluded. Coverage
+    /// disables the optimizer, which inflates every contract: the largest compiles to about
+    /// 29.6 KB unoptimized against 22.3 KB shipped. Run there, this asserts a property of a
+    /// binary that never leaves CI and fails for a reason that says nothing about whether
+    /// the protocol can be deployed. See the exclusion in `.github/workflows/contracts-ci.yml`.
     function test_no_deployed_contract_exceeds_the_chain_code_size_limit() public {
         BreezeDeployer.Deployment memory d = _deploy();
 

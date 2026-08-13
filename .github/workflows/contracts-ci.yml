@@ -26,13 +26,20 @@ jobs:
       - name: Run fuzzing tests (10,000 runs)
         run: FOUNDRY_FUZZ_RUNS=10000 forge test --match-contract "Fuzz" -vv
       - name: Coverage summary
-        # `forge coverage` always disables the optimizer, unlike `forge test`. Two effects:
+        # `forge coverage` always disables the optimizer, unlike `forge test`. Three effects:
         # 1. `--ir-minimum` is needed to avoid stack-too-deep on functions that only fit
         #    within the EVM's stack depth with optimization on.
         # 2. The Monte Carlo calibration sweeps (multi-seed, hundreds of actions each,
         #    genuinely ~750M gas even optimized) blow the block gas limit once every
         #    opcode costs more. They pass under the optimized `forge test` step above;
         #    excluding them here is a coverage-instrumentation limit, not a test skip.
+        # 3. The EIP-170 size assertion measures deployed bytecode, so it can only be
+        #    meaningful against an optimized build. Unoptimized, the largest contract
+        #    compiles to ~29.6 KB against a 24,576 byte limit, while the shipping build is
+        #    22.3 KB. Asserting it here would be checking a binary that never leaves CI.
+        #    It is fully enforced in the `forge test` step above, which is the build that
+        #    actually deploys.
         run: |
           forge coverage --ir-minimum --report summary \
-            --no-match-path "test/simulation/{ReserveMonteCarlo,WaterfallMonteCarlo}.t.sol"
+            --no-match-path "test/simulation/{ReserveMonteCarlo,WaterfallMonteCarlo}.t.sol" \
+            --no-match-test "test_no_deployed_contract_exceeds_the_chain_code_size_limit"
