@@ -3,7 +3,7 @@ import path from 'path'
 import { keccak256, toHex, createWalletClient, createPublicClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import dotenv from 'dotenv'
-import { REGIONS, type RegionConfig } from './seed'
+import { REGIONS, regionIdFor, type RegionConfig } from './seed'
 
 dotenv.config({ path: path.join(__dirname, '../../.env') })
 dotenv.config({ path: path.join(__dirname, '../../contracts/.env') })
@@ -29,8 +29,38 @@ const MIN_SAMPLE_YEARS = 10
 
 const YEARS_OF_HISTORY = 30
 
-/** Rainfall strikes to price, in mm of monthly total. */
-const RAINFALL_THRESHOLDS_MM = [10, 20, 40, 60, 80, 120, 160, 200, 300]
+/** Every rainfall strike worth pricing, in mm of monthly total. */
+const ALL_RAINFALL_THRESHOLDS_MM = [10, 20, 40, 60, 80, 120, 160, 200, 300]
+
+/**
+ * Thresholds actually published, overridable with `CLIMATOLOGY_THRESHOLDS`.
+ *
+ * Each strike is one transaction, so the full set across five regions, twelve months and
+ * both directions is 1,080 of them, around 42 C2FLR at 700 gwei. That is more than a single
+ * faucet grant, and gas is the binding constraint on a testnet rather than anything about
+ * the data.
+ *
+ * Publishing a subset is safe because it is not lossy in any permanent sense: `isPriced`
+ * gates per strike, an unpriced strike leaves a market unpriced rather than mispriced, and
+ * the publisher skips whatever is already on-chain. So the remaining thresholds can be
+ * added later by re-running with a wider list and nothing is repaid.
+ *
+ *   CLIMATOLOGY_THRESHOLDS=10,20,40,60,80,120,160,200,300 pnpm climatology
+ */
+const RAINFALL_THRESHOLDS_MM = (() => {
+  const raw = process.env.CLIMATOLOGY_THRESHOLDS
+  if (!raw) return ALL_RAINFALL_THRESHOLDS_MM
+
+  const parsed = raw
+    .split(',')
+    .map((s) => Number(s.trim()))
+    .filter((n) => Number.isFinite(n) && n > 0)
+
+  if (parsed.length === 0) {
+    throw new Error(`CLIMATOLOGY_THRESHOLDS set but parsed to nothing: "${raw}"`)
+  }
+  return parsed
+})()
 
 const WEATHER_VARIABLE_RAINFALL = 0
 
@@ -70,8 +100,14 @@ export interface StrikeProbability {
   observedTotalsMm: number[]
 }
 
+/**
+ * @dev Delegates to the seeder's helper rather than re-deriving the hash. These
+ * two files had drifted to different schemes once already, which put the
+ * probabilities and the readings under different ids so neither could find the
+ * other. One definition, imported.
+ */
 function regionId(name: string): `0x${string}` {
-  return keccak256(toHex(`${name}_RAINFALL`))
+  return regionIdFor(name, 'RAINFALL')
 }
 
 /**
@@ -252,6 +288,45 @@ const STRIKE_ORACLE_ABI = [
     ],
     outputs: [],
   },
+  // Read side, used to resume an interrupted run instead of re-paying for strikes that
+  // are already on-chain.
+  {
+    type: 'function',
+    name: 'strikeKey',
+    stateMutability: 'pure',
+    inputs: [
+      { name: 'regionId', type: 'bytes32' },
+      { name: 'variable', type: 'uint8' },
+      { name: 'triggerBelow', type: 'bool' },
+      { name: 'threshold', type: 'uint256' },
+      { name: 'monthOfYear', type: 'uint8' },
+    ],
+    outputs: [{ name: '', type: 'bytes32' }],
+  },
+  {
+    type: 'function',
+    name: 'isPriced',
+    stateMutability: 'view',
+    inputs: [{ name: 'key', type: 'bytes32' }],
+    outputs: [{ name: '', type: 'bool' }],
+  },
+  {
+    type: 'function',
+    name: 'levelKey',
+    stateMutability: 'pure',
+    inputs: [
+      { name: 'regionId', type: 'bytes32' },
+      { name: 'monthOfYear', type: 'uint8' },
+    ],
+    outputs: [{ name: '', type: 'bytes32' }],
+  },
+  {
+    type: 'function',
+    name: 'isLevelSet',
+    stateMutability: 'view',
+    inputs: [{ name: 'key', type: 'bytes32' }],
+    outputs: [{ name: '', type: 'bool' }],
+  },
 ] as const
 
 async function postOnChain(strikes: StrikeProbability[], levels: ClimatologyLevel[]) {
@@ -277,44 +352,124 @@ async function postOnChain(strikes: StrikeProbability[], levels: ClimatologyLeve
   const wallet = createWalletClient({ account, chain, transport: http(rpcUrl) })
   const publicClient = createPublicClient({ chain, transport: http(rpcUrl) })
 
-  console.log(`\nPosting ${strikes.length} strike probabilities to ${oracleAddress}...`)
+  // Pinned rather than estimated, for the same reason as the reading seeder: over a
+  // thousand sequential transactions, a padded fee estimate is the difference between
+  // finishing and running dry. Must stay above the chain's base fee.
+  const gasPrice = process.env.GAS_PRICE_WEI ? BigInt(process.env.GAS_PRICE_WEI) : undefined
+  if (gasPrice) console.log(`gas price pinned at ${Number(gasPrice) / 1e9} gwei`)
 
-  for (const s of strikes) {
-    const hash = await wallet.writeContract({
-      address: oracleAddress,
-      abi: STRIKE_ORACLE_ABI,
-      functionName: 'setStrikeProbability',
-      args: [
-        s.regionId,
-        s.variable,
-        s.triggerBelow,
-        BigInt(s.thresholdScaled),
-        s.monthOfYear,
-        s.probabilityBps,
-        s.sampleYears,
-      ],
-    })
-    await publicClient.waitForTransactionReceipt({ hash })
-    console.log(
-      `  ${s.region} m${s.monthOfYear} ${s.triggerBelow ? '<' : '>'}${s.thresholdMm}mm ` +
-        `= ${(s.probabilityBps / 100).toFixed(1)}%  ${hash}`
-    )
-  }
-
+  // Levels are published BEFORE strikes, deliberately.
+  //
+  // There are only 60 of them against 1,080 strikes, so they are roughly 2 C2FLR of the
+  // 44 this run costs, and they are what `BreezePerpFactory._checkInitialMark` consults to
+  // refuse a market opening at a mark unrelated to the climate it tracks. Publishing the
+  // expensive half first meant any run that ran out of gas part-way left the cheap,
+  // creation-gating half unwritten.
   console.log(`\nPosting ${levels.length} expected levels to ${oracleAddress}...`)
 
+  let levelsWritten = 0
+  let levelsSkipped = 0
+
   for (const l of levels) {
-    const hash = await wallet.writeContract({
+    const key = await publicClient.readContract({
       address: oracleAddress,
       abi: STRIKE_ORACLE_ABI,
-      functionName: 'setClimatologyLevel',
-      args: [l.regionId, l.monthOfYear, BigInt(l.expectedLevelScaled), l.sampleYears],
+      functionName: 'levelKey',
+      args: [l.regionId, l.monthOfYear],
     })
-    await publicClient.waitForTransactionReceipt({ hash })
-    console.log(
-      `  ${l.region} m${l.monthOfYear} mean daily = ${l.expectedDailyMm.toFixed(2)}mm  ${hash}`
-    )
+
+    if (await publicClient.readContract({
+      address: oracleAddress,
+      abi: STRIKE_ORACLE_ABI,
+      functionName: 'isLevelSet',
+      args: [key],
+    })) {
+      levelsSkipped++
+      continue
+    }
+
+    try {
+      const hash = await wallet.writeContract({
+        address: oracleAddress,
+        abi: STRIKE_ORACLE_ABI,
+        functionName: 'setClimatologyLevel',
+        args: [l.regionId, l.monthOfYear, BigInt(l.expectedLevelScaled), l.sampleYears],
+        ...(gasPrice ? { gasPrice } : {}),
+      })
+      await publicClient.waitForTransactionReceipt({ hash })
+      levelsWritten++
+      console.log(
+        `  ${l.region} m${l.monthOfYear} mean daily = ${l.expectedDailyMm.toFixed(2)}mm`
+      )
+    } catch (err: any) {
+      const msg = err?.shortMessage ?? err?.message ?? String(err)
+      console.error(`\nStopped at level ${l.region} m${l.monthOfYear}: ${msg}`)
+      console.error(`Levels: ${levelsWritten} written. Top up and re-run to continue.`)
+      return
+    }
   }
+
+  console.log(`\nLevels: ${levelsWritten} written, ${levelsSkipped} already present.`)
+  console.log(`\nPosting ${strikes.length} strike probabilities to ${oracleAddress}...`)
+
+  let written = 0
+  let skipped = 0
+
+  for (const s of strikes) {
+    // Resume rather than restart. This is 1,080 sequential transactions costing roughly
+    // 39 C2FLR at 650 gwei, which is more than a single faucet grant, so being interrupted
+    // part-way is the normal case rather than the exception. Re-posting a strike that is
+    // already on-chain writes the same value for the same money, so the run asks first.
+    const key = await publicClient.readContract({
+      address: oracleAddress,
+      abi: STRIKE_ORACLE_ABI,
+      functionName: 'strikeKey',
+      args: [s.regionId, s.variable, s.triggerBelow, BigInt(s.thresholdScaled), s.monthOfYear],
+    })
+
+    if (await publicClient.readContract({
+      address: oracleAddress,
+      abi: STRIKE_ORACLE_ABI,
+      functionName: 'isPriced',
+      args: [key],
+    })) {
+      skipped++
+      continue
+    }
+
+    try {
+      const hash = await wallet.writeContract({
+        address: oracleAddress,
+        abi: STRIKE_ORACLE_ABI,
+        functionName: 'setStrikeProbability',
+        args: [
+          s.regionId,
+          s.variable,
+          s.triggerBelow,
+          BigInt(s.thresholdScaled),
+          s.monthOfYear,
+          s.probabilityBps,
+          s.sampleYears,
+        ],
+        ...(gasPrice ? { gasPrice } : {}),
+      })
+      await publicClient.waitForTransactionReceipt({ hash })
+      written++
+      if (written % 25 === 0) {
+        console.log(`  ${written} written, ${skipped} already present, ${strikes.length} total`)
+      }
+    } catch (err: any) {
+      // Out of gas is the expected way this run ends, so say so plainly and stop rather
+      // than hammering the RPC for the remaining hundreds of strikes.
+      const msg = err?.shortMessage ?? err?.message ?? String(err)
+      console.error(`\nStopped at ${s.region} m${s.monthOfYear} ${s.thresholdMm}mm: ${msg}`)
+      console.error(`Wrote ${written}, skipped ${skipped}. Top up and re-run to continue.`)
+      return
+    }
+  }
+
+  console.log(`\nStrikes: ${written} written, ${skipped} already present.`)
+  console.log('Climatology publishing complete.')
 }
 
 async function main() {

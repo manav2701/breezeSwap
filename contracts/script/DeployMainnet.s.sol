@@ -67,8 +67,10 @@ contract DeployMainnet is Script {
         console.log("timelock delay (s):", cfg.timelockDelay);
 
         vm.startBroadcast(deployerKey);
-        BreezeDeployer builder = new BreezeDeployer();
-        BreezeDeployer.Deployment memory d = builder.deploy(cfg, deployer);
+        // Library call, inlined. See the note in `BreezeDeployer`: as a contract it was
+        // 133,883 bytes against a 24,576 byte chain limit, so this script could not have
+        // completed on mainnet either.
+        BreezeDeployer.Deployment memory d = BreezeDeployer.deploy(cfg, deployer);
         vm.stopBroadcast();
 
         console.log("");

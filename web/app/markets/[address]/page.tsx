@@ -38,6 +38,20 @@ function scaleOracle(raw: unknown): number | null {
   return n > 1000 ? n / 1e6 : n
 }
 
+/**
+ * An upper threshold only means something when it is above the lower one.
+ *
+ * BINARY markets are created with `thresholdHigh = 0`, which is a real zero rather than an
+ * absent value, so every `thresholdHigh != null` check downstream treated it as a genuine
+ * bound and a market on "at or above 40mm" rendered as the range "40-0mm". Normalising here
+ * rather than at each render site fixes the card, the detail header, the payoff chart and
+ * the weather chart together, and keeps the rule in one place.
+ */
+function upperBound(low: number, high: number | null): number | null {
+  if (high == null) return null
+  return high > low ? high : null
+}
+
 function ensureMarketMapped(m: any): Market | null {
   if (!m) return null
   return {
@@ -48,7 +62,10 @@ function ensureMarketMapped(m: any): Market | null {
     weatherVariable: m.weatherVariable || m.weather_variable || 'RAINFALL',
     payoffType: m.payoffType || m.payoff_type || 'CAPPED',
     thresholdLow: scaleOracle(m.threshold_low ?? m.thresholdLow) ?? 0,
-    thresholdHigh: scaleOracle(m.threshold_high ?? m.thresholdHigh),
+    thresholdHigh: upperBound(
+      scaleOracle(m.threshold_low ?? m.thresholdLow) ?? 0,
+      scaleOracle(m.threshold_high ?? m.thresholdHigh)
+    ),
     expiryTimestamp: m.expiryTimestamp || m.expiry_timestamp || '',
     collateralToken: m.collateralToken || m.collateral_token || '',
     status: m.status || 'OPEN',
@@ -326,7 +343,7 @@ export default function MarketDetailPage({ params }: { params: Promise<{ address
           <div className="min-w-0 space-y-3">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="display-2 text-ink">{market.regionName || 'Global region'}</h1>
-              <StatusBadge status={market.status} />
+              <StatusBadge status={market.status} isExpired={isExpired} />
               {/* This market exists on-chain but the indexer has not picked it
                   up, so history and holders are unavailable. Saying so beats
                   showing an empty table with no explanation. */}

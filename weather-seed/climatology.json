@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T20:34:50.156Z",
+  "generatedAt": "2026-08-11T13:57:08.255Z",
   "source": "Open-Meteo Archive API",
   "startYear": 1996,
   "endYear": 2025,
@@ -46445,6 +46445,489 @@
         40.8,
         68.1
       ]
+    }
+  ],
+  "levelCount": 60,
+  "levels": [
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 1,
+      "expectedDailyMm": 2,
+      "expectedLevelScaled": "1999570",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 2,
+      "expectedDailyMm": 2.343,
+      "expectedLevelScaled": "2343278",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 3,
+      "expectedDailyMm": 3.689,
+      "expectedLevelScaled": "3689462",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 4,
+      "expectedDailyMm": 4.166,
+      "expectedLevelScaled": "4165889",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 5,
+      "expectedDailyMm": 4.618,
+      "expectedLevelScaled": "4618172",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 6,
+      "expectedDailyMm": 5.578,
+      "expectedLevelScaled": "5577889",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 7,
+      "expectedDailyMm": 4.87,
+      "expectedLevelScaled": "4870430",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 8,
+      "expectedDailyMm": 3.79,
+      "expectedLevelScaled": "3790000",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 9,
+      "expectedDailyMm": 6.185,
+      "expectedLevelScaled": "6185444",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 10,
+      "expectedDailyMm": 6.234,
+      "expectedLevelScaled": "6234194",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 11,
+      "expectedDailyMm": 3.099,
+      "expectedLevelScaled": "3099111",
+      "sampleYears": 30
+    },
+    {
+      "region": "TOKYO",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "monthOfYear": 12,
+      "expectedDailyMm": 1.958,
+      "expectedLevelScaled": "1958065",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 1,
+      "expectedDailyMm": 0.647,
+      "expectedLevelScaled": "646989",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 2,
+      "expectedDailyMm": 0.858,
+      "expectedLevelScaled": "857547",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 3,
+      "expectedDailyMm": 1.298,
+      "expectedLevelScaled": "1297527",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 4,
+      "expectedDailyMm": 2.435,
+      "expectedLevelScaled": "2435222",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 5,
+      "expectedDailyMm": 3.184,
+      "expectedLevelScaled": "3184194",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 6,
+      "expectedDailyMm": 4.682,
+      "expectedLevelScaled": "4681778",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 7,
+      "expectedDailyMm": 10.472,
+      "expectedLevelScaled": "10471505",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 8,
+      "expectedDailyMm": 8.585,
+      "expectedLevelScaled": "8585269",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 9,
+      "expectedDailyMm": 4.516,
+      "expectedLevelScaled": "4516333",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 10,
+      "expectedDailyMm": 1.949,
+      "expectedLevelScaled": "1949032",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 11,
+      "expectedDailyMm": 1.594,
+      "expectedLevelScaled": "1593889",
+      "sampleYears": 30
+    },
+    {
+      "region": "SEOUL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "monthOfYear": 12,
+      "expectedDailyMm": 0.744,
+      "expectedLevelScaled": "744409",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 1,
+      "expectedDailyMm": 7.271,
+      "expectedLevelScaled": "7271075",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 2,
+      "expectedDailyMm": 4.51,
+      "expectedLevelScaled": "4510495",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 3,
+      "expectedDailyMm": 7.006,
+      "expectedLevelScaled": "7006129",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 4,
+      "expectedDailyMm": 8.778,
+      "expectedLevelScaled": "8777556",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 5,
+      "expectedDailyMm": 7.653,
+      "expectedLevelScaled": "7652688",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 6,
+      "expectedDailyMm": 6.885,
+      "expectedLevelScaled": "6884556",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 7,
+      "expectedDailyMm": 5.714,
+      "expectedLevelScaled": "5714194",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 8,
+      "expectedDailyMm": 6.436,
+      "expectedLevelScaled": "6436129",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 9,
+      "expectedDailyMm": 6.239,
+      "expectedLevelScaled": "6239222",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 10,
+      "expectedDailyMm": 8.422,
+      "expectedLevelScaled": "8421828",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 11,
+      "expectedDailyMm": 11.189,
+      "expectedLevelScaled": "11189444",
+      "sampleYears": 30
+    },
+    {
+      "region": "SINGAPORE",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "monthOfYear": 12,
+      "expectedDailyMm": 10.24,
+      "expectedLevelScaled": "10239677",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 1,
+      "expectedDailyMm": 0.554,
+      "expectedLevelScaled": "553763",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 2,
+      "expectedDailyMm": 0.371,
+      "expectedLevelScaled": "370755",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 3,
+      "expectedDailyMm": 0.543,
+      "expectedLevelScaled": "542688",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 4,
+      "expectedDailyMm": 0.258,
+      "expectedLevelScaled": "257778",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 5,
+      "expectedDailyMm": 0.021,
+      "expectedLevelScaled": "20538",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 6,
+      "expectedDailyMm": 0.008,
+      "expectedLevelScaled": "8444",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 7,
+      "expectedDailyMm": 0.045,
+      "expectedLevelScaled": "45054",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 8,
+      "expectedDailyMm": 0.03,
+      "expectedLevelScaled": "29785",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 9,
+      "expectedDailyMm": 0.013,
+      "expectedLevelScaled": "13333",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 10,
+      "expectedDailyMm": 0.048,
+      "expectedLevelScaled": "48495",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 11,
+      "expectedDailyMm": 0.139,
+      "expectedLevelScaled": "138778",
+      "sampleYears": 30
+    },
+    {
+      "region": "DUBAI",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "monthOfYear": 12,
+      "expectedDailyMm": 0.249,
+      "expectedLevelScaled": "249140",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 1,
+      "expectedDailyMm": 1.832,
+      "expectedLevelScaled": "1832258",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 2,
+      "expectedDailyMm": 1.761,
+      "expectedLevelScaled": "1760613",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 3,
+      "expectedDailyMm": 1.452,
+      "expectedLevelScaled": "1452366",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 4,
+      "expectedDailyMm": 1.538,
+      "expectedLevelScaled": "1537778",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 5,
+      "expectedDailyMm": 1.764,
+      "expectedLevelScaled": "1763656",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 6,
+      "expectedDailyMm": 1.935,
+      "expectedLevelScaled": "1935000",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 7,
+      "expectedDailyMm": 1.885,
+      "expectedLevelScaled": "1884731",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 8,
+      "expectedDailyMm": 1.954,
+      "expectedLevelScaled": "1954409",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 9,
+      "expectedDailyMm": 1.638,
+      "expectedLevelScaled": "1638111",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 10,
+      "expectedDailyMm": 2.153,
+      "expectedLevelScaled": "2153226",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 11,
+      "expectedDailyMm": 2.225,
+      "expectedLevelScaled": "2225111",
+      "sampleYears": 30
+    },
+    {
+      "region": "LONDON",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "monthOfYear": 12,
+      "expectedDailyMm": 1.906,
+      "expectedLevelScaled": "1906129",
+      "sampleYears": 30
     }
   ]
 }

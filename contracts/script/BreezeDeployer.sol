@@ -43,7 +43,20 @@ contract BreezeDemoUSD is ERC20 {
 /// optional by design, so a missed `setJuniorTranche` produces a protocol that works
 /// perfectly and silently has no junior tranche. Sharing one implementation with a test
 /// that asserts every link is the only way that stays true.
-contract BreezeDeployer {
+///
+/// @dev A LIBRARY, deliberately, and this used to be a contract. As a contract it called
+/// `new` on fifteen protocol contracts, so Solidity embedded the creation bytecode of all
+/// fifteen into its own: 133,883 bytes of runtime code against an EIP-170 limit of 24,576.
+/// It could never have been deployed to any EVM chain. Nothing caught it because Foundry
+/// does not enforce the code size limit in tests, so a full suite passed against a
+/// deployment path that could not run, and the protocol was undeployable for as long as
+/// the builder existed.
+///
+/// Internal library functions are inlined into the caller and the library is never
+/// deployed, so the only CREATE transactions are the protocol contracts themselves, each
+/// of which fits comfortably. The caller here is a forge script, which is executed locally
+/// and never broadcast, so its size does not matter either.
+library BreezeDeployer {
     struct Config {
         /// Collateral token. Zero deploys a demo token — never do that on a real network.
         address collateralToken;
@@ -85,25 +98,29 @@ contract BreezeDeployer {
 
     /// @notice Deploy, fully wire, and hand over governance. One call, nothing left half done.
     ///
-    /// @dev **This contract is the initial admin, not the deployer**, and getting that wrong
-    /// is the first thing that breaks here. Every wiring call below is `onlyAdmin`, and
-    /// `msg.sender` for those calls is THIS CONTRACT — not the externally owned account that
-    /// invoked the script. Granting the initial roles to `deployer` produces a deployment
-    /// that reverts on its first `setFirstLossFund`.
+    /// @dev **`deployer` is the initial admin**, and it has to be, because every wiring call
+    /// below is `onlyAdmin` and `msg.sender` for those calls is whoever the library was
+    /// inlined into. Under `forge script --broadcast` that is the externally owned account
+    /// signing the transactions; in `DeploymentWiring.t.sol` it is the test contract. Passing
+    /// anything else here produces a deployment that reverts on its first `setFirstLossFund`.
     ///
-    /// So the builder holds every role for the duration, and gives all of them up before
-    /// returning. `_handOverGovernance` is called from inside rather than left to the caller
-    /// precisely because a two-step version can be stopped half way, leaving a protocol
-    /// whose admin is a throwaway contract nobody controls.
-    function deploy(Config memory cfg, address deployer) public returns (Deployment memory d) {
+    /// The predecessor made itself the admin via `address(this)` and renounced at the end.
+    /// That does not survive inlining: in a script `address(this)` is the script's
+    /// local-only address, which exists in no chain state, so the protocol would be handed
+    /// to an address nobody can ever hold a key for.
+    ///
+    /// `_handOverGovernance` is still called from inside rather than left to the caller,
+    /// because a two-step version can be stopped half way and leave admin somewhere
+    /// unintended.
+    function deploy(Config memory cfg, address deployer) internal returns (Deployment memory d) {
         if (cfg.perpRegions.length == 0) revert NoRegions();
         if (cfg.perpRegions.length != cfg.perilGroups.length) {
             revert RegionsAndGroupsMismatch(cfg.perpRegions.length, cfg.perilGroups.length);
         }
 
-        d.accessControl = new BreezeAccessControl(address(this));
+        d.accessControl = new BreezeAccessControl(deployer);
         // Not granted by the constructor, and needed to create the perp markets below.
-        d.accessControl.grantRole(d.accessControl.MARKET_CREATOR_ROLE(), address(this));
+        d.accessControl.grantRole(d.accessControl.MARKET_CREATOR_ROLE(), deployer);
 
         if (cfg.collateralToken == address(0)) {
             // Minted to the deployer, not to this throwaway builder, or the demo supply
@@ -255,12 +272,11 @@ contract BreezeDeployer {
     ///     reserves is exactly what the climatology check guards against, so a delay before
     ///     a new market goes live is a feature rather than friction.
     ///
-    /// With no multisig configured, everything goes to the deployer instead — a testnet
-    /// deployment, and the script says so loudly rather than pretending otherwise.
+    /// With no multisig configured, the deployer simply keeps what it already holds — a
+    /// testnet deployment, and the script says so loudly rather than pretending otherwise.
     ///
-    /// The builder renounces last, and `DEFAULT_ADMIN_ROLE` last of all: it is the role that
-    /// grants the others, so releasing it first would strand the sequence half done with
-    /// this throwaway contract still holding admin.
+    /// The deployer renounces last, and `DEFAULT_ADMIN_ROLE` last of all: it is the role that
+    /// grants the others, so releasing it first would strand the sequence half done.
     function _handOverGovernance(Deployment memory d, Config memory cfg, address deployer)
         internal
         returns (TimelockController timelock)
@@ -268,11 +284,10 @@ contract BreezeDeployer {
         BreezeAccessControl ac = d.accessControl;
 
         if (cfg.governanceMultisig == address(0)) {
-            ac.grantRole(ac.ADMIN_ROLE(), deployer);
-            ac.grantRole(ac.MARKET_CREATOR_ROLE(), deployer);
-            ac.grantRole(ac.PAUSER_ROLE(), deployer);
-            ac.grantRole(ac.ORACLE_UPDATER_ROLE(), deployer);
-            ac.grantRole(ac.DEFAULT_ADMIN_ROLE(), deployer);
+            // The deployer was made admin in `deploy` and there is nowhere else to send
+            // control, so it keeps every role. Nothing to grant and nothing to renounce:
+            // renouncing here would leave the protocol with no admin at all.
+            return TimelockController(payable(address(0)));
         } else {
             address[] memory proposers = new address[](1);
             proposers[0] = cfg.governanceMultisig;
@@ -297,11 +312,14 @@ contract BreezeDeployer {
             ac.grantRole(ac.ORACLE_UPDATER_ROLE(), updater);
         }
 
-        ac.renounceRole(ac.ADMIN_ROLE(), address(this));
-        ac.renounceRole(ac.MARKET_CREATOR_ROLE(), address(this));
-        ac.renounceRole(ac.PAUSER_ROLE(), address(this));
-        ac.renounceRole(ac.ORACLE_UPDATER_ROLE(), address(this));
-        ac.renounceRole(ac.DEFAULT_ADMIN_ROLE(), address(this));
+        // Only reached when governance was configured, so there is somewhere for control to
+        // have gone. `renounceRole` acts on `msg.sender`, which is the deployer here, so
+        // these must be the deployer's own roles being released.
+        ac.renounceRole(ac.ADMIN_ROLE(), deployer);
+        ac.renounceRole(ac.MARKET_CREATOR_ROLE(), deployer);
+        ac.renounceRole(ac.PAUSER_ROLE(), deployer);
+        ac.renounceRole(ac.ORACLE_UPDATER_ROLE(), deployer);
+        ac.renounceRole(ac.DEFAULT_ADMIN_ROLE(), deployer);
 
         return timelock;
     }

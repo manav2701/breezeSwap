@@ -31,7 +31,14 @@ function ensureMarketMapped(m: any): Market {
     weatherVariable: m.weatherVariable || m.weather_variable || 'RAINFALL',
     payoffType: m.payoffType || m.payoff_type || 'CAPPED',
     thresholdLow: scale(m.threshold_low ?? m.thresholdLow) ?? 0,
-    thresholdHigh: scale(m.threshold_high ?? m.thresholdHigh),
+    // An upper threshold only means something when it is above the lower one. BINARY
+    // markets carry `thresholdHigh = 0`, a real zero rather than an absent value, so a
+    // plain null check rendered "at or above 40mm" as the range "40-0mm".
+    thresholdHigh: (() => {
+      const low = scale(m.threshold_low ?? m.thresholdLow) ?? 0
+      const high = scale(m.threshold_high ?? m.thresholdHigh)
+      return high != null && high > low ? high : null
+    })(),
     expiryTimestamp: m.expiryTimestamp || m.expiry_timestamp || '',
     collateralToken: m.collateralToken || m.collateral_token || '',
     status: m.status || 'OPEN',
@@ -57,6 +64,9 @@ export function MarketCard({ market: rawMarket }: { market: Market }) {
     market.thresholdHigh != null
       ? `${market.thresholdLow}–${market.thresholdHigh}${unit}`
       : `≥ ${market.thresholdLow}${unit}`
+  const isExpired = market.expiryTimestamp
+    ? new Date(market.expiryTimestamp).getTime() <= Date.now()
+    : false
 
   return (
     <Link
@@ -76,7 +86,7 @@ export function MarketCard({ market: rawMarket }: { market: Market }) {
             </span>
           </div>
         </div>
-        <StatusBadge status={market.status} />
+        <StatusBadge status={market.status} isExpired={isExpired} />
       </div>
 
       <dl className="grid grid-cols-3 gap-3">

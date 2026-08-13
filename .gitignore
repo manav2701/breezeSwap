@@ -22,3 +22,9 @@ contracts/lib/
 Thumbs.db
 .vscode/
 .idea/
+
+# LaTeX build artefacts
+docs/whitepaper/*.log
+docs/whitepaper/*.aux
+docs/whitepaper/*.out
+docs/whitepaper/*.toc

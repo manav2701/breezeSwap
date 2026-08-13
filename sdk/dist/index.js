@@ -9867,13 +9867,16 @@ __export(index_exports, {
   DEPLOYED_CHAIN_IDS: () => DEPLOYED_CHAIN_IDS,
   FLARE_MAINNET_CHAIN_ID: () => FLARE_MAINNET_CHAIN_ID,
   KNOWN_REGIONS: () => KNOWN_REGIONS,
+  LEGACY_REGION_IDS: () => LEGACY_REGION_IDS,
   ORACLE_DECIMALS: () => ORACLE_DECIMALS,
   ORACLE_SCALAR: () => ORACLE_SCALAR,
   PAYOFF_TYPES: () => PAYOFF_TYPES,
   SIDES: () => SIDES,
   SUPPORTED_CHAINS: () => SUPPORTED_CHAINS,
+  SUPPORTED_REGIONS: () => SUPPORTED_REGIONS,
   WAD: () => WAD,
   WEATHER_VARIABLES: () => WEATHER_VARIABLES,
+  WEATHER_VARIABLE_BY_INDEX: () => WEATHER_VARIABLE_BY_INDEX,
   approveCollateral: () => approveCollateral,
   approvePerpCollateral: () => approvePerpCollateral,
   calculateMarkPrice: () => calculateMarkPrice,
@@ -9918,6 +9921,7 @@ __export(index_exports, {
   getWeatherReadings: () => getWeatherReadings,
   grantRole: () => grantRole,
   isChainDeployed: () => isChainDeployed,
+  isLegacyRegionId: () => isLegacyRegionId,
   liquidatePerpPosition: () => liquidatePerpPosition,
   mintPosition: () => mintPosition,
   openPerpPosition: () => openPerpPosition,
@@ -9942,24 +9946,27 @@ var COSTON2_CHAIN_ID = 114;
 var FLARE_MAINNET_CHAIN_ID = 14;
 var CONTRACT_ADDRESSES = {
   [COSTON2_CHAIN_ID]: {
-    accessControl: "0x3788420AB4Ef4D2c2dd22c151fd6CB93d2543853",
-    factory: "0x699fd810EC7C0620a9BF01Cd73356770Ae0aBbaf",
-    marketFactory: "0x699fd810EC7C0620a9BF01Cd73356770Ae0aBbaf",
-    positionToken: "0x1A3C38499020a733C1534E8f43FBbF3afAf01e15",
-    mockWeatherOracle: "0x17EEF37738887b2a6f7149aA3af047D6144D6139",
-    oracle: "0x17EEF37738887b2a6f7149aA3af047D6144D6139",
-    mockUsdt: "0x639b6b2a0195271557e543F51c0FA417265B2FAC",
-    fTestXrp: "0x0b6a8e49F600B4676570c99a38e6a68d5d813DC7",
-    ftsoWeatherAdapter: "0x9cd4dFb3B738dCf0DaBB0a94fd054cC9E2F4218c",
-    fdcWeatherAdapter: "0x341A6C8AA41A70c11803Cb67dd56E7F62c1fb18A",
-    fAssetsCollateralAdapter: "0x4cB99FD30BF78c735a5296462C2C2256bE5DcF54",
-    feeConfig: "0xB0D295305d653F044E4178bb6966e76FB79f325C",
-    protocolTreasury: "0xecB7Ff4dA80532F5C7803392761643bA4dDe5058",
-    insuranceFund: "0x96952FC0fBe43AA72E1D08B11daD5cA56c12a36f",
-    perpFactory: "0x05e309f0434942BDfa0D961E25FaCc4483BABe46",
-    tokyoPerpMarket: "0x90C9876e41D0C5a7E1E8F660F0B2bD58D64Cb7Be",
-    seoulPerpMarket: "0x0e566b3b5917Fa2E712b4cd9D5eAE2411e75E2AB",
-    dubaiPerpMarket: "0x3dEc7c280A41a7a2b1272DBe91F1239F6f352DeD"
+    accessControl: "0x055939d4FB50AF8bEd0b0834689B2e19e4f3454e",
+    factory: "0x37E24CcE58A1fCC23e3C88Bdf0Dcc75E19444A5d",
+    marketFactory: "0x37E24CcE58A1fCC23e3C88Bdf0Dcc75E19444A5d",
+    positionToken: "0xC84941ba6be5580f5502e5D04a3ACa3d2fE2fa39",
+    mockWeatherOracle: "0x9c1C9eb2d5Eeede240254AaC84Ca449E647a35E5",
+    oracle: "0x9c1C9eb2d5Eeede240254AaC84Ca449E647a35E5",
+    /// Demo collateral deployed by the script and minted to the deployer. Not real value.
+    mockUsdt: "0x8399c62f02cb1863Af24D71Db4f6F780F81c9d95",
+    strikeProbabilityOracle: "0x8e8F99a12Ec5Cec7436E16a70Ce7Ec31f1ECb595",
+    feeConfig: "0xc284039C88A9B5B0Cb1D7D149DBa017BF1935052",
+    protocolTreasury: "0x7eFC570bFDA83e94c7a65Fc23B339f59097dd1bB",
+    insuranceFund: "0x40593E16e34Df12537bb0c07dded55F4a0355198",
+    // Capital stack. Absent from every previous deployment.
+    firstLossReserve: "0x7abF64b4B0bED8c151F403f8Ae3efA6f8AD22B4E",
+    liquidityVault: "0x053d5237A55941bE87cAb5bbB40230AC8Ab644b6",
+    juniorTranche: "0x9432b5cE8c6aEc67b7FD04429986fC38149DBF55",
+    perilExposureRegistry: "0xa8A1A17642226203397e2cc7aB336f814c0a4Ef4",
+    weatherPolicyMarket: "0xB41Fd6739FE2fee81F5eA8A3881eaDEc49B72252",
+    perpFactory: "0x82df4B98D83A65Af9CA85ec489bcC9d3742D36B7",
+    tokyoPerpMarket: "0x4Cad553561C9A37f9db2D33f5CbcCb527D4dC0dc",
+    seoulPerpMarket: "0x2247023AAa6dE770C5b7c7aF91B204553ee3d08A"
   }
 };
 var DEPLOYED_CHAIN_IDS = [COSTON2_CHAIN_ID];
@@ -19717,21 +19724,27 @@ var BreezeMarket_default = [
 ];
 
 // src/utils/regions.ts
-function encodeRegionId(regionName) {
-  return keccak256(toHex(regionName));
-}
-var KNOWN_REGIONS = {
-  [encodeRegionId("Tokyo")]: "Tokyo",
-  [encodeRegionId("Seoul")]: "Seoul",
-  [encodeRegionId("Singapore")]: "Singapore",
-  [encodeRegionId("Dubai")]: "Dubai",
-  [encodeRegionId("London")]: "London",
-  [encodeRegionId("TOKYO_RAINFALL")]: "Tokyo",
-  [encodeRegionId("SEOUL_RAINFALL")]: "Seoul",
-  [encodeRegionId("SINGAPORE_RAINFALL")]: "Singapore",
-  [encodeRegionId("DUBAI_TEMPERATURE")]: "Dubai",
-  [encodeRegionId("LONDON_RAINFALL")]: "London"
+var WEATHER_VARIABLE_BY_INDEX = {
+  0: "RAINFALL",
+  1: "TEMPERATURE"
 };
+function encodeRegionId(regionName, variable) {
+  return keccak256(toHex(`${regionName.toUpperCase()}_${variable}`));
+}
+var SUPPORTED_REGIONS = ["Tokyo", "Seoul", "Singapore", "Dubai", "London"];
+var KNOWN_REGIONS = Object.fromEntries([
+  ...SUPPORTED_REGIONS.flatMap((name) => [
+    [encodeRegionId(name, "RAINFALL"), name],
+    [encodeRegionId(name, "TEMPERATURE"), name]
+  ]),
+  ...SUPPORTED_REGIONS.map((name) => [keccak256(toHex(name)), name])
+]);
+var LEGACY_REGION_IDS = new Set(
+  SUPPORTED_REGIONS.map((name) => keccak256(toHex(name)))
+);
+function isLegacyRegionId(regionId) {
+  return LEGACY_REGION_IDS.has(regionId.toLowerCase()) || LEGACY_REGION_IDS.has(regionId);
+}
 function decodeRegionId(regionId) {
   return KNOWN_REGIONS[regionId.toLowerCase()] ?? KNOWN_REGIONS[regionId] ?? "Unknown Region";
 }
@@ -21643,13 +21656,16 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong, feeBps = 1
   DEPLOYED_CHAIN_IDS,
   FLARE_MAINNET_CHAIN_ID,
   KNOWN_REGIONS,
+  LEGACY_REGION_IDS,
   ORACLE_DECIMALS,
   ORACLE_SCALAR,
   PAYOFF_TYPES,
   SIDES,
   SUPPORTED_CHAINS,
+  SUPPORTED_REGIONS,
   WAD,
   WEATHER_VARIABLES,
+  WEATHER_VARIABLE_BY_INDEX,
   approveCollateral,
   approvePerpCollateral,
   calculateMarkPrice,
@@ -21694,6 +21710,7 @@ function calculatePerpQuote(reserves, collateralIn, leverage, isLong, feeBps = 1
   getWeatherReadings,
   grantRole,
   isChainDeployed,
+  isLegacyRegionId,
   liquidatePerpPosition,
   mintPosition,
   openPerpPosition,

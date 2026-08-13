@@ -34,8 +34,10 @@ contract DeployProtocol is Script {
 
         vm.startBroadcast(deployerKey);
 
-        BreezeDeployer builder = new BreezeDeployer();
-        BreezeDeployer.Deployment memory d = builder.deploy(cfg, deployer);
+        // Library call, inlined. No builder contract is deployed: as a contract it embedded
+        // the creation bytecode of every protocol contract and came to 133,883 bytes,
+        // against a 24,576 byte chain limit.
+        BreezeDeployer.Deployment memory d = BreezeDeployer.deploy(cfg, deployer);
 
         vm.stopBroadcast();
 
@@ -51,13 +53,22 @@ contract DeployProtocol is Script {
         // Two regions in one peril group, because that is the configuration the aggregate
         // cap exists for: correlated rainfall markets that must not each fill their own
         // allowance against the same weather event.
+        //
+        // Both regions must be ones the climatology seeder actually covers. This used to
+        // list OSAKA_RAINFALL, which `weather-seed` has never had in its region set, so that
+        // market deployed with no expected level and no readings behind it. Nothing failed:
+        // `_checkInitialMark` deliberately skips an unpriced region rather than blocking a
+        // listing, so the market simply existed with its opening mark unchecked and no
+        // oracle data to settle against. Seoul is seeded, and East Asian rainfall is
+        // genuinely correlated with Tokyo's through the same monsoon and typhoon tracks,
+        // which is what the peril group is asserting.
         cfg.perpRegions = new bytes32[](2);
         cfg.perpRegions[0] = keccak256("TOKYO_RAINFALL");
-        cfg.perpRegions[1] = keccak256("OSAKA_RAINFALL");
+        cfg.perpRegions[1] = keccak256("SEOUL_RAINFALL");
 
         cfg.perilGroups = new bytes32[](2);
-        cfg.perilGroups[0] = keccak256("PERIL_JAPAN_RAINFALL");
-        cfg.perilGroups[1] = keccak256("PERIL_JAPAN_RAINFALL");
+        cfg.perilGroups[0] = keccak256("PERIL_EAST_ASIA_RAINFALL");
+        cfg.perilGroups[1] = keccak256("PERIL_EAST_ASIA_RAINFALL");
     }
 
     function _report(BreezeDeployer.Deployment memory d, BreezeDeployer.Config memory cfg)

@@ -93,7 +93,7 @@ export default function CreateMarketPage() {
 
     try {
       const result = await createMarket(walletClient as any, publicClient as any, {
-        regionId: encodeRegionId(regionName),
+        regionId: encodeRegionId(regionName, weatherVariable),
         weatherVariable,
         payoffType,
         thresholdLow: toOracleUnits(thresholdLow),
