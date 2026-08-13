@@ -5,6 +5,7 @@ on:
 jobs:
   fork-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     defaults:
       run:
         working-directory: contracts
@@ -21,4 +22,5 @@ jobs:
         run: |
           forge test --match-path "test/fork/*" \
             --fork-url https://coston2-api.flare.network/ext/C/rpc \
+            --rpc-timeout 30s \
             -vvv

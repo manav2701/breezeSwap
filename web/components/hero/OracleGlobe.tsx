@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotion } from 'framer-motion'
 
 type Node = { id: string; label: string; x: number; y: number }
 
