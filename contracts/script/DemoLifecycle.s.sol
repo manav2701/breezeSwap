@@ -25,6 +25,10 @@ contract DemoLifecycle is Script {
         MockWeatherOracle oracle = MockWeatherOracle(oracleAddress);
         IERC20 usdt = IERC20(usdtAddress);
 
+        // Must match `regionIdFor` in weather-seed and `encodeRegionId` in the
+        // SDK: keccak256("<REGION>_<VARIABLE>"). The variable is part of the id
+        // because the oracle keys readings on region alone, so a city-only id
+        // makes rainfall and temperature share one slot.
         bytes32 regionId = keccak256("TOKYO_RAINFALL");
         uint256 expiry = block.timestamp + 120; // 2 minutes expiry for live demo
 

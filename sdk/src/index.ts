@@ -57,5 +57,10 @@ export {
   formatOracleValue, toOracleUnits, formatPayoutRatio,
   formatCollateral, formatExpiry, timeUntilExpiry
 } from './utils/formatting'
-export { encodeRegionId, decodeRegionId, KNOWN_REGIONS } from './utils/regions'
+export {
+  encodeRegionId, decodeRegionId, KNOWN_REGIONS,
+  SUPPORTED_REGIONS, LEGACY_REGION_IDS, isLegacyRegionId,
+  WEATHER_VARIABLE_BY_INDEX
+} from './utils/regions'
+export type { SupportedRegion } from './utils/regions'
 export { calculatePerpQuote, calculateMarkPrice, type Reserves } from './utils/perpQuote'

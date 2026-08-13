@@ -21,8 +21,6 @@ import "../../script/BreezeDeployer.sol";
 /// So the scripts and this test share one wiring implementation, and this asserts each link
 /// individually rather than checking that the deployment "succeeded".
 contract DeploymentWiringTest is Test {
-    BreezeDeployer builder;
-
     address deployer = address(0xDE9);
     address multisig = address(0x115);
     address updater = address(0x0BAC);
@@ -33,7 +31,6 @@ contract DeploymentWiringTest is Test {
 
     function setUp() public {
         vm.warp(1_700_000_000);
-        builder = new BreezeDeployer();
     }
 
     function _config() internal pure returns (BreezeDeployer.Config memory cfg) {
@@ -45,8 +42,22 @@ contract DeploymentWiringTest is Test {
         cfg.perilGroups[1] = JAPAN_RAIN;
     }
 
+    /// @dev Pranked as `deployer` throughout, and that is not incidental. The library is
+    /// inlined into whoever calls it, so `msg.sender` for every wiring call is this test
+    /// contract unless told otherwise — which would make `deployer` a bystander and let a
+    /// deployment pass here that reverts under `forge script`, where the signer really is a
+    /// separate externally owned account. Pranking models the script faithfully.
+    function _deployAs(BreezeDeployer.Config memory cfg)
+        internal
+        returns (BreezeDeployer.Deployment memory d)
+    {
+        vm.startPrank(deployer);
+        d = BreezeDeployer.deploy(cfg, deployer);
+        vm.stopPrank();
+    }
+
     function _deploy() internal returns (BreezeDeployer.Deployment memory) {
-        return builder.deploy(_config(), deployer);
+        return _deployAs(_config());
     }
 
     function _deployGoverned() internal returns (BreezeDeployer.Deployment memory) {
@@ -54,7 +65,7 @@ contract DeploymentWiringTest is Test {
         cfg.governanceMultisig = multisig;
         cfg.timelockDelay = 2 days;
         cfg.oracleUpdater = updater;
-        return builder.deploy(cfg, deployer);
+        return _deployAs(cfg);
     }
 
     // =================================================================
@@ -221,19 +232,72 @@ contract DeploymentWiringTest is Test {
     // Governance
     // =================================================================
 
-    /// The builder is a throwaway contract with no key behind it. If it kept any role, that
-    /// role would be permanently unusable and, for `DEFAULT_ADMIN_ROLE`, would mean nobody
-    /// could ever grant anything again.
-    function test_the_builder_keeps_no_roles() public {
-        BreezeDeployer.Deployment memory d = _deploy();
+    /// No intermediary may retain a role.
+    ///
+    /// @dev This used to assert that a throwaway *builder contract* held nothing. There is no
+    /// builder any more, and the equivalent hazard moved rather than disappeared: the caller
+    /// the library is inlined into must not end up with control it was never meant to have.
+    /// Under `forge script` that address is the script contract, which exists only in the
+    /// local EVM and has no key behind it on any chain, so a role left there is permanently
+    /// unusable exactly as before.
+    function test_no_intermediary_keeps_roles() public {
+        BreezeDeployer.Deployment memory d = _deployGoverned();
         BreezeAccessControl ac = d.accessControl;
-        address b = address(builder);
 
-        assertFalse(ac.hasRole(ac.ADMIN_ROLE(), b), "builder kept ADMIN_ROLE");
-        assertFalse(ac.hasRole(ac.DEFAULT_ADMIN_ROLE(), b), "builder kept DEFAULT_ADMIN_ROLE");
-        assertFalse(ac.hasRole(ac.PAUSER_ROLE(), b), "builder kept PAUSER_ROLE");
-        assertFalse(ac.hasRole(ac.ORACLE_UPDATER_ROLE(), b), "builder kept ORACLE_UPDATER_ROLE");
-        assertFalse(ac.hasRole(ac.MARKET_CREATOR_ROLE(), b), "builder kept MARKET_CREATOR_ROLE");
+        address[2] memory intermediaries = [address(this), deployer];
+        string[2] memory labels = ["caller", "deployer"];
+
+        for (uint256 i = 0; i < intermediaries.length; i++) {
+            address a = intermediaries[i];
+            assertFalse(ac.hasRole(ac.ADMIN_ROLE(), a), string.concat(labels[i], " kept ADMIN_ROLE"));
+            assertFalse(
+                ac.hasRole(ac.DEFAULT_ADMIN_ROLE(), a),
+                string.concat(labels[i], " kept DEFAULT_ADMIN_ROLE")
+            );
+            assertFalse(ac.hasRole(ac.PAUSER_ROLE(), a), string.concat(labels[i], " kept PAUSER_ROLE"));
+            assertFalse(
+                ac.hasRole(ac.ORACLE_UPDATER_ROLE(), a),
+                string.concat(labels[i], " kept ORACLE_UPDATER_ROLE")
+            );
+            assertFalse(
+                ac.hasRole(ac.MARKET_CREATOR_ROLE(), a),
+                string.concat(labels[i], " kept MARKET_CREATOR_ROLE")
+            );
+        }
+    }
+
+    /// The deployment path must stay deployable.
+    ///
+    /// @dev The reason this file exists at all is that wiring defects are silent. This one
+    /// was worse: `BreezeDeployer` was a contract that called `new` on fifteen others, so it
+    /// carried all their creation bytecode and came to 133,883 bytes against EIP-170's
+    /// 24,576. It could not be deployed to any chain, and every test here passed anyway,
+    /// because Foundry does not enforce the code size limit. A green suite is not evidence
+    /// that a deployment can happen, so assert it directly.
+    function test_no_deployed_contract_exceeds_the_chain_code_size_limit() public {
+        BreezeDeployer.Deployment memory d = _deploy();
+
+        address[10] memory deployed = [
+            address(d.accessControl),
+            address(d.weatherOracle),
+            address(d.pricingOracle),
+            address(d.positionToken),
+            address(d.classicFactory),
+            address(d.vault),
+            address(d.juniorTranche),
+            address(d.firstLossReserve),
+            address(d.perpFactory),
+            address(d.policyMarket)
+        ];
+
+        for (uint256 i = 0; i < deployed.length; i++) {
+            assertLe(deployed[i].code.length, 24_576, "contract over EIP-170 limit");
+            assertGt(deployed[i].code.length, 0, "contract has no code");
+        }
+
+        for (uint256 i = 0; i < d.perpMarkets.length; i++) {
+            assertLe(d.perpMarkets[i].code.length, 24_576, "perp market over EIP-170 limit");
+        }
     }
 
     /// With no multisig configured everything lands on the deployer. That is a testnet
@@ -357,18 +421,29 @@ contract DeploymentWiringTest is Test {
         BreezeDemoUSD existing = new BreezeDemoUSD(address(this));
         cfg.collateralToken = address(existing);
 
-        BreezeDeployer.Deployment memory d = builder.deploy(cfg, deployer);
+        BreezeDeployer.Deployment memory d = _deployAs(cfg);
         assertEq(address(d.collateralToken), address(existing));
         assertFalse(d.collateralIsDemoToken, "a demo token was deployed anyway");
     }
 
     /// The demo token has to be mintable to somebody who holds a key. Minting it to the
-    /// throwaway builder would strand the whole supply.
+    /// inlined caller would strand the whole supply at an address with no key behind it.
     function test_the_demo_token_supply_reaches_the_deployer() public {
         BreezeDeployer.Deployment memory d = _deploy();
         assertTrue(d.collateralIsDemoToken);
         assertEq(d.collateralToken.balanceOf(deployer), 10_000_000e18);
-        assertEq(d.collateralToken.balanceOf(address(builder)), 0);
+        assertEq(d.collateralToken.balanceOf(address(this)), 0);
+    }
+
+    /// @dev `vm.expectRevert` needs a real call boundary to observe, and an inlined internal
+    /// library function is not one — the revert unwinds the test itself with nothing to
+    /// catch it. This wrapper restores the boundary the old `builder.deploy(...)` external
+    /// call used to provide.
+    function deployExternal(BreezeDeployer.Config memory cfg, address dep)
+        external
+        returns (BreezeDeployer.Deployment memory)
+    {
+        return BreezeDeployer.deploy(cfg, dep);
     }
 
     function test_mismatched_regions_and_groups_are_refused() public {
@@ -379,12 +454,12 @@ contract DeploymentWiringTest is Test {
         vm.expectRevert(
             abi.encodeWithSelector(BreezeDeployer.RegionsAndGroupsMismatch.selector, 2, 1)
         );
-        builder.deploy(cfg, deployer);
+        this.deployExternal(cfg, deployer);
     }
 
     function test_a_deployment_with_no_markets_is_refused() public {
         BreezeDeployer.Config memory cfg;
         vm.expectRevert(BreezeDeployer.NoRegions.selector);
-        builder.deploy(cfg, deployer);
+        this.deployExternal(cfg, deployer);
     }
 }

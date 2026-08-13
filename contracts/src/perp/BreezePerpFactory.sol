@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import "./BreezePerpMarket.sol";
 import "./InsuranceFund.sol";
+import "./PerpMarketDeployer.sol";
 import "./VirtualAMM.sol";
 import "../fees/FeeConfig.sol";
 import "../fees/ProtocolTreasury.sol";
@@ -115,20 +116,27 @@ contract BreezePerpFactory is Pausable {
         if (initialCollateralReserve == 0 || initialWeatherReserve == 0) revert InvalidInitialReserves();
         if (oracleAddress == address(0) || collateralToken == address(0)) revert ZeroAddress();
 
-        VirtualAMM.Reserves memory initialReserves = VirtualAMM.Reserves({
-            collateralReserve: initialCollateralReserve,
-            weatherReserve: initialWeatherReserve
-        });
-
-        BreezePerpMarket market = new BreezePerpMarket(
-            initialReserves,
-            oracleAddress,
-            address(sharedInsuranceFund),
-            address(feeConfig),
-            address(treasury),
-            address(accessControl),
-            collateralToken,
-            regionId
+        // Delegated to an external library so the market's creation bytecode is not
+        // compiled into this contract. Inlining it here put the factory at 26,527 bytes
+        // against the 24,576 byte chain limit, which made the factory undeployable on any
+        // EVM chain. The DELEGATECALL executes in this contract's context, so the market's
+        // creator is still this factory and nothing about its behaviour changes.
+        BreezePerpMarket market = BreezePerpMarket(
+            PerpMarketDeployer.deploy(
+                PerpMarketDeployer.MarketParams({
+                    reserves: VirtualAMM.Reserves({
+                        collateralReserve: initialCollateralReserve,
+                        weatherReserve: initialWeatherReserve
+                    }),
+                    oracle: oracleAddress,
+                    insuranceFund: address(sharedInsuranceFund),
+                    feeConfig: address(feeConfig),
+                    treasury: address(treasury),
+                    accessControl: address(accessControl),
+                    collateralToken: collateralToken,
+                    regionId: regionId
+                })
+            )
         );
 
         _checkInitialMark(market, regionId);

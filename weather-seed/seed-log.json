@@ -1,2209 +1,3970 @@
 {
-  "timestamp": "2026-07-24T08:28:09.460Z",
+  "timestamp": "2026-08-11T13:55:43.730Z",
   "network": "Coston2",
-  "oracleAddress": "MockOraclePendingDeploy",
+  "oracleAddress": "0x9c1C9eb2d5Eeede240254AaC84Ca449E647a35E5",
+  "broadcast": true,
   "regionsCount": 5,
-  "totalReadings": 220,
+  "totalReadings": 440,
   "readings": [
     {
       "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-06-24",
-      "timestamp": 1782259200,
-      "precipitation_mm": 11.3,
-      "precipitation_scaled": "11300000",
-      "temp_max_c": 25.2,
-      "temp_max_scaled": "25200000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-06-25",
-      "timestamp": 1782345600,
-      "precipitation_mm": 14.6,
-      "precipitation_scaled": "14600000",
-      "temp_max_c": 20.9,
-      "temp_max_scaled": "20900000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-06-26",
-      "timestamp": 1782432000,
-      "precipitation_mm": 56.9,
-      "precipitation_scaled": "56900000",
-      "temp_max_c": 25.3,
-      "temp_max_scaled": "25300000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-06-27",
-      "timestamp": 1782518400,
-      "precipitation_mm": 23.7,
-      "precipitation_scaled": "23700000",
-      "temp_max_c": 22.9,
-      "temp_max_scaled": "22900000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-06-28",
-      "timestamp": 1782604800,
-      "precipitation_mm": 9.5,
-      "precipitation_scaled": "9500000",
-      "temp_max_c": 23,
-      "temp_max_scaled": "23000000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-06-29",
-      "timestamp": 1782691200,
-      "precipitation_mm": 0.1,
-      "precipitation_scaled": "100000",
-      "temp_max_c": 25.7,
-      "temp_max_scaled": "25700000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-06-30",
-      "timestamp": 1782777600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.1,
-      "temp_max_scaled": "28100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-01",
-      "timestamp": 1782864000,
-      "precipitation_mm": 40.8,
-      "precipitation_scaled": "40800000",
-      "temp_max_c": 27.4,
-      "temp_max_scaled": "27400000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-02",
-      "timestamp": 1782950400,
-      "precipitation_mm": 10.2,
-      "precipitation_scaled": "10200000",
-      "temp_max_c": 23.4,
-      "temp_max_scaled": "23400000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-03",
-      "timestamp": 1783036800,
-      "precipitation_mm": 0.1,
-      "precipitation_scaled": "100000",
-      "temp_max_c": 26.1,
-      "temp_max_scaled": "26100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-04",
-      "timestamp": 1783123200,
-      "precipitation_mm": 5.7,
-      "precipitation_scaled": "5700000",
-      "temp_max_c": 26.1,
-      "temp_max_scaled": "26100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-05",
-      "timestamp": 1783209600,
-      "precipitation_mm": 7.6,
-      "precipitation_scaled": "7600000",
-      "temp_max_c": 24.2,
-      "temp_max_scaled": "24200000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-06",
-      "timestamp": 1783296000,
-      "precipitation_mm": 1.9,
-      "precipitation_scaled": "1900000",
-      "temp_max_c": 23.5,
-      "temp_max_scaled": "23500000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-07",
-      "timestamp": 1783382400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 24.8,
-      "temp_max_scaled": "24800000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-08",
-      "timestamp": 1783468800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.4,
-      "temp_max_scaled": "28400000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-09",
-      "timestamp": 1783555200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29.8,
-      "temp_max_scaled": "29800000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-10",
-      "timestamp": 1783641600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 30.5,
-      "temp_max_scaled": "30500000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-11",
-      "timestamp": 1783728000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 30.8,
-      "temp_max_scaled": "30800000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-12",
       "timestamp": 1783814400,
-      "precipitation_mm": 10.2,
-      "precipitation_scaled": "10200000",
-      "temp_max_c": 28.9,
-      "temp_max_scaled": "28900000"
+      "value": 10.2,
+      "valueScaled": "10200000"
     },
     {
       "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-13",
-      "timestamp": 1783900800,
-      "precipitation_mm": 3.7,
-      "precipitation_scaled": "3700000",
-      "temp_max_c": 28.2,
-      "temp_max_scaled": "28200000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-14",
-      "timestamp": 1783987200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 33.2,
-      "temp_max_scaled": "33200000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-15",
-      "timestamp": 1784073600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32.6,
-      "temp_max_scaled": "32600000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-16",
-      "timestamp": 1784160000,
-      "precipitation_mm": 0.1,
-      "precipitation_scaled": "100000",
-      "temp_max_c": 33.1,
-      "temp_max_scaled": "33100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-17",
-      "timestamp": 1784246400,
-      "precipitation_mm": 6,
-      "precipitation_scaled": "6000000",
-      "temp_max_c": 29.7,
-      "temp_max_scaled": "29700000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-18",
-      "timestamp": 1784332800,
-      "precipitation_mm": 0.3,
-      "precipitation_scaled": "300000",
-      "temp_max_c": 28.3,
-      "temp_max_scaled": "28300000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-19",
-      "timestamp": 1784419200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.5,
-      "temp_max_scaled": "31500000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-20",
-      "timestamp": 1784505600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 34.5,
-      "temp_max_scaled": "34500000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-21",
-      "timestamp": 1784592000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 35.1,
-      "temp_max_scaled": "35100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-22",
-      "timestamp": 1784678400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 35.6,
-      "temp_max_scaled": "35600000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-23",
-      "timestamp": 1784764800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 35.1,
-      "temp_max_scaled": "35100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-24",
-      "timestamp": 1784851200,
-      "precipitation_mm": 22.3,
-      "precipitation_scaled": "22300000",
-      "temp_max_c": 32.1,
-      "temp_max_scaled": "32100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-25",
-      "timestamp": 1784937600,
-      "precipitation_mm": 8.5,
-      "precipitation_scaled": "8500000",
-      "temp_max_c": 34.4,
-      "temp_max_scaled": "34400000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-26",
-      "timestamp": 1785024000,
-      "precipitation_mm": 24.8,
-      "precipitation_scaled": "24800000",
-      "temp_max_c": 29.7,
-      "temp_max_scaled": "29700000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-27",
-      "timestamp": 1785110400,
-      "precipitation_mm": 17.03,
-      "precipitation_scaled": "17030000",
-      "temp_max_c": 31.1,
-      "temp_max_scaled": "31100000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-28",
-      "timestamp": 1785196800,
-      "precipitation_mm": 0.6,
-      "precipitation_scaled": "600000",
-      "temp_max_c": 29.8,
-      "temp_max_scaled": "29800000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-29",
-      "timestamp": 1785283200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32.2,
-      "temp_max_scaled": "32200000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-30",
-      "timestamp": 1785369600,
-      "precipitation_mm": 17,
-      "precipitation_scaled": "17000000",
-      "temp_max_c": 33.8,
-      "temp_max_scaled": "33800000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-07-31",
-      "timestamp": 1785456000,
-      "precipitation_mm": 1.6,
-      "precipitation_scaled": "1600000",
-      "temp_max_c": 28.4,
-      "temp_max_scaled": "28400000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-08-01",
-      "timestamp": 1785542400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.8,
-      "temp_max_scaled": "31800000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-08-02",
-      "timestamp": 1785628800,
-      "precipitation_mm": 15,
-      "precipitation_scaled": "15000000",
-      "temp_max_c": 32.9,
-      "temp_max_scaled": "32900000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-08-03",
-      "timestamp": 1785715200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 26.2,
-      "temp_max_scaled": "26200000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-08-04",
-      "timestamp": 1785801600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.7,
-      "temp_max_scaled": "27700000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-08-05",
-      "timestamp": 1785888000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.5,
-      "temp_max_scaled": "28500000"
-    },
-    {
-      "region": "TOKYO",
-      "regionId": "0x1802ef76335fc4aa746bb25175f631141377e77c0213ad1a3f3ae8b66518e752",
-      "date": "2026-08-06",
-      "timestamp": 1785974400,
-      "precipitation_mm": 10.6,
-      "precipitation_scaled": "10600000",
-      "temp_max_c": 28.6,
-      "temp_max_scaled": "28600000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-06-24",
-      "timestamp": 1782259200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.9,
-      "temp_max_scaled": "28900000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-06-25",
-      "timestamp": 1782345600,
-      "precipitation_mm": 2.6,
-      "precipitation_scaled": "2600000",
-      "temp_max_c": 23.4,
-      "temp_max_scaled": "23400000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-06-26",
-      "timestamp": 1782432000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.5,
-      "temp_max_scaled": "27500000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-06-27",
-      "timestamp": 1782518400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.2,
-      "temp_max_scaled": "31200000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-06-28",
-      "timestamp": 1782604800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31,
-      "temp_max_scaled": "31000000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-06-29",
-      "timestamp": 1782691200,
-      "precipitation_mm": 0.1,
-      "precipitation_scaled": "100000",
-      "temp_max_c": 30.7,
-      "temp_max_scaled": "30700000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-06-30",
-      "timestamp": 1782777600,
-      "precipitation_mm": 0.2,
-      "precipitation_scaled": "200000",
-      "temp_max_c": 29.1,
-      "temp_max_scaled": "29100000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-01",
-      "timestamp": 1782864000,
-      "precipitation_mm": 0.5,
-      "precipitation_scaled": "500000",
-      "temp_max_c": 29.4,
-      "temp_max_scaled": "29400000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-02",
-      "timestamp": 1782950400,
-      "precipitation_mm": 1.3,
-      "precipitation_scaled": "1300000",
-      "temp_max_c": 26.6,
-      "temp_max_scaled": "26600000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-03",
-      "timestamp": 1783036800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.3,
-      "temp_max_scaled": "27300000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-04",
-      "timestamp": 1783123200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.9,
-      "temp_max_scaled": "27900000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-05",
-      "timestamp": 1783209600,
-      "precipitation_mm": 11.8,
-      "precipitation_scaled": "11800000",
-      "temp_max_c": 28.1,
-      "temp_max_scaled": "28100000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-06",
-      "timestamp": 1783296000,
-      "precipitation_mm": 17.5,
-      "precipitation_scaled": "17500000",
-      "temp_max_c": 26.6,
-      "temp_max_scaled": "26600000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-07",
-      "timestamp": 1783382400,
-      "precipitation_mm": 23.1,
-      "precipitation_scaled": "23100000",
-      "temp_max_c": 29,
-      "temp_max_scaled": "29000000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-08",
-      "timestamp": 1783468800,
-      "precipitation_mm": 21.1,
-      "precipitation_scaled": "21100000",
-      "temp_max_c": 27.2,
-      "temp_max_scaled": "27200000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-09",
-      "timestamp": 1783555200,
-      "precipitation_mm": 34.1,
-      "precipitation_scaled": "34100000",
-      "temp_max_c": 26.6,
-      "temp_max_scaled": "26600000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-10",
-      "timestamp": 1783641600,
-      "precipitation_mm": 8.1,
-      "precipitation_scaled": "8100000",
-      "temp_max_c": 27.4,
-      "temp_max_scaled": "27400000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-07-11",
-      "timestamp": 1783728000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32,
-      "temp_max_scaled": "32000000"
-    },
-    {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
       "date": "2026-07-12",
       "timestamp": 1783814400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 34.6,
-      "temp_max_scaled": "34600000"
+      "value": 28.9,
+      "valueScaled": "28900000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-13",
       "timestamp": 1783900800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32.2,
-      "temp_max_scaled": "32200000"
+      "value": 3.7,
+      "valueScaled": "3700000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "value": 28.2,
+      "valueScaled": "28200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-14",
       "timestamp": 1783987200,
-      "precipitation_mm": 59.9,
-      "precipitation_scaled": "59900000",
-      "temp_max_c": 31.5,
-      "temp_max_scaled": "31500000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "value": 33.2,
+      "valueScaled": "33200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-15",
       "timestamp": 1784073600,
-      "precipitation_mm": 0.1,
-      "precipitation_scaled": "100000",
-      "temp_max_c": 27.7,
-      "temp_max_scaled": "27700000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "value": 32.6,
+      "valueScaled": "32600000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-16",
       "timestamp": 1784160000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29.5,
-      "temp_max_scaled": "29500000"
+      "value": 0.1,
+      "valueScaled": "100000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "value": 33.1,
+      "valueScaled": "33100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-17",
       "timestamp": 1784246400,
-      "precipitation_mm": 97.6,
-      "precipitation_scaled": "97600000",
-      "temp_max_c": 28.7,
-      "temp_max_scaled": "28700000"
+      "value": 6,
+      "valueScaled": "6000000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "value": 29.7,
+      "valueScaled": "29700000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-18",
       "timestamp": 1784332800,
-      "precipitation_mm": 2.7,
-      "precipitation_scaled": "2700000",
-      "temp_max_c": 27.2,
-      "temp_max_scaled": "27200000"
+      "value": 0.3,
+      "valueScaled": "300000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "value": 28.3,
+      "valueScaled": "28300000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-19",
       "timestamp": 1784419200,
-      "precipitation_mm": 8.1,
-      "precipitation_scaled": "8100000",
-      "temp_max_c": 28.3,
-      "temp_max_scaled": "28300000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "value": 31.5,
+      "valueScaled": "31500000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-20",
       "timestamp": 1784505600,
-      "precipitation_mm": 26.1,
-      "precipitation_scaled": "26100000",
-      "temp_max_c": 25,
-      "temp_max_scaled": "25000000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "value": 34.5,
+      "valueScaled": "34500000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-21",
       "timestamp": 1784592000,
-      "precipitation_mm": 16.5,
-      "precipitation_scaled": "16500000",
-      "temp_max_c": 26.5,
-      "temp_max_scaled": "26500000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "value": 35.1,
+      "valueScaled": "35100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-22",
       "timestamp": 1784678400,
-      "precipitation_mm": 4.9,
-      "precipitation_scaled": "4900000",
-      "temp_max_c": 29.1,
-      "temp_max_scaled": "29100000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "value": 35.6,
+      "valueScaled": "35600000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-23",
       "timestamp": 1784764800,
-      "precipitation_mm": 4.7,
-      "precipitation_scaled": "4700000",
-      "temp_max_c": 29,
-      "temp_max_scaled": "29000000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "value": 35.1,
+      "valueScaled": "35100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-24",
       "timestamp": 1784851200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.1,
-      "temp_max_scaled": "31100000"
+      "value": 6.3,
+      "valueScaled": "6300000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "value": 32.1,
+      "valueScaled": "32100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-25",
       "timestamp": 1784937600,
-      "precipitation_mm": 8.1,
-      "precipitation_scaled": "8100000",
-      "temp_max_c": 29.4,
-      "temp_max_scaled": "29400000"
+      "value": 2.2,
+      "valueScaled": "2200000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "value": 36.2,
+      "valueScaled": "36200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-26",
       "timestamp": 1785024000,
-      "precipitation_mm": 1.3,
-      "precipitation_scaled": "1300000",
-      "temp_max_c": 29.6,
-      "temp_max_scaled": "29600000"
+      "value": 5.7,
+      "valueScaled": "5700000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "value": 32.3,
+      "valueScaled": "32300000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-27",
       "timestamp": 1785110400,
-      "precipitation_mm": 4.25,
-      "precipitation_scaled": "4250000",
-      "temp_max_c": 30.8,
-      "temp_max_scaled": "30800000"
+      "value": 0.3,
+      "valueScaled": "300000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "value": 28.8,
+      "valueScaled": "28800000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-28",
       "timestamp": 1785196800,
-      "precipitation_mm": 2.6,
-      "precipitation_scaled": "2600000",
-      "temp_max_c": 30.3,
-      "temp_max_scaled": "30300000"
+      "value": 2.1,
+      "valueScaled": "2100000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "value": 28.9,
+      "valueScaled": "28900000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-29",
       "timestamp": 1785283200,
-      "precipitation_mm": 3.4,
-      "precipitation_scaled": "3400000",
-      "temp_max_c": 30.4,
-      "temp_max_scaled": "30400000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "value": 34.4,
+      "valueScaled": "34400000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-30",
       "timestamp": 1785369600,
-      "precipitation_mm": 1.3,
-      "precipitation_scaled": "1300000",
-      "temp_max_c": 30.9,
-      "temp_max_scaled": "30900000"
+      "value": 0.2,
+      "valueScaled": "200000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "value": 35.2,
+      "valueScaled": "35200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-07-31",
       "timestamp": 1785456000,
-      "precipitation_mm": 0.1,
-      "precipitation_scaled": "100000",
-      "temp_max_c": 30.9,
-      "temp_max_scaled": "30900000"
+      "value": 0.5,
+      "valueScaled": "500000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "value": 34.1,
+      "valueScaled": "34100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-08-01",
       "timestamp": 1785542400,
-      "precipitation_mm": 1.8,
-      "precipitation_scaled": "1800000",
-      "temp_max_c": 31.7,
-      "temp_max_scaled": "31700000"
+      "value": 0.1,
+      "valueScaled": "100000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "value": 35.1,
+      "valueScaled": "35100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-08-02",
       "timestamp": 1785628800,
-      "precipitation_mm": 0.6,
-      "precipitation_scaled": "600000",
-      "temp_max_c": 32.5,
-      "temp_max_scaled": "32500000"
+      "value": 1.5,
+      "valueScaled": "1500000"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "value": 32.9,
+      "valueScaled": "32900000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-08-03",
       "timestamp": 1785715200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32.7,
-      "temp_max_scaled": "32700000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "value": 26.5,
+      "valueScaled": "26500000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-08-04",
       "timestamp": 1785801600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 33.9,
-      "temp_max_scaled": "33900000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "value": 28.9,
+      "valueScaled": "28900000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
       "date": "2026-08-05",
       "timestamp": 1785888000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 34.5,
-      "temp_max_scaled": "34500000"
+      "value": 2.2,
+      "valueScaled": "2200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "value": 29.8,
+      "valueScaled": "29800000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 31,
+      "valueScaled": "31000000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 0.2,
+      "valueScaled": "200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 31.7,
+      "valueScaled": "31700000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 32.7,
+      "valueScaled": "32700000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 0.1,
+      "valueScaled": "100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 31.6,
+      "valueScaled": "31600000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 30.1,
+      "valueScaled": "30100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 43.6,
+      "valueScaled": "43600000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 27.4,
+      "valueScaled": "27400000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 26,
+      "valueScaled": "26000000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 25.5,
+      "valueScaled": "25500000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 8.2,
+      "valueScaled": "8200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 27.4,
+      "valueScaled": "27400000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 34,
+      "valueScaled": "34000000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 26.2,
+      "valueScaled": "26200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 1.5,
+      "valueScaled": "1500000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 28.7,
+      "valueScaled": "28700000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 1,
+      "valueScaled": "1000000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 28.2,
+      "valueScaled": "28200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 1.5,
+      "valueScaled": "1500000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 30.8,
+      "valueScaled": "30800000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 8.4,
+      "valueScaled": "8400000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 31.7,
+      "valueScaled": "31700000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 0.6,
+      "valueScaled": "600000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 29.8,
+      "valueScaled": "29800000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 2.9,
+      "valueScaled": "2900000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 29.5,
+      "valueScaled": "29500000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 18,
+      "valueScaled": "18000000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 28.8,
+      "valueScaled": "28800000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 4.3,
+      "valueScaled": "4300000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 28,
+      "valueScaled": "28000000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 1.8,
+      "valueScaled": "1800000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 29.1,
+      "valueScaled": "29100000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "RAINFALL",
+      "regionId": "0x7eb47a164b9247a5aaf37720353ab36e8c227eeb926e886848e9ca1cf9ca0a77",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 1.2,
+      "valueScaled": "1200000"
+    },
+    {
+      "region": "TOKYO",
+      "variable": "TEMPERATURE",
+      "regionId": "0x3e1d37b8b903426e58a2b1b7c7bdeb66d7b865612d5ef8cef14cfa15c4e04251",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 28.2,
+      "valueScaled": "28200000"
     },
     {
       "region": "SEOUL",
-      "regionId": "0xcde5a5206502103831b662ec1daab4fc5ee4a28be119b107e2dbd56e02c814b0",
-      "date": "2026-08-06",
-      "timestamp": 1785974400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 36.2,
-      "temp_max_scaled": "36200000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-06-24",
-      "timestamp": 1782259200,
-      "precipitation_mm": 29,
-      "precipitation_scaled": "29000000",
-      "temp_max_c": 30.3,
-      "temp_max_scaled": "30300000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-06-25",
-      "timestamp": 1782345600,
-      "precipitation_mm": 2.2,
-      "precipitation_scaled": "2200000",
-      "temp_max_c": 31.1,
-      "temp_max_scaled": "31100000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-06-26",
-      "timestamp": 1782432000,
-      "precipitation_mm": 1,
-      "precipitation_scaled": "1000000",
-      "temp_max_c": 31.9,
-      "temp_max_scaled": "31900000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-06-27",
-      "timestamp": 1782518400,
-      "precipitation_mm": 0.3,
-      "precipitation_scaled": "300000",
-      "temp_max_c": 32.3,
-      "temp_max_scaled": "32300000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-06-28",
-      "timestamp": 1782604800,
-      "precipitation_mm": 1.1,
-      "precipitation_scaled": "1100000",
-      "temp_max_c": 32,
-      "temp_max_scaled": "32000000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-06-29",
-      "timestamp": 1782691200,
-      "precipitation_mm": 12.7,
-      "precipitation_scaled": "12700000",
-      "temp_max_c": 32,
-      "temp_max_scaled": "32000000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-06-30",
-      "timestamp": 1782777600,
-      "precipitation_mm": 2.1,
-      "precipitation_scaled": "2100000",
-      "temp_max_c": 29.9,
-      "temp_max_scaled": "29900000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-01",
-      "timestamp": 1782864000,
-      "precipitation_mm": 3.5,
-      "precipitation_scaled": "3500000",
-      "temp_max_c": 31.3,
-      "temp_max_scaled": "31300000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-02",
-      "timestamp": 1782950400,
-      "precipitation_mm": 0.6,
-      "precipitation_scaled": "600000",
-      "temp_max_c": 30,
-      "temp_max_scaled": "30000000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-03",
-      "timestamp": 1783036800,
-      "precipitation_mm": 4.9,
-      "precipitation_scaled": "4900000",
-      "temp_max_c": 30.7,
-      "temp_max_scaled": "30700000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-04",
-      "timestamp": 1783123200,
-      "precipitation_mm": 1.5,
-      "precipitation_scaled": "1500000",
-      "temp_max_c": 32.5,
-      "temp_max_scaled": "32500000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-05",
-      "timestamp": 1783209600,
-      "precipitation_mm": 9.3,
-      "precipitation_scaled": "9300000",
-      "temp_max_c": 31.7,
-      "temp_max_scaled": "31700000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-06",
-      "timestamp": 1783296000,
-      "precipitation_mm": 10.9,
-      "precipitation_scaled": "10900000",
-      "temp_max_c": 31.6,
-      "temp_max_scaled": "31600000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-07",
-      "timestamp": 1783382400,
-      "precipitation_mm": 10.7,
-      "precipitation_scaled": "10700000",
-      "temp_max_c": 31.4,
-      "temp_max_scaled": "31400000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-08",
-      "timestamp": 1783468800,
-      "precipitation_mm": 7.9,
-      "precipitation_scaled": "7900000",
-      "temp_max_c": 30.8,
-      "temp_max_scaled": "30800000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-09",
-      "timestamp": 1783555200,
-      "precipitation_mm": 11.8,
-      "precipitation_scaled": "11800000",
-      "temp_max_c": 29.6,
-      "temp_max_scaled": "29600000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-10",
-      "timestamp": 1783641600,
-      "precipitation_mm": 1.9,
-      "precipitation_scaled": "1900000",
-      "temp_max_c": 31.8,
-      "temp_max_scaled": "31800000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-11",
-      "timestamp": 1783728000,
-      "precipitation_mm": 5.1,
-      "precipitation_scaled": "5100000",
-      "temp_max_c": 31.1,
-      "temp_max_scaled": "31100000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-12",
       "timestamp": 1783814400,
-      "precipitation_mm": 1.3,
-      "precipitation_scaled": "1300000",
-      "temp_max_c": 30.6,
-      "temp_max_scaled": "30600000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-13",
-      "timestamp": 1783900800,
-      "precipitation_mm": 1.2,
-      "precipitation_scaled": "1200000",
-      "temp_max_c": 31.8,
-      "temp_max_scaled": "31800000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-14",
-      "timestamp": 1783987200,
-      "precipitation_mm": 1.4,
-      "precipitation_scaled": "1400000",
-      "temp_max_c": 32.2,
-      "temp_max_scaled": "32200000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-15",
-      "timestamp": 1784073600,
-      "precipitation_mm": 5.6,
-      "precipitation_scaled": "5600000",
-      "temp_max_c": 32.2,
-      "temp_max_scaled": "32200000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-16",
-      "timestamp": 1784160000,
-      "precipitation_mm": 1.8,
-      "precipitation_scaled": "1800000",
-      "temp_max_c": 32.8,
-      "temp_max_scaled": "32800000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-17",
-      "timestamp": 1784246400,
-      "precipitation_mm": 5.4,
-      "precipitation_scaled": "5400000",
-      "temp_max_c": 30,
-      "temp_max_scaled": "30000000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-18",
-      "timestamp": 1784332800,
-      "precipitation_mm": 3.7,
-      "precipitation_scaled": "3700000",
-      "temp_max_c": 32.5,
-      "temp_max_scaled": "32500000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-19",
-      "timestamp": 1784419200,
-      "precipitation_mm": 0.2,
-      "precipitation_scaled": "200000",
-      "temp_max_c": 32.7,
-      "temp_max_scaled": "32700000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-20",
-      "timestamp": 1784505600,
-      "precipitation_mm": 7,
-      "precipitation_scaled": "7000000",
-      "temp_max_c": 32,
-      "temp_max_scaled": "32000000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-21",
-      "timestamp": 1784592000,
-      "precipitation_mm": 3.3,
-      "precipitation_scaled": "3300000",
-      "temp_max_c": 32.6,
-      "temp_max_scaled": "32600000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-22",
-      "timestamp": 1784678400,
-      "precipitation_mm": 18.4,
-      "precipitation_scaled": "18400000",
-      "temp_max_c": 29.7,
-      "temp_max_scaled": "29700000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-23",
-      "timestamp": 1784764800,
-      "precipitation_mm": 3.6,
-      "precipitation_scaled": "3600000",
-      "temp_max_c": 29.4,
-      "temp_max_scaled": "29400000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-24",
-      "timestamp": 1784851200,
-      "precipitation_mm": 13.6,
-      "precipitation_scaled": "13600000",
-      "temp_max_c": 31.4,
-      "temp_max_scaled": "31400000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-25",
-      "timestamp": 1784937600,
-      "precipitation_mm": 22.6,
-      "precipitation_scaled": "22600000",
-      "temp_max_c": 28.2,
-      "temp_max_scaled": "28200000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-26",
-      "timestamp": 1785024000,
-      "precipitation_mm": 8,
-      "precipitation_scaled": "8000000",
-      "temp_max_c": 29.1,
-      "temp_max_scaled": "29100000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-27",
-      "timestamp": 1785110400,
-      "precipitation_mm": 3.9,
-      "precipitation_scaled": "3900000",
-      "temp_max_c": 30.6,
-      "temp_max_scaled": "30600000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-28",
-      "timestamp": 1785196800,
-      "precipitation_mm": 6,
-      "precipitation_scaled": "6000000",
-      "temp_max_c": 29.4,
-      "temp_max_scaled": "29400000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-29",
-      "timestamp": 1785283200,
-      "precipitation_mm": 1.7,
-      "precipitation_scaled": "1700000",
-      "temp_max_c": 30.5,
-      "temp_max_scaled": "30500000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-30",
-      "timestamp": 1785369600,
-      "precipitation_mm": 7.3,
-      "precipitation_scaled": "7300000",
-      "temp_max_c": 28.8,
-      "temp_max_scaled": "28800000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-07-31",
-      "timestamp": 1785456000,
-      "precipitation_mm": 2.4,
-      "precipitation_scaled": "2400000",
-      "temp_max_c": 31.9,
-      "temp_max_scaled": "31900000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-08-01",
-      "timestamp": 1785542400,
-      "precipitation_mm": 7.7,
-      "precipitation_scaled": "7700000",
-      "temp_max_c": 28.4,
-      "temp_max_scaled": "28400000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-08-02",
-      "timestamp": 1785628800,
-      "precipitation_mm": 13.8,
-      "precipitation_scaled": "13800000",
-      "temp_max_c": 28.2,
-      "temp_max_scaled": "28200000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-08-03",
-      "timestamp": 1785715200,
-      "precipitation_mm": 7.3,
-      "precipitation_scaled": "7300000",
-      "temp_max_c": 29.8,
-      "temp_max_scaled": "29800000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-08-04",
-      "timestamp": 1785801600,
-      "precipitation_mm": 0.6,
-      "precipitation_scaled": "600000",
-      "temp_max_c": 30.6,
-      "temp_max_scaled": "30600000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-08-05",
-      "timestamp": 1785888000,
-      "precipitation_mm": 0.6,
-      "precipitation_scaled": "600000",
-      "temp_max_c": 31.2,
-      "temp_max_scaled": "31200000"
-    },
-    {
-      "region": "SINGAPORE",
-      "regionId": "0xf72034ed489702323d81191465449ba3e6b04a066218c44596dcc454cbc528b4",
-      "date": "2026-08-06",
-      "timestamp": 1785974400,
-      "precipitation_mm": 4.8,
-      "precipitation_scaled": "4800000",
-      "temp_max_c": 29.7,
-      "temp_max_scaled": "29700000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-06-24",
-      "timestamp": 1782259200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.8,
-      "temp_max_scaled": "41800000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-06-25",
-      "timestamp": 1782345600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.2,
-      "temp_max_scaled": "38200000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-06-26",
-      "timestamp": 1782432000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.5,
-      "temp_max_scaled": "38500000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-06-27",
-      "timestamp": 1782518400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 35.8,
-      "temp_max_scaled": "35800000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-06-28",
-      "timestamp": 1782604800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 39,
-      "temp_max_scaled": "39000000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-06-29",
-      "timestamp": 1782691200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.4,
-      "temp_max_scaled": "38400000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-06-30",
-      "timestamp": 1782777600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37,
-      "temp_max_scaled": "37000000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-01",
-      "timestamp": 1782864000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 36.9,
-      "temp_max_scaled": "36900000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-02",
-      "timestamp": 1782950400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37.9,
-      "temp_max_scaled": "37900000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-03",
-      "timestamp": 1783036800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.3,
-      "temp_max_scaled": "41300000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-04",
-      "timestamp": 1783123200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38,
-      "temp_max_scaled": "38000000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-05",
-      "timestamp": 1783209600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37.2,
-      "temp_max_scaled": "37200000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-06",
-      "timestamp": 1783296000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.4,
-      "temp_max_scaled": "38400000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-07",
-      "timestamp": 1783382400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.5,
-      "temp_max_scaled": "38500000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-08",
-      "timestamp": 1783468800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37.8,
-      "temp_max_scaled": "37800000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-09",
-      "timestamp": 1783555200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37.7,
-      "temp_max_scaled": "37700000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-10",
-      "timestamp": 1783641600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.9,
-      "temp_max_scaled": "38900000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
-      "date": "2026-07-11",
-      "timestamp": 1783728000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 39,
-      "temp_max_scaled": "39000000"
-    },
-    {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
       "date": "2026-07-12",
       "timestamp": 1783814400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.6,
-      "temp_max_scaled": "38600000"
+      "value": 34.6,
+      "valueScaled": "34600000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-13",
       "timestamp": 1783900800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 36.8,
-      "temp_max_scaled": "36800000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-14",
       "timestamp": 1783987200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 40.4,
-      "temp_max_scaled": "40400000"
+      "value": 59.9,
+      "valueScaled": "59900000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "value": 31.5,
+      "valueScaled": "31500000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-15",
       "timestamp": 1784073600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 44.2,
-      "temp_max_scaled": "44200000"
+      "value": 0.1,
+      "valueScaled": "100000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "value": 27.7,
+      "valueScaled": "27700000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-16",
       "timestamp": 1784160000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 45.2,
-      "temp_max_scaled": "45200000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "value": 29.5,
+      "valueScaled": "29500000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-17",
       "timestamp": 1784246400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.4,
-      "temp_max_scaled": "41400000"
+      "value": 97.6,
+      "valueScaled": "97600000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "value": 28.7,
+      "valueScaled": "28700000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-18",
       "timestamp": 1784332800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 39.9,
-      "temp_max_scaled": "39900000"
+      "value": 2.7,
+      "valueScaled": "2700000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "value": 27.2,
+      "valueScaled": "27200000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-19",
       "timestamp": 1784419200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 39.9,
-      "temp_max_scaled": "39900000"
+      "value": 8.1,
+      "valueScaled": "8100000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "value": 28.3,
+      "valueScaled": "28300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-20",
       "timestamp": 1784505600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 40.4,
-      "temp_max_scaled": "40400000"
+      "value": 26.1,
+      "valueScaled": "26100000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "value": 25,
+      "valueScaled": "25000000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-21",
       "timestamp": 1784592000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 40.5,
-      "temp_max_scaled": "40500000"
+      "value": 16.5,
+      "valueScaled": "16500000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "value": 26.5,
+      "valueScaled": "26500000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-22",
       "timestamp": 1784678400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.5,
-      "temp_max_scaled": "38500000"
+      "value": 4.9,
+      "valueScaled": "4900000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "value": 29.1,
+      "valueScaled": "29100000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-23",
       "timestamp": 1784764800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 39.8,
-      "temp_max_scaled": "39800000"
+      "value": 4.7,
+      "valueScaled": "4700000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "value": 29,
+      "valueScaled": "29000000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-24",
       "timestamp": 1784851200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.3,
-      "temp_max_scaled": "41300000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "value": 31.6,
+      "valueScaled": "31600000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-25",
       "timestamp": 1784937600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.9,
-      "temp_max_scaled": "38900000"
+      "value": 1.3,
+      "valueScaled": "1300000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "value": 29.9,
+      "valueScaled": "29900000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-26",
       "timestamp": 1785024000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37.9,
-      "temp_max_scaled": "37900000"
+      "value": 2.6,
+      "valueScaled": "2600000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "value": 31.3,
+      "valueScaled": "31300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-27",
       "timestamp": 1785110400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 36.8,
-      "temp_max_scaled": "36800000"
+      "value": 1.1,
+      "valueScaled": "1100000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "value": 30.5,
+      "valueScaled": "30500000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-28",
       "timestamp": 1785196800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37,
-      "temp_max_scaled": "37000000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "value": 30.6,
+      "valueScaled": "30600000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-29",
       "timestamp": 1785283200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 38.9,
-      "temp_max_scaled": "38900000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "value": 31.3,
+      "valueScaled": "31300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-30",
       "timestamp": 1785369600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.3,
-      "temp_max_scaled": "41300000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "value": 31.3,
+      "valueScaled": "31300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-07-31",
       "timestamp": 1785456000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 42.7,
-      "temp_max_scaled": "42700000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "value": 31.1,
+      "valueScaled": "31100000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-08-01",
       "timestamp": 1785542400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.5,
-      "temp_max_scaled": "41500000"
+      "value": 0.1,
+      "valueScaled": "100000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "value": 33.2,
+      "valueScaled": "33200000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-08-02",
       "timestamp": 1785628800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.3,
-      "temp_max_scaled": "41300000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "value": 33.8,
+      "valueScaled": "33800000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-08-03",
       "timestamp": 1785715200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 41.3,
-      "temp_max_scaled": "41300000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "value": 35.3,
+      "valueScaled": "35300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-08-04",
       "timestamp": 1785801600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 39.6,
-      "temp_max_scaled": "39600000"
+      "value": 0.2,
+      "valueScaled": "200000"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "value": 35.2,
+      "valueScaled": "35200000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-08-05",
       "timestamp": 1785888000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 37.8,
-      "temp_max_scaled": "37800000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "DUBAI",
-      "regionId": "0xa0d301f4111a7a9c42071e3f0f177df99ae72288b525b536bd8dd69db364d63e",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "value": 35.5,
+      "valueScaled": "35500000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
       "date": "2026-08-06",
       "timestamp": 1785974400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 39.2,
-      "temp_max_scaled": "39200000"
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-06-24",
-      "timestamp": 1782259200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 35.9,
-      "temp_max_scaled": "35900000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 35.4,
+      "valueScaled": "35400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-06-25",
-      "timestamp": 1782345600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.1,
-      "temp_max_scaled": "31100000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-06-26",
-      "timestamp": 1782432000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 35.9,
-      "temp_max_scaled": "35900000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 35.7,
+      "valueScaled": "35700000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-06-27",
-      "timestamp": 1782518400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32,
-      "temp_max_scaled": "32000000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-06-28",
-      "timestamp": 1782604800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 25.8,
-      "temp_max_scaled": "25800000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 32.8,
+      "valueScaled": "32800000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-06-29",
-      "timestamp": 1782691200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 23.9,
-      "temp_max_scaled": "23900000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-06-30",
-      "timestamp": 1782777600,
-      "precipitation_mm": 0.7,
-      "precipitation_scaled": "700000",
-      "temp_max_c": 24.5,
-      "temp_max_scaled": "24500000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 30.4,
+      "valueScaled": "30400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-01",
-      "timestamp": 1782864000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 26.1,
-      "temp_max_scaled": "26100000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-02",
-      "timestamp": 1782950400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 26,
-      "temp_max_scaled": "26000000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 32.5,
+      "valueScaled": "32500000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-03",
-      "timestamp": 1783036800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.1,
-      "temp_max_scaled": "27100000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-04",
-      "timestamp": 1783123200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.2,
-      "temp_max_scaled": "28200000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 32.2,
+      "valueScaled": "32200000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-05",
-      "timestamp": 1783209600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.8,
-      "temp_max_scaled": "28800000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-06",
-      "timestamp": 1783296000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.9,
-      "temp_max_scaled": "31900000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 29.1,
+      "valueScaled": "29100000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-07",
-      "timestamp": 1783382400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.6,
-      "temp_max_scaled": "31600000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 0,
+      "valueScaled": "0"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-08",
-      "timestamp": 1783468800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32.5,
-      "temp_max_scaled": "32500000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 30.6,
+      "valueScaled": "30600000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-09",
-      "timestamp": 1783555200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 34.1,
-      "temp_max_scaled": "34100000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 0.03,
+      "valueScaled": "30000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-10",
-      "timestamp": 1783641600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 30,
-      "temp_max_scaled": "30000000"
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 32,
+      "valueScaled": "32000000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
-      "date": "2026-07-11",
-      "timestamp": 1783728000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29.9,
-      "temp_max_scaled": "29900000"
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 16.9,
+      "valueScaled": "16900000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 33.3,
+      "valueScaled": "33300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 14.3,
+      "valueScaled": "14300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 29,
+      "valueScaled": "29000000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 7.7,
+      "valueScaled": "7700000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 29,
+      "valueScaled": "29000000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 2.5,
+      "valueScaled": "2500000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 28.9,
+      "valueScaled": "28900000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 29.3,
+      "valueScaled": "29300000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 30,
+      "valueScaled": "30000000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 29.9,
+      "valueScaled": "29900000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 32.1,
+      "valueScaled": "32100000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 7.6,
+      "valueScaled": "7600000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "RAINFALL",
+      "regionId": "0x13559cceee377e47dfce8045e518d009be09630977ae41aba2482f8dd45b9380",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 18.9,
+      "valueScaled": "18900000"
+    },
+    {
+      "region": "SEOUL",
+      "variable": "TEMPERATURE",
+      "regionId": "0x2d5d618e46d507baedea0cea0ecae0aa4ca725a551983842af1355166804b827",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 30.4,
+      "valueScaled": "30400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-12",
       "timestamp": 1783814400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29.9,
-      "temp_max_scaled": "29900000"
+      "value": 1.3,
+      "valueScaled": "1300000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "value": 30.6,
+      "valueScaled": "30600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-13",
       "timestamp": 1783900800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.5,
-      "temp_max_scaled": "27500000"
+      "value": 1.2,
+      "valueScaled": "1200000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "value": 31.8,
+      "valueScaled": "31800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-14",
       "timestamp": 1783987200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 30.3,
-      "temp_max_scaled": "30300000"
+      "value": 1.4,
+      "valueScaled": "1400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-15",
       "timestamp": 1784073600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.3,
-      "temp_max_scaled": "28300000"
+      "value": 5.6,
+      "valueScaled": "5600000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-16",
       "timestamp": 1784160000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.9,
-      "temp_max_scaled": "28900000"
+      "value": 1.8,
+      "valueScaled": "1800000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "value": 32.8,
+      "valueScaled": "32800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-17",
       "timestamp": 1784246400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.9,
-      "temp_max_scaled": "28900000"
+      "value": 5.4,
+      "valueScaled": "5400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "value": 30,
+      "valueScaled": "30000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-18",
       "timestamp": 1784332800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 22.7,
-      "temp_max_scaled": "22700000"
+      "value": 3.7,
+      "valueScaled": "3700000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "value": 32.5,
+      "valueScaled": "32500000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-19",
       "timestamp": 1784419200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 22.6,
-      "temp_max_scaled": "22600000"
+      "value": 0.2,
+      "valueScaled": "200000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "value": 32.7,
+      "valueScaled": "32700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-20",
       "timestamp": 1784505600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 25.6,
-      "temp_max_scaled": "25600000"
+      "value": 7,
+      "valueScaled": "7000000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "value": 32,
+      "valueScaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-21",
       "timestamp": 1784592000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 23.1,
-      "temp_max_scaled": "23100000"
+      "value": 3.3,
+      "valueScaled": "3300000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "value": 32.6,
+      "valueScaled": "32600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-22",
       "timestamp": 1784678400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 26.6,
-      "temp_max_scaled": "26600000"
+      "value": 18.4,
+      "valueScaled": "18400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "value": 29.7,
+      "valueScaled": "29700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-23",
       "timestamp": 1784764800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 26.6,
-      "temp_max_scaled": "26600000"
+      "value": 3.6,
+      "valueScaled": "3600000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "value": 29.4,
+      "valueScaled": "29400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-24",
       "timestamp": 1784851200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.5,
-      "temp_max_scaled": "28500000"
+      "value": 4,
+      "valueScaled": "4000000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "value": 32,
+      "valueScaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-25",
       "timestamp": 1784937600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29.2,
-      "temp_max_scaled": "29200000"
+      "value": 8.1,
+      "valueScaled": "8100000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "value": 29.7,
+      "valueScaled": "29700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-26",
       "timestamp": 1785024000,
-      "precipitation_mm": 0.55,
-      "precipitation_scaled": "550000",
-      "temp_max_c": 24.9,
-      "temp_max_scaled": "24900000"
+      "value": 16.3,
+      "valueScaled": "16300000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "value": 28.6,
+      "valueScaled": "28600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-27",
       "timestamp": 1785110400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 26,
-      "temp_max_scaled": "26000000"
+      "value": 1.4,
+      "valueScaled": "1400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "value": 31.2,
+      "valueScaled": "31200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-28",
       "timestamp": 1785196800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29,
-      "temp_max_scaled": "29000000"
+      "value": 2,
+      "valueScaled": "2000000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "value": 31.6,
+      "valueScaled": "31600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-29",
       "timestamp": 1785283200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.4,
-      "temp_max_scaled": "31400000"
+      "value": 4.5,
+      "valueScaled": "4500000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "value": 31.3,
+      "valueScaled": "31300000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-30",
       "timestamp": 1785369600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29.2,
-      "temp_max_scaled": "29200000"
+      "value": 15.9,
+      "valueScaled": "15900000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "value": 30.7,
+      "valueScaled": "30700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-07-31",
       "timestamp": 1785456000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29,
-      "temp_max_scaled": "29000000"
+      "value": 3.4,
+      "valueScaled": "3400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "value": 31.9,
+      "valueScaled": "31900000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-08-01",
       "timestamp": 1785542400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 31.9,
-      "temp_max_scaled": "31900000"
+      "value": 4.9,
+      "valueScaled": "4900000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-08-02",
       "timestamp": 1785628800,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 32.3,
-      "temp_max_scaled": "32300000"
+      "value": 0.3,
+      "valueScaled": "300000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "value": 32.6,
+      "valueScaled": "32600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-08-03",
       "timestamp": 1785715200,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 28.8,
-      "temp_max_scaled": "28800000"
+      "value": 1.4,
+      "valueScaled": "1400000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "value": 32.9,
+      "valueScaled": "32900000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-08-04",
       "timestamp": 1785801600,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.9,
-      "temp_max_scaled": "27900000"
+      "value": 3.3,
+      "valueScaled": "3300000"
     },
     {
-      "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "value": 32.1,
+      "valueScaled": "32100000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
       "date": "2026-08-05",
       "timestamp": 1785888000,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 29.1,
-      "temp_max_scaled": "29100000"
+      "value": 1.8,
+      "valueScaled": "1800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "value": 32.8,
+      "valueScaled": "32800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 3.7,
+      "valueScaled": "3700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 31.7,
+      "valueScaled": "31700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 1.6,
+      "valueScaled": "1600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 32.1,
+      "valueScaled": "32100000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 0.7,
+      "valueScaled": "700000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 32.4,
+      "valueScaled": "32400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 32,
+      "valueScaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 0.3,
+      "valueScaled": "300000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 31.9,
+      "valueScaled": "31900000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 32.4,
+      "valueScaled": "32400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 32,
+      "valueScaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 33.2,
+      "valueScaled": "33200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 8.4,
+      "valueScaled": "8400000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 29.3,
+      "valueScaled": "29300000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 1.5,
+      "valueScaled": "1500000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 31,
+      "valueScaled": "31000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 0.6,
+      "valueScaled": "600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 32,
+      "valueScaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 3.6,
+      "valueScaled": "3600000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 30.1,
+      "valueScaled": "30100000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 3,
+      "valueScaled": "3000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 29.3,
+      "valueScaled": "29300000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 9,
+      "valueScaled": "9000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 26.8,
+      "valueScaled": "26800000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 1.2,
+      "valueScaled": "1200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 32,
+      "valueScaled": "32000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 9,
+      "valueScaled": "9000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 30,
+      "valueScaled": "30000000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "RAINFALL",
+      "regionId": "0x2d1bfb336e38a36c7927936bf4633ddec8eb34b381b9b21093e52f2952714584",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 1.2,
+      "valueScaled": "1200000"
+    },
+    {
+      "region": "SINGAPORE",
+      "variable": "TEMPERATURE",
+      "regionId": "0x4d11a310b17abd44ab2cf7511349ff42d6cd16ac09b7f618a9426473d4474d94",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 32.2,
+      "valueScaled": "32200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "value": 38.6,
+      "valueScaled": "38600000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "value": 36.8,
+      "valueScaled": "36800000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "value": 40.4,
+      "valueScaled": "40400000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "value": 44.2,
+      "valueScaled": "44200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "value": 45.2,
+      "valueScaled": "45200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "value": 41.4,
+      "valueScaled": "41400000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "value": 39.9,
+      "valueScaled": "39900000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "value": 39.9,
+      "valueScaled": "39900000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "value": 40.4,
+      "valueScaled": "40400000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "value": 40.5,
+      "valueScaled": "40500000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "value": 38.5,
+      "valueScaled": "38500000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "value": 39.8,
+      "valueScaled": "39800000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "value": 40.8,
+      "valueScaled": "40800000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "value": 39.8,
+      "valueScaled": "39800000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "value": 41.2,
+      "valueScaled": "41200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "value": 39.4,
+      "valueScaled": "39400000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "value": 38.6,
+      "valueScaled": "38600000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "value": 43.2,
+      "valueScaled": "43200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "value": 43.9,
+      "valueScaled": "43900000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "value": 44.6,
+      "valueScaled": "44600000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "value": 43.1,
+      "valueScaled": "43100000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "value": 43.5,
+      "valueScaled": "43500000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "value": 43.2,
+      "valueScaled": "43200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "value": 44.3,
+      "valueScaled": "44300000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "value": 45.4,
+      "valueScaled": "45400000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 42.3,
+      "valueScaled": "42300000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 42.6,
+      "valueScaled": "42600000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 44.3,
+      "valueScaled": "44300000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 0.3,
+      "valueScaled": "300000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 44.3,
+      "valueScaled": "44300000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 42,
+      "valueScaled": "42000000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 41,
+      "valueScaled": "41000000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 40.6,
+      "valueScaled": "40600000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 44.2,
+      "valueScaled": "44200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 44.1,
+      "valueScaled": "44100000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 40.9,
+      "valueScaled": "40900000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 40.3,
+      "valueScaled": "40300000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 40.6,
+      "valueScaled": "40600000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 42.9,
+      "valueScaled": "42900000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 41,
+      "valueScaled": "41000000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 38.2,
+      "valueScaled": "38200000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 37.7,
+      "valueScaled": "37700000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 36.7,
+      "valueScaled": "36700000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 40.5,
+      "valueScaled": "40500000"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "RAINFALL",
+      "regionId": "0xb28916fea25d68ea8ff5f0da60cc9946be7f1fb3c3436e8f0fc5cc901b81a0c8",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "DUBAI",
+      "variable": "TEMPERATURE",
+      "regionId": "0x5d0073e23e438573bb48836b7f4b164646b2c17775c58e4a61ab1a9e0f0a7466",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 41.3,
+      "valueScaled": "41300000"
     },
     {
       "region": "LONDON",
-      "regionId": "0x53e1484318d8f344486d8c0000c486b097ab80ed07d51faa3a363b08ea78ebdd",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-12",
+      "timestamp": 1783814400,
+      "value": 29.9,
+      "valueScaled": "29900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-13",
+      "timestamp": 1783900800,
+      "value": 27.5,
+      "valueScaled": "27500000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-14",
+      "timestamp": 1783987200,
+      "value": 30.3,
+      "valueScaled": "30300000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-15",
+      "timestamp": 1784073600,
+      "value": 28.3,
+      "valueScaled": "28300000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-16",
+      "timestamp": 1784160000,
+      "value": 28.9,
+      "valueScaled": "28900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-17",
+      "timestamp": 1784246400,
+      "value": 28.9,
+      "valueScaled": "28900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-18",
+      "timestamp": 1784332800,
+      "value": 22.7,
+      "valueScaled": "22700000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-19",
+      "timestamp": 1784419200,
+      "value": 22.6,
+      "valueScaled": "22600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-20",
+      "timestamp": 1784505600,
+      "value": 25.6,
+      "valueScaled": "25600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-21",
+      "timestamp": 1784592000,
+      "value": 23.1,
+      "valueScaled": "23100000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-22",
+      "timestamp": 1784678400,
+      "value": 26.6,
+      "valueScaled": "26600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-23",
+      "timestamp": 1784764800,
+      "value": 26.6,
+      "valueScaled": "26600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-24",
+      "timestamp": 1784851200,
+      "value": 28,
+      "valueScaled": "28000000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-25",
+      "timestamp": 1784937600,
+      "value": 28.8,
+      "valueScaled": "28800000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "value": 0.1,
+      "valueScaled": "100000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-26",
+      "timestamp": 1785024000,
+      "value": 25.9,
+      "valueScaled": "25900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-27",
+      "timestamp": 1785110400,
+      "value": 26.9,
+      "valueScaled": "26900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-28",
+      "timestamp": 1785196800,
+      "value": 29.2,
+      "valueScaled": "29200000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-29",
+      "timestamp": 1785283200,
+      "value": 33.8,
+      "valueScaled": "33800000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-30",
+      "timestamp": 1785369600,
+      "value": 27.8,
+      "valueScaled": "27800000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-07-31",
+      "timestamp": 1785456000,
+      "value": 25.7,
+      "valueScaled": "25700000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-01",
+      "timestamp": 1785542400,
+      "value": 26,
+      "valueScaled": "26000000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-02",
+      "timestamp": 1785628800,
+      "value": 27,
+      "valueScaled": "27000000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-03",
+      "timestamp": 1785715200,
+      "value": 30.7,
+      "valueScaled": "30700000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-04",
+      "timestamp": 1785801600,
+      "value": 29.6,
+      "valueScaled": "29600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "value": 1,
+      "valueScaled": "1000000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-05",
+      "timestamp": 1785888000,
+      "value": 24.8,
+      "valueScaled": "24800000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
       "date": "2026-08-06",
       "timestamp": 1785974400,
-      "precipitation_mm": 0,
-      "precipitation_scaled": "0",
-      "temp_max_c": 27.5,
-      "temp_max_scaled": "27500000"
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-06",
+      "timestamp": 1785974400,
+      "value": 22.3,
+      "valueScaled": "22300000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-07",
+      "timestamp": 1786060800,
+      "value": 25.9,
+      "valueScaled": "25900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-08",
+      "timestamp": 1786147200,
+      "value": 28.1,
+      "valueScaled": "28100000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-09",
+      "timestamp": 1786233600,
+      "value": 31.6,
+      "valueScaled": "31600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-10",
+      "timestamp": 1786320000,
+      "value": 26.5,
+      "valueScaled": "26500000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-11",
+      "timestamp": 1786406400,
+      "value": 25.4,
+      "valueScaled": "25400000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-12",
+      "timestamp": 1786492800,
+      "value": 32.6,
+      "valueScaled": "32600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-13",
+      "timestamp": 1786579200,
+      "value": 35.5,
+      "valueScaled": "35500000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-14",
+      "timestamp": 1786665600,
+      "value": 27.4,
+      "valueScaled": "27400000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-15",
+      "timestamp": 1786752000,
+      "value": 23.1,
+      "valueScaled": "23100000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-16",
+      "timestamp": 1786838400,
+      "value": 25,
+      "valueScaled": "25000000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 1.8,
+      "valueScaled": "1800000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-17",
+      "timestamp": 1786924800,
+      "value": 22.5,
+      "valueScaled": "22500000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-18",
+      "timestamp": 1787011200,
+      "value": 23,
+      "valueScaled": "23000000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 2.3,
+      "valueScaled": "2300000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-19",
+      "timestamp": 1787097600,
+      "value": 24.7,
+      "valueScaled": "24700000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 0.1,
+      "valueScaled": "100000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-20",
+      "timestamp": 1787184000,
+      "value": 23.2,
+      "valueScaled": "23200000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-21",
+      "timestamp": 1787270400,
+      "value": 21.9,
+      "valueScaled": "21900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 0.6,
+      "valueScaled": "600000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-22",
+      "timestamp": 1787356800,
+      "value": 20.9,
+      "valueScaled": "20900000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 0,
+      "valueScaled": "0"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-23",
+      "timestamp": 1787443200,
+      "value": 21.2,
+      "valueScaled": "21200000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "RAINFALL",
+      "regionId": "0x6f682c4ce564a97b800ecd7228a0b52a8c47de947ee37be7f247aacf83f40de7",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 1.2,
+      "valueScaled": "1200000"
+    },
+    {
+      "region": "LONDON",
+      "variable": "TEMPERATURE",
+      "regionId": "0x6ae0a76040e0c2e76d3e290fa8b17c5bfcb3d9fd8d1d2220a59ba13a92aaceb7",
+      "date": "2026-08-24",
+      "timestamp": 1787529600,
+      "value": 20.2,
+      "valueScaled": "20200000"
     }
   ]
 }

@@ -17,11 +17,73 @@ const FACTORY_ADDRESS = (process.env.FACTORY_ADDRESS || '0xe8969c988D4CF26AA9A98
 const ORACLE_ADDRESS = (process.env.MOCK_WEATHER_ORACLE_ADDRESS || '0x376b26e7C91AE050E48Aa1Ca7233625EA258A3ab') as `0x${string}`
 const CHUNK_SIZE = 25n // Coston2 RPC limits max block range to 30
 
+/**
+ * Where to resume indexing from.
+ *
+ * @dev This was `currentBlock - 500n`, unconditionally. Coston2 produces a block roughly
+ * every 1.8 seconds, so that is about fifteen minutes of history no matter when the
+ * contracts were deployed or how long the service was down. Meanwhile `DEPLOYMENT_BLOCK`
+ * was documented in `.env.example` as "block to backfill from on first boot" and read
+ * nowhere, and `indexer_state.last_block` was written after every run and never read back.
+ * Both existed; neither did anything.
+ *
+ * It surfaces as missing data rather than as an error. Seeding the oracle takes longer than
+ * fifteen minutes, so a boot afterwards indexed only the tail of that run, and every chart
+ * whose region had no rows fell back to sample data with nothing logged to say why.
+ *
+ * Resume point, in order of preference:
+ *   1. the stored cursor, so a restart continues where it left off
+ *   2. `DEPLOYMENT_BLOCK`, so a first boot covers the whole deployment
+ *   3. the previous 500-block window, so an unconfigured service still does something
+ */
+async function resolveStartBlock(currentBlock: bigint): Promise<{ from: bigint; reason: string }> {
+  const deploymentBlock = process.env.DEPLOYMENT_BLOCK
+    ? BigInt(process.env.DEPLOYMENT_BLOCK)
+    : undefined
+
+  let stored: bigint | undefined
+  try {
+    const { data } = await supabase
+      .from('indexer_state')
+      .select('last_block')
+      .eq('id', 'coston2_main')
+      .single()
+    if (data?.last_block) stored = BigInt(data.last_block)
+  } catch {
+    // No row yet is the ordinary first-boot case, not a failure.
+  }
+
+  // A stored cursor behind the configured deployment means the row is left over from an
+  // earlier set of contracts. Trusting it would silently skip the current deployment's
+  // history, which is exactly how the indexer ended up watching one generation of
+  // contracts while the frontend read another.
+  if (stored && deploymentBlock !== undefined && stored < deploymentBlock) {
+    return { from: deploymentBlock, reason: 'DEPLOYMENT_BLOCK (stored cursor predates it)' }
+  }
+  if (stored && stored > 0n) {
+    // Re-read the last indexed block rather than starting past it: handlers upsert on
+    // transaction hash, so overlapping by a block is harmless and missing one is not.
+    return { from: stored, reason: 'stored cursor' }
+  }
+  if (deploymentBlock !== undefined) {
+    return { from: deploymentBlock, reason: 'DEPLOYMENT_BLOCK' }
+  }
+  return {
+    from: currentBlock > 500n ? currentBlock - 500n : 0n,
+    reason: 'default 500-block window; set DEPLOYMENT_BLOCK to cover the full deployment',
+  }
+}
+
 export async function runBackfill() {
   const currentBlock = await withRetry(() => publicClient.getBlockNumber())
-  const startBlock = currentBlock > 500n ? currentBlock - 500n : 0n
+  const { from: startBlock, reason } = await resolveStartBlock(currentBlock)
 
-  logger.info('Starting backfill', { fromBlock: startBlock.toString(), toBlock: currentBlock.toString() })
+  logger.info('Starting backfill', {
+    fromBlock: startBlock.toString(),
+    toBlock: currentBlock.toString(),
+    blocks: (currentBlock - startBlock).toString(),
+    startedFrom: reason,
+  })
 
   for (let from = startBlock; from <= currentBlock; from += CHUNK_SIZE) {
     const to = from + CHUNK_SIZE - 1n < currentBlock ? from + CHUNK_SIZE - 1n : currentBlock

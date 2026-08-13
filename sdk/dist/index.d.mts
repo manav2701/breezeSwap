@@ -177,6 +177,13 @@ declare const FLARE_MAINNET_CHAIN_ID = 14;
  * indexer, and frontend are all genuinely chain-parametrised, so adding a
  * mainnet entry here is the only change required once one is deployed.
  */
+/**
+ * @dev Must match `contracts/deployments/coston2.json`. These are the full-protocol
+ * deployment from `script/DeployProtocol.s.sol` at block 33922220, which superseded the
+ * pre-waterfall stack. The old addresses are recorded under `superseded` in that file and
+ * must not be used: their markets derived a region id from the city name alone, so a city's
+ * rainfall and temperature markets shared one oracle slot and cannot settle correctly.
+ */
 declare const CONTRACT_ADDRESSES: {
     readonly 114: {
         readonly accessControl: `0x${string}`;
@@ -186,17 +193,18 @@ declare const CONTRACT_ADDRESSES: {
         readonly mockWeatherOracle: `0x${string}`;
         readonly oracle: `0x${string}`;
         readonly mockUsdt: `0x${string}`;
-        readonly fTestXrp: `0x${string}`;
-        readonly ftsoWeatherAdapter: `0x${string}`;
-        readonly fdcWeatherAdapter: `0x${string}`;
-        readonly fAssetsCollateralAdapter: `0x${string}`;
+        readonly strikeProbabilityOracle: `0x${string}`;
         readonly feeConfig: `0x${string}`;
         readonly protocolTreasury: `0x${string}`;
         readonly insuranceFund: `0x${string}`;
+        readonly firstLossReserve: `0x${string}`;
+        readonly liquidityVault: `0x${string}`;
+        readonly juniorTranche: `0x${string}`;
+        readonly perilExposureRegistry: `0x${string}`;
+        readonly weatherPolicyMarket: `0x${string}`;
         readonly perpFactory: `0x${string}`;
         readonly tokyoPerpMarket: `0x${string}`;
         readonly seoulPerpMarket: `0x${string}`;
-        readonly dubaiPerpMarket: `0x${string}`;
     };
 };
 /** Chain IDs with a verified on-chain deployment. */
@@ -217,17 +225,18 @@ declare function getContractAddresses(chainId: number): {
     readonly mockWeatherOracle: `0x${string}`;
     readonly oracle: `0x${string}`;
     readonly mockUsdt: `0x${string}`;
-    readonly fTestXrp: `0x${string}`;
-    readonly ftsoWeatherAdapter: `0x${string}`;
-    readonly fdcWeatherAdapter: `0x${string}`;
-    readonly fAssetsCollateralAdapter: `0x${string}`;
+    readonly strikeProbabilityOracle: `0x${string}`;
     readonly feeConfig: `0x${string}`;
     readonly protocolTreasury: `0x${string}`;
     readonly insuranceFund: `0x${string}`;
+    readonly firstLossReserve: `0x${string}`;
+    readonly liquidityVault: `0x${string}`;
+    readonly juniorTranche: `0x${string}`;
+    readonly perilExposureRegistry: `0x${string}`;
+    readonly weatherPolicyMarket: `0x${string}`;
     readonly perpFactory: `0x${string}`;
     readonly tokyoPerpMarket: `0x${string}`;
     readonly seoulPerpMarket: `0x${string}`;
-    readonly dubaiPerpMarket: `0x${string}`;
 };
 declare const ORACLE_DECIMALS = 6n;
 declare const ORACLE_SCALAR: bigint;
@@ -26053,8 +26062,47 @@ declare function formatCollateral(raw: string | bigint | number | undefined | nu
 declare function formatExpiry(isoString: string): string;
 declare function timeUntilExpiry(isoString: string): string;
 
-declare function encodeRegionId(regionName: string): `0x${string}`;
+/**
+ * A region identifier names a DATA SERIES, not a place.
+ *
+ * `IWeatherOracle.getReading(regionId, timestamp)` takes no weather-variable
+ * argument, and `MockWeatherOracle` stores readings as
+ * `regionId => timestamp => Reading`. The region id is therefore the only thing
+ * separating one series from another, so the variable has to be part of it.
+ *
+ * Encoding the city alone is what produced the defect this module now exists to
+ * prevent: a Tokyo rainfall market and a Tokyo temperature market both hashed to
+ * `keccak256("Tokyo")`, so both read the same oracle slot. Writing 45 mm of
+ * rainfall settled the temperature market as though Tokyo had hit 45 degrees.
+ * Nothing reverted and nothing logged, because from the oracle's point of view
+ * the two markets were asking the same question.
+ */
+
+/** Weather variable as encoded by `BreezeMarket.WeatherVariable`. */
+declare const WEATHER_VARIABLE_BY_INDEX: Record<number, WeatherVariable>;
+/**
+ * Canonical region id: `keccak256("<REGION>_<VARIABLE>")`, upper case.
+ *
+ * Matches `weather-seed/src/climatology.ts`, which is what priced the strike
+ * probabilities the protocol quotes against, so a market created here is
+ * addressable by the pricing data that already exists.
+ */
+declare function encodeRegionId(regionName: string, variable: WeatherVariable): `0x${string}`;
+/** The cities the climatology seeder covers. */
+declare const SUPPORTED_REGIONS: readonly ["Tokyo", "Seoul", "Singapore", "Dubai", "London"];
+type SupportedRegion = (typeof SUPPORTED_REGIONS)[number];
+/**
+ * Display names by region id, for both variables of every supported city.
+ *
+ * @dev The legacy city-only ids are still listed so that markets created before
+ * the collision was fixed keep rendering a readable name instead of "Unknown
+ * Region". They are deliberately NOT produced by `encodeRegionId` any more, and
+ * `isLegacyRegionId` exists so a caller can warn on them.
+ */
 declare const KNOWN_REGIONS: Record<string, string>;
+/** Ids from the city-only scheme, which cannot distinguish the two variables. */
+declare const LEGACY_REGION_IDS: ReadonlySet<string>;
+declare function isLegacyRegionId(regionId: string): boolean;
 declare function decodeRegionId(regionId: string): string;
 
 interface Reserves {
@@ -26071,4 +26119,4 @@ declare function calculatePerpQuote(reserves: Reserves, collateralIn: bigint, le
     entryPrice: number;
 };
 
-export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, DEPLOYED_CHAIN_IDS, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, type Side, type TokenMeta, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, type WeatherReading, type WeatherVariable, approveCollateral, approvePerpCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, fromTokenUnits, getAllowance, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketOnChain, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTokenBalance, getTokenMeta, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, isChainDeployed, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, toTokenUnits, unpauseFactory, unpauseMarket };
+export { type BreezeRole, type BreezeSwapConfig, CONTRACT_ADDRESSES, COSTON2_CHAIN_ID, type CreateMarketParams, DEPLOYED_CHAIN_IDS, FLARE_MAINNET_CHAIN_ID, type FundingHistoryItem, KNOWN_REGIONS, LEGACY_REGION_IDS, type MarkPriceHistoryItem, type Market, type MarketStatus, type MintPositionParams, type OHLCCandle, ORACLE_DECIMALS, ORACLE_SCALAR, PAYOFF_TYPES, type PayoffType, type PerpMarket, type PerpMarketStatsData, type PerpPosition, type Position, type Reserves, SIDES, SUPPORTED_CHAINS, SUPPORTED_REGIONS, type Side, type SupportedRegion, type TokenMeta, type TradeHistoryEntry, WAD, WEATHER_VARIABLES, WEATHER_VARIABLE_BY_INDEX, type WeatherReading, type WeatherVariable, approveCollateral, approvePerpCollateral, calculateMarkPrice, calculatePerpQuote, checkRole, closePerpPosition, coston2Chain, createBreezePublicClient, createBreezeWalletClient, createMarket, decodeRegionId, encodeRegionId, flareMainnetChain, formatCollateral, formatExpiry, formatOracleValue, formatPayoutRatio, fromTokenUnits, getAllowance, getContractAddresses, getFundingHistory, getGlobalTradeHistory, getInsuranceFundBalance, getMarkPriceCandles, getMarkPriceHistory, getMarket, getMarketOnChain, getMarketPositions, getMarkets, getPerpMarket, getPerpMarketPositions, getPerpMarketStats, getPerpMarkets, getProtocolTreasuryBalance, getRegions, getTokenBalance, getTokenMeta, getTotalFeesCollected, getTradeHistory, getUserPerpPositions, getUserPositions, getWeatherReadings, grantRole, isChainDeployed, isLegacyRegionId, liquidatePerpPosition, mintPosition, openPerpPosition, pauseFactory, pauseMarket, redeem, revokeRole, setOracleReading, setTradingFeeBps, settle, settleFunding, timeUntilExpiry, toOracleUnits, toTokenUnits, unpauseFactory, unpauseMarket };

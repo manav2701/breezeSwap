@@ -55,22 +55,11 @@ const FALLBACK_PERPS: PerpMarket[] = [
     totalLongOpenInterest: '500000000000000000000',
     totalShortOpenInterest: '750000000000000000000',
   },
-  {
-    contractAddress: CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].dubaiPerpMarket,
-    chainId: COSTON2_CHAIN_ID,
-    regionId: 'DUBAI_TEMPERATURE',
-    regionName: 'Dubai',
-    collateralToken: CONTRACT_ADDRESSES[COSTON2_CHAIN_ID].mockUsdt,
-    status: 'ACTIVE',
-    createdAt: new Date().toISOString(),
-    blockNumber: 0,
-    txHash: '',
-    markPrice: 40.0,
-    oraclePrice: 40.2,
-    fundingRate: 0.01,
-    totalLongOpenInterest: '1200000000000000000000',
-    totalShortOpenInterest: '1100000000000000000000',
-  },
+  // Dubai was removed with the deployment that superseded the pre-waterfall stack. The
+  // current protocol lists Tokyo and Seoul, both in one peril group, because two correlated
+  // rainfall markets are the configuration `PerilExposureRegistry` exists to bound. A
+  // fallback entry for a market that no longer exists would render a card linking to an
+  // address with no contract behind it.
 ]
 
 function oiToNumber(raw?: string) {
