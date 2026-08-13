@@ -1,5 +1,5 @@
 # BreezeSwap — Weather Derivatives on Flare
-<!-- BreezeSwap repository trigger update -->
+<!-- BreezeSwap repository trigger update v2 -->
 
 > Rain in Tokyo, heat in Dubai, drought in Seoul: real risks that people already carry and
 > mostly cannot hedge. BreezeSwap turns a weather reading into a tradeable contract that
