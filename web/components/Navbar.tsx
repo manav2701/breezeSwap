@@ -17,7 +17,9 @@ const NAV_LINKS = [
   { href: '/markets', label: 'Markets' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/create', label: 'Create' },
+  { href: '/about', label: 'About' },
   { href: '/docs', label: 'Docs' },
+  { href: '/whitepaper', label: 'Whitepaper' },
 ]
 
 export function Navbar() {
