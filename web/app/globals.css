@@ -209,6 +209,20 @@
     overflow: hidden;
   }
 
+  /* Opaque variant, for surfaces that float above arbitrary page content.
+     `.panel` sits at 82% and leans on backdrop blur, which works when what is
+     behind it is a background. A dropdown is not over a background: it is over
+     headings and figures, and blur does not stop high-contrast text reading
+     through. Overlays get a solid base, and keep the top highlight so they still
+     look like the rest of the system. */
+  .panel-solid {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 42%),
+      var(--color-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   /* Nested block inside a panel — readings, quote rows, stat tiles. */
   .inset {
     background-color: color-mix(in srgb, var(--color-inset) 78%, transparent);

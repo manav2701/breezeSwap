@@ -131,7 +131,7 @@ function NavDropdown({
           /* Pulled up under the trigger so the pointer never crosses a gap. */
           className="absolute left-0 top-full pt-2 w-[16.5rem] z-50"
         >
-          <div className="panel p-1.5 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)]">
+          <div className="panel panel-solid p-1.5 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.75)]">
             {group.items.map((item) => (
               <Link
                 key={item.href}
@@ -139,10 +139,13 @@ function NavDropdown({
                 role="menuitem"
                 onClick={() => setOpen(false)}
                 aria-current={isActive(item.href) ? 'page' : undefined}
+                /* Hover is `raised`, not `surface`: the panel base is now surface, so a
+                   surface hover would be the same colour as the thing behind it. Active
+                   shares the background and is distinguished by the accent label. */
                 className={`block px-3 py-2.5 rounded-lg transition-colors ${
                   isActive(item.href)
                     ? 'bg-[color:var(--color-raised)]'
-                    : 'hover:bg-[color:var(--color-surface)]'
+                    : 'hover:bg-[color:var(--color-raised)]'
                 }`}
               >
                 <span
