@@ -94,6 +94,9 @@ importers:
       connectkit:
         specifier: ^1.8.2
         version: 1.9.2(@babel/core@7.29.7)(@tanstack/react-query@5.101.4(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(viem@2.55.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(wagmi@2.19.5(@tanstack/query-core@5.101.4)(@tanstack/react-query@5.101.4(react@19.2.4))(@types/react@19.2.17)(bufferutil@4.1.0)(react@19.2.4)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.55.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76))
+      framer-motion:
+        specifier: ^12.43.0
+        version: 12.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       lucide-react:
         specifier: ^0.475.0
         version: 0.475.0(react@19.2.4)
