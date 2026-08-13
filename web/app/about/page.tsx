@@ -10,6 +10,7 @@ import {
   Clock,
   FileWarning,
   MapPin,
+  ExternalLink,
 } from 'lucide-react'
 
 export const metadata = {
@@ -29,26 +30,37 @@ export const metadata = {
  * cannot itself wave numbers around.
  */
 
+/**
+ * @dev Every figure carries the publication it came from and a link to it. An earlier draft
+ * claimed "~70% of weather losses uninsured", which was a stale number: Swiss Re's 2025
+ * figures put the insured share at 49%, the highest on their record. Overstating the problem
+ * on a page whose whole argument is that the industry mismeasures risk would have been the
+ * worst possible place to be sloppy, and the real number is damning enough.
+ */
 const STATS = [
   {
     value: '$424bn',
-    label: 'Uninsured natural catastrophe losses, 2025',
-    source: 'Swiss Re',
+    label: 'Natural catastrophe losses in 2025 with no insurance behind them, up from $395bn a year earlier',
+    source: 'Swiss Re sigma 1/2026',
+    href: 'https://www.swissre.com/institute/research/sigma-research/sigma-2026-01-natcat-2025-wildfire-storm-risk.html',
   },
   {
-    value: '~70%',
-    label: 'Of weather-related losses carried with no insurance at all',
-    source: 'Swiss Re',
+    value: '51%',
+    label: 'Of 2025 disaster losses were uninsured, and that was the best-covered year Swiss Re has ever recorded',
+    source: 'Swiss Re sigma 1/2026',
+    href: 'https://www.swissre.com/institute/research/sigma-research/sigma-2026-01-natcat-2025-wildfire-storm-risk/global-natcat-losses-2025.html',
   },
   {
-    value: '$76bn',
-    label: 'The crop protection gap, and it grew again last year',
-    source: 'Swiss Re, 2024',
+    value: '60%',
+    label: 'Of the world’s crop production is uninsured, leaving a $76bn protection gap that grew again',
+    source: 'Swiss Re Crop Insurance Resilience Index',
+    href: 'https://www.swissre.com/institute/research/topics-and-risk-dialogues/climate-and-natural-catastrophe-risk/growing-exposure/global-crop-insurance.html',
   },
   {
     value: '13',
     label: 'Cities on Earth with a liquid, exchange-traded weather market',
     source: 'CME Group',
+    href: 'https://www.cmegroup.com/education/lessons/overview-of-weather-markets',
   },
 ]
 
@@ -134,19 +146,59 @@ export default function AboutPage() {
       <section>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {STATS.map((s) => (
-            <div key={s.label} className="panel p-5 flex flex-col gap-2">
+            <div key={s.source + s.value} className="panel p-5 flex flex-col gap-2">
               <span className="metric-value-lg text-accent numeric">{s.value}</span>
               <span className="text-sm text-ink-muted leading-snug">{s.label}</span>
-              <span className="text-xs text-ink-faint mt-auto pt-2">{s.source}</span>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs text-ink-faint mt-auto pt-2 hover:text-accent transition-colors inline-flex items-center gap-1"
+              >
+                {s.source}
+                <ExternalLink className="w-3 h-3" aria-hidden />
+              </a>
             </div>
           ))}
         </div>
-        <p className="text-sm text-ink-faint mt-4 max-w-3xl leading-relaxed">
-          Around 55% of the world&apos;s insurable crop value is unprotected, and in India
-          close to two thirds of farmers carry no cover at all. These are not edge cases.
-          This is how most agricultural weather risk on the planet is currently held: by the
-          person least able to absorb it.
-        </p>
+
+        <div className="panel p-5 sm:p-6 mt-4 max-w-3xl space-y-3">
+          <p className="text-sm text-ink-muted leading-relaxed">
+            Swiss Re puts the crop protection gap at{' '}
+            <span className="text-ink">close to $76 billion</span>, up from $73 billion the
+            year before, with around 55% of the world&apos;s insurable crop value
+            unprotected. Closing it entirely would take an estimated{' '}
+            <span className="text-ink">$113 billion a year</span> in premiums.
+          </p>
+          <p className="text-sm text-ink-muted leading-relaxed">
+            The direction of travel is the interesting part. Traditional agricultural
+            insurance is growing at about 5% a year. Parametric cover, which pays on a
+            measurement rather than an assessor&apos;s visit, is growing at{' '}
+            <span className="text-ink">15 to 20%</span>. People are not choosing it because
+            it is novel. They are choosing it because it arrives.
+          </p>
+          <p className="text-xs text-ink-faint pt-1">
+            Sources:{' '}
+            <a
+              href="https://www.swissre.com/institute/research/topics-and-risk-dialogues/climate-and-natural-catastrophe-risk/growing-exposure/global-crop-insurance.html"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-accent transition-colors underline underline-offset-2"
+            >
+              Swiss Re, Global crop insurance
+            </a>{' '}
+            and{' '}
+            <a
+              href="https://www.swissre.com/reinsurance/property-and-casualty/agriculture-risks/agricultural-insurance-parametric-products.html"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-accent transition-colors underline underline-offset-2"
+            >
+              Swiss Re, parametric agriculture
+            </a>
+            .
+          </p>
+        </div>
       </section>
 
       {/* Why it is broken */}

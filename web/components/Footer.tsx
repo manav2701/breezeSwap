@@ -1,12 +1,15 @@
 import Link from 'next/link'
-import { CloudRain, ExternalLink, Github, Terminal } from 'lucide-react'
+import Image from 'next/image'
+import { ExternalLink, Github, Terminal } from 'lucide-react'
 
 const PROTOCOL_LINKS = [
   { href: '/perp-markets', label: 'Perpetuals' },
   { href: '/markets', label: 'Classic markets' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/create', label: 'Create a market' },
+  { href: '/about', label: 'About' },
   { href: '/docs', label: 'Documentation' },
+  { href: '/whitepaper', label: 'Whitepaper' },
 ]
 
 export function Footer() {
@@ -15,8 +18,8 @@ export function Footer() {
       <div className="max-w-[86rem] mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="space-y-3 lg:col-span-2 max-w-sm">
           <div className="flex items-center gap-2.5">
-            <span className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
-              <CloudRain className="w-4 h-4 text-[#0a0a0a]" aria-hidden />
+            <span className="relative w-8 h-8 shrink-0">
+              <Image src="/logo.png" alt="" fill sizes="32px" className="object-contain" />
             </span>
             <span className="text-base font-semibold tracking-tight text-ink">
               Breeze<span className="text-accent">Swap</span>

@@ -27,9 +27,17 @@ export const metadata: Metadata = {
     title: 'BreezeSwap — Weather Derivatives on Flare Network',
     description:
       'Hedge climate risk or trade weather outcomes — settled automatically by real oracle data.',
-    url: 'https://breezeswap.xyz',
+    url: 'https://breeze-swap-web-74qh-coral.vercel.app',
     siteName: 'BreezeSwap',
     type: 'website',
+    images: [{ url: '/logo.png', width: 512, height: 512, alt: 'BreezeSwap' }],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'BreezeSwap — Weather Derivatives on Flare Network',
+    description:
+      'Hedge climate risk or trade weather outcomes, settled automatically by real oracle data.',
+    images: ['/logo.png'],
   },
 }
 
