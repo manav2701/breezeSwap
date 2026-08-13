@@ -10,7 +10,7 @@ jobs:
       run:
         working-directory: contracts
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: foundry-rs/foundry-toolchain@v1
       - name: Install Foundry dependencies
         run: |
@@ -20,7 +20,11 @@ jobs:
           git clone --depth 1 https://github.com/foundry-rs/forge-std lib/forge-std
       - name: Run Coston2 Fork Tests
         run: |
+          # `--rpc-timeout` is a plain integer of SECONDS. Passing a duration string
+          # such as `30s` is rejected during argument parsing, so the job exits 2 in
+          # about ten seconds having run no tests at all, while reporting only
+          # "Process completed with exit code 2".
           forge test --match-path "test/fork/*" \
             --fork-url https://coston2-api.flare.network/ext/C/rpc \
-            --rpc-timeout 30s \
+            --rpc-timeout 30 \
             -vvv
