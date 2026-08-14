@@ -1,22 +1,23 @@
-# BreezeSwap — DoraHacks submission
+# BreezeSwap, DoraHacks submission
 
-Paste-ready copy for the Flare Summer Signal submission form.
+Paste ready copy for the Flare Summer Signal submission form.
 
 ---
 
-**Project name:** BreezeSwap
+**Project name.** BreezeSwap
 
-**Bounty:** Bounty 1 — Interoperable Asset Products
+**Bounty.** Bounty 1, Interoperable Asset Products
 
-**Links**
-- Live app: https://breeze-swap-web-74qh-coral.vercel.app
-- GitHub: https://github.com/manav2701/breezeSwap
-- Whitepaper: https://breeze-swap-web-74qh-coral.vercel.app/whitepaper
+**Live app.** https://breeze-swap-web-74qh-coral.vercel.app
+
+**GitHub.** https://github.com/manav2701/breezeSwap
+
+**Whitepaper.** https://breeze-swap-web-74qh-coral.vercel.app/whitepaper
 
 ---
 
 BreezeSwap is a weather derivatives protocol on Flare. Anyone can hedge or trade rainfall
-and temperature outcomes, priced from a 30-year climate record and settled automatically
+and temperature outcomes, priced from a 30 year climate record and settled automatically
 from an oracle reading, with no claim, no adjuster and no counterparty to find.
 
 **The problem.** Weather decides whether a huge number of people earn a living, and almost
@@ -25,66 +26,67 @@ with no insurance behind it**, and **60% of the world's crop production is unins
 (Swiss Re). The instruments that hedge weather properly settle against **thirteen US
 cities**. That is not a map of where weather risk lives, it is a map of where the paperwork
 was easiest. Traditional cover pays only after an assessor visits and agrees, which takes
-months — a farmer who cannot buy seed this season does not need the money next season.
+months, and a farmer who cannot buy seed this season does not need the money next season.
 
 **The solution.** BreezeSwap replaces the assessor with a formula and the counterparty with
-capital. You agree in advance on something measurable — rainfall in Tokyo this month, below
-40mm — and if the measurement lands there, you are paid. Three products share one balance
-sheet: **classic markets** (fixed-expiry ERC-1155 positions, transferable before expiry),
-**perpetual markets** (a virtual AMM quoting both sides continuously, so a hedger never
-waits for a counterparty), and **policy markets** (one-sided cover underwritten straight
-from pooled LP capital). Settlement is permissionless: anyone can trigger it, nobody can
-block it.
+capital. You agree in advance on something measurable, such as rainfall in Tokyo this month
+landing below 40mm, and if the measurement lands there you are paid. Three products share
+one balance sheet. **Classic markets** are fixed expiry positions held as transferable
+tokens. **Perpetual markets** use a virtual AMM that quotes both sides continuously, so a
+hedger never waits for a counterparty. **Policy markets** sell one sided cover underwritten
+straight from pooled capital. Settlement is permissionless, so anyone can trigger it and
+nobody can block it.
 
-**Target user.** Farmers and agricultural cooperatives hedging a season; energy and solar
-operators whose revenue tracks temperature; ski resorts, logistics and outdoor events; and
-LPs who want a yield source genuinely uncorrelated with crypto, because rainfall in Japan
-has nothing to do with the market.
+**Target user.** Farmers and agricultural cooperatives hedging a season. Energy and solar
+operators whose revenue tracks temperature. Ski resorts, logistics operators and outdoor
+events. And liquidity providers who want a yield source genuinely uncorrelated with crypto,
+because rainfall in Japan has nothing to do with the market.
 
-**What makes it different.** Most on-chain weather attempts are an oracle and an
-if-statement, which fails twice. First, equal collateral silently prices every outcome as a
-coin flip: Tokyo August rainfall exceeded 40mm in **28 of the last 30 years**, so a 50/50
-contract hands one side a 43-point edge. BreezeSwap publishes **1,080 strike probabilities
-computed from 30 years of Open-Meteo history** on-chain, and gates markets against them.
-Second, weather demand is one-directional — everyone in a region wants drought cover in the
-same month — so a matching market clears roughly one hedger in four. Pooling capital removes
-that constraint entirely. Because weather risk is severely correlated, that pool is
-protected by a **three-tier loss waterfall** (protocol-owned first-loss reserve → junior
-tranche → senior ERC-4626 vault) and a **peril exposure registry** that caps exposure across
-correlated markets, so one storm cannot drain the protocol through several markets at once.
+**What makes it different.** Most on chain weather attempts are an oracle and an if
+statement, which fails twice. First, equal collateral silently prices every outcome as a
+coin flip. Tokyo August rainfall exceeded 40mm in **28 of the last 30 years**, so a fifty
+fifty contract hands one side a 43 point edge. BreezeSwap publishes **1,080 strike
+probabilities computed from 30 years of Open Meteo history** on chain and gates markets
+against them. Second, weather demand is one directional, because everyone in a region wants
+drought cover in the same month, so a matching market clears roughly one hedger in four.
+Pooling capital removes that constraint. Because weather risk is severely correlated, that
+pool is protected by a **three tier loss waterfall**, running from a protocol owned first
+loss reserve through a subordinated junior tranche to the senior vault, plus an exposure
+registry that caps risk across correlated markets so one storm cannot drain the protocol
+through several markets at once.
 
-**How it uses Flare.** BreezeSwap is deployed on **Flare Testnet Coston2** (chainId 114),
-17 contracts, gas in C2FLR. It is built directly on the thesis behind Flare's **Letter of
-Intent with Kweather (14 July 2026)** to publish meteorological data through **FTSO**,
-explicitly to enable parametric climate insurance and weather derivatives — which is exactly
-this product. `FtsoWeatherAdapter` and `FdcWeatherAdapter` are written against the same
-`IWeatherOracle` interface the protocol consumes, and **revert rather than returning
-invented data** while the Kweather feed is not yet live; `test_MarketSwapsOracleToFtsoAdapterGracefully`
-proves a live market can move from the seeded oracle to the adapter without a rewrite.
-`FAssetsCollateralAdapter` lets **FXRP** back a weather position, so XRP holders can hedge
-without selling into a stablecoin. Today settlement runs on an oracle seeded with **440 real
-Open-Meteo readings** across five cities; the swap-in point is one address.
+**How it uses Flare.** BreezeSwap is deployed on **Flare Testnet Coston2**, chainId 114,
+with 17 contracts and gas paid in C2FLR. It is built directly on the thesis behind Flare's
+**Letter of Intent with Kweather**, signed 14 July 2026, to publish meteorological data
+through **FTSO** specifically to enable parametric climate insurance and weather
+derivatives, which is exactly this product. The FTSO and FDC weather adapters are written
+against the same oracle interface the protocol consumes and **revert rather than returning
+invented data** while the Kweather feed is not yet live, and a test proves a live market can
+move from the seeded oracle to an adapter without a rewrite. A collateral adapter lets
+**FXRP** back a weather position, so XRP holders can hedge without selling into a
+stablecoin. Today settlement runs on an oracle seeded with **440 real Open Meteo readings**
+across five cities, and the swap in point is a single address.
 
-**What was newly built during the program.** The entire capital stack — `BreezeLiquidityVault`
-(ERC-4626 senior tranche), `JuniorTranche`, `FirstLossReserve` and the waterfall between
-them; `PerilExposureRegistry` for correlated-exposure caps; `StrikeProbabilityOracle` plus
-the climatology pipeline that turns 30 years of history into 1,080 on-chain strikes;
-`WeatherPolicyMarket` for one-sided cover. We also **made the protocol deployable at all**:
-two contracts exceeded the EIP-170 bytecode limit (one at 133,883 bytes against a 24,576
-limit) and could never have been deployed to any chain — Foundry does not enforce the limit
-in tests, so a green suite was running against a deployment path that could not execute.
-Both are fixed and the limit is now asserted by a test. **569 tests pass**, across unit,
-fuzz (10,000 runs), invariant (256×64) and adversarial suites, with 13,700 lines of tests
-against 6,100 lines of contracts.
+**What was newly built during the program.** The entire capital stack, meaning the senior
+vault, the subordinated junior tranche, the protocol owned first loss reserve and the
+waterfall between them. The exposure registry for correlated risk. The pricing oracle and
+the climatology pipeline that turns 30 years of history into 1,080 strikes published on
+chain. The policy market for one sided cover. We also **made the protocol deployable at
+all**, because two contracts exceeded the EVM bytecode limit, one of them at 133,883 bytes
+against a limit of 24,576, and could never have been deployed to any chain. Foundry does not
+enforce that limit in tests, so a fully green suite was running against a deployment path
+that could not execute. Both are fixed and the limit is now asserted by a test. **569 tests
+pass** across unit, fuzz at 10,000 runs, invariant and adversarial suites, with 13,700 lines
+of tests against 6,100 lines of contracts.
 
-**Diagrams.** The architecture diagram shows the three products sharing one balance sheet:
-two oracles feed all three markets, and the policy and perpetual markets clear against a
-pooled vault protected by the loss waterfall. The clearing chart is the reason the protocol
-is built this way: as weather demand becomes one-sided, a matching venue clears a collapsing
-fraction of hedgers (25% at a mild 80% skew) while a pooled venue clears everyone until
-capital binds, then degrades smoothly instead of emptying.
+**Diagrams.** The architecture diagram shows the three products sharing one balance sheet,
+with two oracles feeding all three markets and the policy and perpetual markets clearing
+against a pooled vault protected by the loss waterfall. The clearing chart shows why the
+protocol is built this way, because as weather demand becomes one sided a matching venue
+clears a collapsing fraction of hedgers, only 25% at a mild 80% skew, while a pooled venue
+clears everyone until capital binds and then degrades smoothly instead of emptying.
 
-**Deployed on Flare Coston2** ([explorer](https://coston2-explorer.flare.network))
+**Deployed on Flare Coston2**, viewable at https://coston2-explorer.flare.network
 
 | Contract | Address |
 |---|---|
@@ -97,19 +99,19 @@ capital binds, then degrades smoothly instead of emptying.
 | WeatherPolicyMarket | `0xB41Fd6739FE2fee81F5eA8A3881eaDEc49B72252` |
 | BreezePerpFactory | `0x82df4B98D83A65Af9CA85ec489bcC9d3742D36B7` |
 | MockWeatherOracle | `0x9c1C9eb2d5Eeede240254AaC84Ca449E647a35E5` |
-| PositionToken (ERC-1155) | `0xC84941ba6be5580f5502e5D04a3ACa3d2fE2fa39` |
+| PositionToken | `0xC84941ba6be5580f5502e5D04a3ACa3d2fE2fa39` |
 
-Live markets are tradeable now, with real weather charts and a market past expiry that
-anyone can settle. Full list in `contracts/deployments/coston2.json`.
+Live markets are tradeable now, with real weather charts, and one market is already past
+expiry so anyone can settle it and watch the payout compute on chain.
 
 **Honest limitations.** Coston2 only, demo collateral, no audit. The FTSO and FDC weather
 adapters are deliberate stubs until the Kweather feed exists. Our own Monte Carlo sweep
-argues one shipped parameter should be higher, and that is in the whitepaper rather than
-left for someone to find. All of it is in `docs/KNOWN_ISSUES.md`.
+argues that one shipped parameter should be higher, and that is written into the whitepaper
+rather than left for someone to find.
 
-**Next steps.** Wire the Kweather FTSO feed the moment it publishes — one adapter, already
-written and tested. Complete FXRP collateral end-to-end against live FTSOv2 pricing. A
-security audit, then a Flare mainnet deployment gated on it (`DeployMainnet.s.sol` already
-refuses to run without real collateral and a governance multisig). Then pilot conversations
-with an agricultural cooperative, because the product only matters if the farmer it was
-built for can actually reach it.
+**Next steps.** Wire the Kweather FTSO feed the moment it publishes, which is one adapter
+that is already written and tested. Complete FXRP collateral end to end against live FTSOv2
+pricing. Then a security audit, followed by a Flare mainnet deployment gated on it, since
+the mainnet deploy script already refuses to run without real collateral and a governance
+multisig. After that, pilot conversations with an agricultural cooperative, because the
+product only matters if the farmer it was built for can actually reach it.
