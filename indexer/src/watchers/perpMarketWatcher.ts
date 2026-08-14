@@ -80,9 +80,33 @@ export function startPerpMarketWatcher(marketAddress: string) {
         const block = await publicClient.getBlock({ blockNumber })
 
         if (eventName === 'PositionOpened') {
+          // The same event is legitimately seen more than once: a backfill overlapping an
+          // already-processed range replays it, and a second indexer instance sees it too.
+          // A plain insert wrote another row each time, so every trade appeared twice in
+          // the history under one transaction hash.
+          //
+          // Checked rather than upserted with `onConflict`, deliberately. That would need a
+          // unique constraint on (market_address, position_id), and migration 0006 adds
+          // one, but a deployment whose migrations have not run would then fail every
+          // insert instead of merely duplicating. Losing trade history is worse than
+          // repeating it, so the guard works against any schema state and the constraint
+          // is the belt to this pair of braces.
+          const positionId = args.positionId.toString()
+          const { data: existing } = await supabase
+            .from('perp_positions')
+            .select('id')
+            .eq('market_address', marketAddress.toLowerCase())
+            .eq('position_id', positionId)
+            .maybeSingle()
+
+          if (existing) {
+            logger.info('Perp PositionOpened already indexed, skipping', { marketAddress, positionId })
+            continue
+          }
+
           await supabase.from('perp_positions').insert({
             market_address: marketAddress.toLowerCase(),
-            position_id: args.positionId.toString(),
+            position_id: positionId,
             trader_address: args.trader.toLowerCase(),
             is_long: args.isLong,
             collateral: args.collateral.toString(),

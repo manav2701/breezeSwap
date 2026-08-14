@@ -85,6 +85,11 @@ export async function getGlobalTradeHistory(req: Request, res: Response) {
 
     if (error) throw error
 
+    // Same unit correction as the per-market history: collateral is in the token's
+    // smallest unit, so notional must come out of 1e18 like price and pnl already do.
+    const notional = (pos: any) =>
+      ((Number(pos.collateral || 0) / 1e18) * Number(pos.leverage || 1)).toFixed(2)
+
     const trades: any[] = []
     for (const pos of positions || []) {
       trades.push({
@@ -94,7 +99,7 @@ export async function getGlobalTradeHistory(req: Request, res: Response) {
         timestamp: pos.opened_at,
         trader: pos.trader_address,
         side: pos.is_long ? 'LONG' : 'SHORT',
-        size: (Number(pos.collateral || 0) * Number(pos.leverage || 1)).toString(),
+        size: notional(pos),
         price: pos.entry_mark_price ? (Number(pos.entry_mark_price) / 1e18).toFixed(2) : '0.00',
         pnl: null,
         txHash: pos.open_tx_hash
@@ -108,7 +113,7 @@ export async function getGlobalTradeHistory(req: Request, res: Response) {
           timestamp: pos.closed_at,
           trader: pos.trader_address,
           side: pos.is_long ? 'LONG' : 'SHORT',
-          size: (Number(pos.collateral || 0) * Number(pos.leverage || 1)).toString(),
+          size: notional(pos),
           price: pos.entry_mark_price ? (Number(pos.entry_mark_price) / 1e18).toFixed(2) : '0.00',
           pnl: pos.realized_pnl ? (Number(pos.realized_pnl) / 1e18).toFixed(2) : '0.00',
           txHash: pos.close_tx_hash
