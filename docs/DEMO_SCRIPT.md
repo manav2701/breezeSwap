@@ -335,6 +335,71 @@ Scroll to the SDK code blocks.
 
 ---
 
+## 8b. The hackathon: bounty, and how Flare is used
+
+Reference material rather than a spoken beat. Doubles as the written submission, which asks
+for exactly these things.
+
+### Which bounty, and why
+
+**Bounty 1 — Interoperable Asset Products.** Not Bounty 2.
+
+Bounty 2 is Confidential Compute apps: TEEs, sealed execution, private state. BreezeSwap has
+none of that and should not pretend otherwise. Everything it does is deliberately public and
+verifiable, which is the opposite property.
+
+Bounty 1 fits because Flare describes itself as "built to unlock DeFi for assets that do not
+have native smart contracts, starting with XRP through FAssets." BreezeSwap is an asset
+product in that sense twice over:
+
+1. It turns a **weather index**, which has no native representation on any chain, into a
+   tradeable on-chain instrument.
+2. It is built to accept **FXRP as collateral**, so XRP holders can back a weather hedge
+   without selling into a stablecoin first.
+
+The second is the literal definition of the bounty. The first is the reason the protocol
+exists.
+
+### How the project uses Flare
+
+Be precise here, because "Flare integration quality" is an explicit judging criterion and a
+padded answer is worse than a short one.
+
+| Flare component | Status | What it does |
+|---|---|---|
+| **Coston2 (chain 114)** | **Live** | All 17 contracts deployed and verifiable, gas paid in C2FLR |
+| **FTSOv2 price feeds** | Written, not wired | `FAssetsCollateralAdapter` has the `getFeedById` call in place but currently returns an admin-set fallback price |
+| **FAssets / FXRP** | Written | FXRP accepted as collateral, normalised to USD through the adapter above |
+| **FTSO weather feed** | Stub, by design | `FtsoWeatherAdapter` satisfies `IWeatherOracle` and reverts. The Kweather feed is not live yet |
+| **FDC** | Stub, by design | `FdcWeatherAdapter`, same shape, for the attestation path |
+
+The two stubs are the honest part and worth volunteering. They revert rather than returning
+invented data, they report themselves stale so consumers refuse them through the normal
+guard, and `test_MarketSwapsOracleToFtsoAdapterGracefully` proves a market can move from the
+mock to the adapter without a rewrite.
+
+### What was newly built during the program
+
+The hackathon asks teams to separate this out. Ours:
+
+- The entire capital stack: `BreezeLiquidityVault` (ERC-4626 senior tranche),
+  `JuniorTranche`, `FirstLossReserve`, and the three-tier loss waterfall between them
+- `PerilExposureRegistry`, capping exposure across correlated markets
+- `StrikeProbabilityOracle` plus the climatology pipeline: 30 years of Open-Meteo history
+  aggregated into 1,080 strike probabilities, published on-chain
+- `WeatherPolicyMarket`, one-sided cover sold from pooled capital
+- Live FTSOv2 integration for FXRP collateral valuation
+- Made the protocol **deployable at all**: two contracts exceeded the EIP-170 bytecode limit
+  and could never have been deployed to any chain. Both fixed and now enforced by a test
+
+### Deployment
+
+Coston2 only. No Songbird, no mainnet. Mainnet is gated on an audit, and
+`DeployMainnet.s.sol` refuses to run without real collateral and a governance multisig
+configured, so it cannot be shipped carelessly.
+
+---
+
 ## 9. Why Flare, and why now (13:30 – 14:15)
 
 This is the question you will be asked if the room knows Flare, and until recently it was
