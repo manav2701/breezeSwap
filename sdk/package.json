@@ -14,7 +14,8 @@
   },
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "sync-abis": "node scripts/sync-abis.js"
   },
   "dependencies": {
     "viem": "^2.23.0"

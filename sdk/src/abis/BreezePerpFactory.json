@@ -3,17 +3,53 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "sharedPositionToken_",
+        "name": "_accessControl",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_accessControl",
+        "name": "_sharedInsuranceFund",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_feeConfig",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_treasury",
         "type": "address",
         "internalType": "address"
       }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "MAX_INITIAL_MARK_DEVIATION_BPS",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "MIN_INITIAL_MARK_DEVIATION_BPS",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -49,7 +85,7 @@
   },
   {
     "type": "function",
-    "name": "createMarket",
+    "name": "createPerpMarket",
     "inputs": [
       {
         "name": "regionId",
@@ -57,22 +93,12 @@
         "internalType": "bytes32"
       },
       {
-        "name": "weatherVariable",
-        "type": "uint8",
-        "internalType": "enum BreezeMarket.WeatherVariable"
+        "name": "initialCollateralReserve",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "name": "thresholdLow",
-        "type": "int256",
-        "internalType": "int256"
-      },
-      {
-        "name": "thresholdHigh",
-        "type": "int256",
-        "internalType": "int256"
-      },
-      {
-        "name": "expiryTimestamp",
+        "name": "initialWeatherReserve",
         "type": "uint256",
         "internalType": "uint256"
       },
@@ -85,11 +111,6 @@
         "name": "collateralToken",
         "type": "address",
         "internalType": "address"
-      },
-      {
-        "name": "payoffType",
-        "type": "uint8",
-        "internalType": "enum PayoffCalculator.PayoffType"
       }
     ],
     "outputs": [
@@ -100,6 +121,19 @@
       }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "feeConfig",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract FeeConfig"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -116,19 +150,13 @@
   },
   {
     "type": "function",
-    "name": "isMarket",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
+    "name": "maxInitialMarkDeviationBps",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "type": "bool",
-        "internalType": "bool"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
@@ -168,6 +196,19 @@
   },
   {
     "type": "function",
+    "name": "setMaxInitialMarkDeviationBps",
+    "inputs": [
+      {
+        "name": "newBps",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setPricingOracle",
     "inputs": [
       {
@@ -181,13 +222,26 @@
   },
   {
     "type": "function",
-    "name": "sharedPositionToken",
+    "name": "sharedInsuranceFund",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "address",
-        "internalType": "contract PositionToken"
+        "internalType": "contract InsuranceFund"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "treasury",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract ProtocolTreasury"
       }
     ],
     "stateMutability": "view"
@@ -201,10 +255,73 @@
   },
   {
     "type": "event",
-    "name": "MarketCreated",
+    "name": "InitialMarkChecked",
     "inputs": [
       {
         "name": "market",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "markPrice",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "climatologyPrice",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "monthOfYear",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "uint8"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "InitialMarkDeviationUpdated",
+    "inputs": [
+      {
+        "name": "oldBps",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newBps",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Paused",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "PerpMarketCreated",
+    "inputs": [
+      {
+        "name": "marketAddress",
         "type": "address",
         "indexed": true,
         "internalType": "address"
@@ -216,32 +333,25 @@
         "internalType": "bytes32"
       },
       {
-        "name": "expiryTimestamp",
+        "name": "initialCollateralReserve",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
       },
       {
-        "name": "collateralToken",
+        "name": "initialWeatherReserve",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "oracleAddress",
         "type": "address",
         "indexed": false,
         "internalType": "address"
       },
       {
-        "name": "payoffType",
-        "type": "uint8",
-        "indexed": false,
-        "internalType": "enum PayoffCalculator.PayoffType"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Paused",
-    "inputs": [
-      {
-        "name": "account",
+        "name": "collateralToken",
         "type": "address",
         "indexed": false,
         "internalType": "address"
@@ -293,7 +403,43 @@
   },
   {
     "type": "error",
-    "name": "InvalidParameters",
+    "name": "InitialMarkOffClimatology",
+    "inputs": [
+      {
+        "name": "markPrice",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "climatologyPrice",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxBps",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidInitialReserves",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidParameter",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "UnauthorizedCaller",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ZeroAddress",
     "inputs": []
   }
 ]

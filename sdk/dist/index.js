@@ -19273,9 +19273,45 @@ var BreezeMarket_default = [
         name: "payoffType_",
         type: "uint8",
         internalType: "enum PayoffCalculator.PayoffType"
+      },
+      {
+        name: "accessControl_",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "pricingOracle_",
+        type: "address",
+        internalType: "address"
       }
     ],
     stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "MIN_FAIR_ODDS_TOLERANCE_BPS",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "accessControl",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract BreezeAccessControl"
+      }
+    ],
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -19305,6 +19341,32 @@ var BreezeMarket_default = [
   },
   {
     type: "function",
+    name: "fairLongShareBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "fairOddsToleranceBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "finalOracleValue",
     inputs: [],
     outputs: [
@@ -19318,6 +19380,32 @@ var BreezeMarket_default = [
   },
   {
     type: "function",
+    name: "impliedLongShareBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "isPriced",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "longPayoutPerToken",
     inputs: [],
     outputs: [
@@ -19325,6 +19413,19 @@ var BreezeMarket_default = [
         name: "",
         type: "uint256",
         internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "longWinProbabilityBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint32",
+        internalType: "uint32"
       }
     ],
     stateMutability: "view"
@@ -19355,6 +19456,19 @@ var BreezeMarket_default = [
   },
   {
     type: "function",
+    name: "oddsGapBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "oracle",
     inputs: [],
     outputs: [
@@ -19362,6 +19476,26 @@ var BreezeMarket_default = [
         name: "",
         type: "address",
         internalType: "contract IWeatherOracle"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "pauseMarket",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "paused",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
       }
     ],
     stateMutability: "view"
@@ -19388,6 +19522,19 @@ var BreezeMarket_default = [
         name: "",
         type: "address",
         internalType: "contract PositionToken"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "pricingOracle",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract StrikeProbabilityOracle"
       }
     ],
     stateMutability: "view"
@@ -19428,6 +19575,19 @@ var BreezeMarket_default = [
       }
     ],
     stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "setFairOddsToleranceBps",
+    inputs: [
+      {
+        name: "newBps",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
   },
   {
     type: "function",
@@ -19529,6 +19689,13 @@ var BreezeMarket_default = [
   },
   {
     type: "function",
+    name: "unpauseMarket",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
     name: "vault",
     inputs: [],
     outputs: [
@@ -19555,6 +19722,25 @@ var BreezeMarket_default = [
   },
   {
     type: "event",
+    name: "FairOddsToleranceUpdated",
+    inputs: [
+      {
+        name: "oldBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "newBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
     name: "MarketSettled",
     inputs: [
       {
@@ -19574,6 +19760,19 @@ var BreezeMarket_default = [
         type: "uint256",
         indexed: false,
         internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "Paused",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        indexed: false,
+        internalType: "address"
       }
     ],
     anonymous: false
@@ -19641,6 +19840,29 @@ var BreezeMarket_default = [
     anonymous: false
   },
   {
+    type: "event",
+    name: "Unpaused",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        indexed: false,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "EnforcedPause",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "ExpectedPause",
+    inputs: []
+  },
+  {
     type: "error",
     name: "InvalidOracleData",
     inputs: []
@@ -19677,6 +19899,22 @@ var BreezeMarket_default = [
   },
   {
     type: "error",
+    name: "MintWorsensOdds",
+    inputs: [
+      {
+        name: "resultingLongShareBps",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "fairLongShareBps",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
     name: "OracleDataStale",
     inputs: []
   },
@@ -19691,35 +19929,9 @@ var BreezeMarket_default = [
     inputs: []
   },
   {
-    type: "function",
-    name: "vault",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract CollateralVault"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
     type: "error",
-    name: "ERC20InsufficientAllowance",
-    inputs: [
-      {
-        name: "spender",
-        type: "address"
-      },
-      {
-        name: "currentAllowance",
-        type: "uint256"
-      },
-      {
-        name: "neededAllowance",
-        type: "uint256"
-      }
-    ]
+    name: "ZeroAmount",
+    inputs: []
   }
 ];
 
@@ -19939,113 +20151,292 @@ async function getRegions(indexerUrl, chainId = 114) {
 // src/abis/BreezeAccessControl.json
 var BreezeAccessControl_default = [
   {
+    type: "constructor",
     inputs: [
-      { internalType: "bytes32", name: "role", type: "bytes32" }
+      {
+        name: "initialAdmin",
+        type: "address",
+        internalType: "address"
+      }
     ],
-    name: "getRoleAdmin",
-    outputs: [
-      { internalType: "bytes32", name: "", type: "bytes32" }
-    ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "nonpayable"
   },
   {
-    inputs: [
-      { internalType: "bytes32", name: "role", type: "bytes32" },
-      { internalType: "address", name: "account", type: "address" }
-    ],
-    name: "grantRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "bytes32", name: "role", type: "bytes32" },
-      { internalType: "address", name: "account", type: "address" }
-    ],
-    name: "hasRole",
-    outputs: [
-      { internalType: "bool", name: "", type: "bool" }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "bytes32", name: "role", type: "bytes32" },
-      { internalType: "address", name: "account", type: "address" }
-    ],
-    name: "renounceRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "bytes32", name: "role", type: "bytes32" },
-      { internalType: "address", name: "account", type: "address" }
-    ],
-    name: "revokeRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
+    type: "function",
     name: "ADMIN_ROLE",
+    inputs: [],
     outputs: [
-      { internalType: "bytes32", name: "", type: "bytes32" }
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
+    type: "function",
+    name: "DEFAULT_ADMIN_ROLE",
     inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "MARKET_CREATOR_ROLE",
+    inputs: [],
     outputs: [
-      { internalType: "bytes32", name: "", type: "bytes32" }
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [],
-    name: "PAUSER_ROLE",
-    outputs: [
-      { internalType: "bytes32", name: "", type: "bytes32" }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
+    type: "function",
     name: "ORACLE_UPDATER_ROLE",
+    inputs: [],
     outputs: [
-      { internalType: "bytes32", name: "", type: "bytes32" }
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: "bytes32", name: "role", type: "bytes32" },
-      { indexed: true, internalType: "address", name: "account", type: "address" },
-      { indexed: true, internalType: "address", name: "sender", type: "address" }
+    type: "function",
+    name: "PAUSER_ROLE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
     ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getRoleAdmin",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "grantRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "hasRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "renounceRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "callerConfirmation",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "revokeRole",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "supportsInterface",
+    inputs: [
+      {
+        name: "interfaceId",
+        type: "bytes4",
+        internalType: "bytes4"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "event",
+    name: "RoleAdminChanged",
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "previousAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "newAdminRole",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
     name: "RoleGranted",
-    type: "event"
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
   },
   {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: "bytes32", name: "role", type: "bytes32" },
-      { indexed: true, internalType: "address", name: "account", type: "address" },
-      { indexed: true, internalType: "address", name: "sender", type: "address" }
-    ],
+    type: "event",
     name: "RoleRevoked",
-    type: "event"
+    inputs: [
+      {
+        name: "role",
+        type: "bytes32",
+        indexed: true,
+        internalType: "bytes32"
+      },
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "sender",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "AccessControlBadConfirmation",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "AccessControlUnauthorizedAccount",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "neededRole",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ]
   }
 ];
 
@@ -20212,9 +20603,27 @@ var BreezeMarketFactory_default = [
         name: "sharedPositionToken_",
         type: "address",
         internalType: "address"
+      },
+      {
+        name: "_accessControl",
+        type: "address",
+        internalType: "address"
       }
     ],
     stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "accessControl",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract BreezeAccessControl"
+      }
+    ],
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -20323,21 +20732,47 @@ var BreezeMarketFactory_default = [
   },
   {
     type: "function",
-    name: "owner",
+    name: "pauseFactory",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "paused",
     inputs: [],
     outputs: [
       {
         name: "",
-        type: "address",
-        internalType: "address"
+        type: "bool",
+        internalType: "bool"
       }
     ],
     stateMutability: "view"
   },
   {
     type: "function",
-    name: "renounceOwnership",
+    name: "pricingOracle",
     inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract StrikeProbabilityOracle"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "setPricingOracle",
+    inputs: [
+      {
+        name: "oracle",
+        type: "address",
+        internalType: "address"
+      }
+    ],
     outputs: [],
     stateMutability: "nonpayable"
   },
@@ -20356,14 +20791,8 @@ var BreezeMarketFactory_default = [
   },
   {
     type: "function",
-    name: "transferOwnership",
-    inputs: [
-      {
-        name: "newOwner",
-        type: "address",
-        internalType: "address"
-      }
-    ],
+    name: "unpauseFactory",
+    inputs: [],
     outputs: [],
     stateMutability: "nonpayable"
   },
@@ -20406,16 +20835,29 @@ var BreezeMarketFactory_default = [
   },
   {
     type: "event",
-    name: "OwnershipTransferred",
+    name: "Paused",
     inputs: [
       {
-        name: "previousOwner",
+        name: "account",
+        type: "address",
+        indexed: false,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PricingOracleUpdated",
+    inputs: [
+      {
+        name: "oldOracle",
         type: "address",
         indexed: true,
         internalType: "address"
       },
       {
-        name: "newOwner",
+        name: "newOracle",
         type: "address",
         indexed: true,
         internalType: "address"
@@ -20424,31 +20866,32 @@ var BreezeMarketFactory_default = [
     anonymous: false
   },
   {
-    type: "error",
-    name: "InvalidParameters",
-    inputs: []
-  },
-  {
-    type: "error",
-    name: "OwnableInvalidOwner",
-    inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address"
-      }
-    ]
-  },
-  {
-    type: "error",
-    name: "OwnableUnauthorizedAccount",
+    type: "event",
+    name: "Unpaused",
     inputs: [
       {
         name: "account",
         type: "address",
+        indexed: false,
         internalType: "address"
       }
-    ]
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "EnforcedPause",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "ExpectedPause",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InvalidParameters",
+    inputs: []
   }
 ];
 
@@ -20662,8 +21105,27 @@ async function settle(walletClient, publicClient, marketAddress) {
 var MockWeatherOracle_default = [
   {
     type: "constructor",
-    inputs: [],
+    inputs: [
+      {
+        name: "_accessControl",
+        type: "address",
+        internalType: "address"
+      }
+    ],
     stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "accessControl",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract BreezeAccessControl"
+      }
+    ],
+    stateMutability: "view"
   },
   {
     type: "function",
@@ -20751,19 +21213,6 @@ var MockWeatherOracle_default = [
   },
   {
     type: "function",
-    name: "owner",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address"
-      }
-    ],
-    stateMutability: "view"
-  },
-  {
-    type: "function",
     name: "readings",
     inputs: [
       {
@@ -20798,13 +21247,6 @@ var MockWeatherOracle_default = [
   },
   {
     type: "function",
-    name: "renounceOwnership",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable"
-  },
-  {
-    type: "function",
     name: "setReading",
     inputs: [
       {
@@ -20825,38 +21267,6 @@ var MockWeatherOracle_default = [
     ],
     outputs: [],
     stateMutability: "nonpayable"
-  },
-  {
-    type: "function",
-    name: "transferOwnership",
-    inputs: [
-      {
-        name: "newOwner",
-        type: "address",
-        internalType: "address"
-      }
-    ],
-    outputs: [],
-    stateMutability: "nonpayable"
-  },
-  {
-    type: "event",
-    name: "OwnershipTransferred",
-    inputs: [
-      {
-        name: "previousOwner",
-        type: "address",
-        indexed: true,
-        internalType: "address"
-      },
-      {
-        name: "newOwner",
-        type: "address",
-        indexed: true,
-        internalType: "address"
-      }
-    ],
-    anonymous: false
   },
   {
     type: "event",
@@ -20885,28 +21295,6 @@ var MockWeatherOracle_default = [
   },
   {
     type: "error",
-    name: "OwnableInvalidOwner",
-    inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address"
-      }
-    ]
-  },
-  {
-    type: "error",
-    name: "OwnableUnauthorizedAccount",
-    inputs: [
-      {
-        name: "account",
-        type: "address",
-        internalType: "address"
-      }
-    ]
-  },
-  {
-    type: "error",
     name: "Unauthorized",
     inputs: []
   }
@@ -20915,126 +21303,267 @@ var MockWeatherOracle_default = [
 // src/abis/FeeConfig.json
 var FeeConfig_default = [
   {
+    type: "constructor",
+    inputs: [
+      {
+        name: "_accessControl",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "MAX_FEE_BPS",
     inputs: [],
-    name: "tradingFeeBps",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [
+    type: "function",
+    name: "MAX_TREASURY_SHARE_BPS",
+    inputs: [],
+    outputs: [
       {
-        internalType: "uint256",
-        name: "newRateBps",
-        type: "uint256"
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    name: "setTradingFeeBps",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [
+    type: "function",
+    name: "MIN_FEE_BPS",
+    inputs: [],
+    outputs: [
       {
-        internalType: "uint256",
-        name: "tradeAmount",
-        type: "uint256"
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "MIN_INSURANCE_SHARE_BPS",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "accessControl",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract BreezeAccessControl"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "calculateFeeSplit",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "feeAmount",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "insuranceShare",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "firstLossShare",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "treasuryShare",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "insuranceShareBps",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "firstLossShareBps",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "treasuryShareBps",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
     inputs: [
       {
-        internalType: "uint256",
-        name: "insuranceBps",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "firstLossBps",
-        type: "uint256"
-      },
-      {
-        internalType: "uint256",
-        name: "treasuryBps",
-        type: "uint256"
+        name: "tradeAmount",
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
+    outputs: [
+      {
+        name: "feeAmount",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "insuranceShare",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "firstLossShare",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "treasuryShare",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "firstLossShareBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "insuranceShareBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "setFeeSplit",
+    inputs: [
+      {
+        name: "insuranceBps",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "firstLossBps",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "treasuryBps",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setTradingFeeBps",
+    inputs: [
+      {
+        name: "newRateBps",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "tradingFeeBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "treasuryShareBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "event",
+    name: "FeeRateUpdated",
+    inputs: [
+      {
+        name: "oldRateBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "newRateBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "updatedBy",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "FeeSplitUpdated",
+    inputs: [
+      {
+        name: "insuranceBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "firstLossBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "treasuryBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "InvalidFeeBounds",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InvalidFeeSplit",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "UnauthorizedCaller",
+    inputs: []
   }
 ];
 
@@ -21145,343 +21674,1757 @@ async function revokeRole(walletClient, publicClient, accessControlAddress, role
 // src/abis/BreezePerpMarket.json
 var BreezePerpMarket_default = [
   {
-    inputs: [],
-    name: "getMarkPrice",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
+    type: "constructor",
     inputs: [
       {
-        internalType: "bool",
-        name: "isLong",
-        type: "bool"
+        name: "initialReserves",
+        type: "tuple",
+        internalType: "struct VirtualAMM.Reserves",
+        components: [
+          {
+            name: "collateralReserve",
+            type: "uint256",
+            internalType: "uint256"
+          },
+          {
+            name: "weatherReserve",
+            type: "uint256",
+            internalType: "uint256"
+          }
+        ]
       },
       {
-        internalType: "uint256",
-        name: "collateral",
-        type: "uint256"
+        name: "_oracle",
+        type: "address",
+        internalType: "address"
       },
       {
-        internalType: "uint256",
-        name: "leverage",
-        type: "uint256"
-      }
-    ],
-    name: "openPosition",
-    outputs: [
+        name: "_insuranceFund",
+        type: "address",
+        internalType: "address"
+      },
       {
-        internalType: "uint256",
-        name: "positionId",
-        type: "uint256"
+        name: "_feeConfig",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "_treasury",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "_accessControl",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "_collateralToken",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "_regionId",
+        type: "bytes32",
+        internalType: "bytes32"
       }
     ],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: "nonpayable"
   },
   {
+    type: "function",
+    name: "MAX_MIN_COLLATERAL",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "MAX_OPEN_POSITIONS",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "MAX_ORACLE_AGE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "MAX_ORACLE_VALUE_SCALE",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "MAX_SKEW_RESERVE_BPS",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "MAX_UTILIZATION_FEE_BPS",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "accessControl",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract BreezeAccessControl"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "accruedFundingIndex",
     inputs: [
       {
-        internalType: "uint256",
         name: "positionId",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    name: "closePosition",
     outputs: [
       {
-        internalType: "int256",
-        name: "pnl",
-        type: "int256"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "positionId",
-        type: "uint256"
-      }
-    ],
-    name: "liquidate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "reward",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "settleFunding",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "positionId",
-        type: "uint256"
-      }
-    ],
-    name: "calculateUnrealizedPnl",
-    outputs: [
-      {
-        internalType: "int256",
-        name: "totalPnl",
-        type: "int256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "positionId",
-        type: "uint256"
-      }
-    ],
-    name: "isLiquidatable",
-    outputs: [
-      {
-        internalType: "bool",
         name: "",
-        type: "bool"
+        type: "int256",
+        internalType: "int256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [],
-    name: "totalLongOpenInterest",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "totalShortOpenInterest",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "cumulativeFundingIndex",
-    outputs: [
-      {
-        internalType: "int256",
-        name: "",
-        type: "int256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "lastFundingSettledAt",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "effectiveOpenFeeBps",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "capacityUtilizationBps",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "utilizationSurchargeBps",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "maxNotionalCapacity",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "maxPerilNotionalCapacity",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "effectiveNotionalCapacity",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        internalType: "bool",
-        name: "isLong",
-        type: "bool"
-      }
-    ],
+    type: "function",
     name: "availableNotional",
-    outputs: [
+    inputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
+        name: "isLong",
+        type: "bool",
+        internalType: "bool"
       }
     ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "openPositionCount",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
-    inputs: [],
-    name: "minCollateral",
+    type: "function",
+    name: "calculateUnrealizedPnl",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
     outputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
+        name: "totalPnl",
+        type: "int256",
+        internalType: "int256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
+    type: "function",
+    name: "capacityUtilizationBps",
     inputs: [],
-    name: "fundingInterval",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
-        type: "uint256"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
+    type: "function",
+    name: "closePosition",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "pnl",
+        type: "int256",
+        internalType: "int256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "collateralToken",
     inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IERC20"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "cumulativeFundingIndex",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "int256",
+        internalType: "int256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
     name: "currentFundingRate",
+    inputs: [],
     outputs: [
       {
-        internalType: "int256",
         name: "",
-        type: "int256"
+        type: "int256",
+        internalType: "int256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
   },
   {
+    type: "function",
+    name: "currentIndexPrice",
     inputs: [],
-    name: "effectiveFundingIndex",
     outputs: [
       {
-        internalType: "int256",
         name: "",
-        type: "int256"
+        type: "uint256",
+        internalType: "uint256"
       }
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "currentSkew",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "effectiveFundingIndex",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "int256",
+        internalType: "int256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "effectiveNotionalCapacity",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "effectiveOpenFeeBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "feeConfig",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract FeeConfig"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "firstLossReserve",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract FirstLossReserve"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "fundingInterval",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "getMarkPrice",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "indexPrice",
+    inputs: [
+      {
+        name: "rawReading",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "insuranceFund",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract InsuranceFund"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "isLiquidatable",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "lastFundingSettledAt",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "liquidate",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "reward",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "liquidityVault",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract BreezeLiquidityVault"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "matchedOpenInterest",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "maxFundingRateBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "maxNotionalCapacity",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "maxPerilNotionalCapacity",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "maxSkew",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "minCollateral",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "nextPositionId",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "notionalSkew",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "openPosition",
+    inputs: [
+      {
+        name: "isLong",
+        type: "bool",
+        internalType: "bool"
+      },
+      {
+        name: "collateral",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "leverage",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "openPositionAt",
+    inputs: [
+      {
+        name: "index",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "openPositionCount",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "openPositionObligations",
+    inputs: [],
+    outputs: [
+      {
+        name: "obligations",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "openPositionSlotsRemaining",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "oracle",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IWeatherOracle"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "oracleValueScale",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "pauseOpens",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "paused",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "perilRegistry",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IPerilExposureRegistry"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "positions",
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [
+      {
+        name: "trader",
+        type: "address",
+        internalType: "address"
+      },
+      {
+        name: "isLong",
+        type: "bool",
+        internalType: "bool"
+      },
+      {
+        name: "collateral",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "leverage",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "virtualSize",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "entryMarkPrice",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "entryFundingIndex",
+        type: "int256",
+        internalType: "int256"
+      },
+      {
+        name: "isOpen",
+        type: "bool",
+        internalType: "bool"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "regionId",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "requiredVaultReserve",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "reserves",
+    inputs: [],
+    outputs: [
+      {
+        name: "collateralReserve",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "weatherReserve",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "setFirstLossReserve",
+    inputs: [
+      {
+        name: "reserve",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setFundingParams",
+    inputs: [
+      {
+        name: "newInterval",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "newMaxRateBps",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setLiquidityVault",
+    inputs: [
+      {
+        name: "vault",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setMaxSkew",
+    inputs: [
+      {
+        name: "newMaxSkew",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setMinCollateral",
+    inputs: [
+      {
+        name: "newMin",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setOracleValueScale",
+    inputs: [
+      {
+        name: "newScale",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setPerilRegistry",
+    inputs: [
+      {
+        name: "registry",
+        type: "address",
+        internalType: "address"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setSkewReserveBps",
+    inputs: [
+      {
+        name: "newBps",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "setUtilizationFeeBps",
+    inputs: [
+      {
+        name: "newBps",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "settleFunding",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "skewReserveBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "sweepSurplus",
+    inputs: [],
+    outputs: [
+      {
+        name: "surplus",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "syncVaultReserve",
+    inputs: [],
+    outputs: [
+      {
+        name: "shortfall",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "totalLongNotional",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "totalLongOpenInterest",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "totalShortNotional",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "totalShortOpenInterest",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "treasury",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract ProtocolTreasury"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "unpauseOpens",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable"
+  },
+  {
+    type: "function",
+    name: "utilizationFeeBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "utilizationSurchargeBps",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "function",
+    name: "worstCaseNotionalExposure",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ],
+    stateMutability: "view"
+  },
+  {
+    type: "event",
+    name: "CapacitySurchargeCollected",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "trader",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "utilizationBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "FeeCollected",
+    inputs: [
+      {
+        name: "market",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "trader",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "feeAmount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "insuranceShare",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "firstLossShare",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "treasuryShare",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "FirstLossReserveUpdated",
+    inputs: [
+      {
+        name: "oldReserve",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "newReserve",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "FundingParamsUpdated",
+    inputs: [
+      {
+        name: "interval",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "maxRateBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "FundingSettled",
+    inputs: [
+      {
+        name: "fundingRate",
+        type: "int256",
+        indexed: false,
+        internalType: "int256"
+      },
+      {
+        name: "newCumulativeIndex",
+        type: "int256",
+        indexed: false,
+        internalType: "int256"
+      },
+      {
+        name: "timestamp",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "LiquidityVaultUpdated",
+    inputs: [
+      {
+        name: "oldVault",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "newVault",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "MaxSkewUpdated",
+    inputs: [
+      {
+        name: "oldMaxSkew",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "newMaxSkew",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "MinCollateralUpdated",
+    inputs: [
+      {
+        name: "oldMin",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "newMin",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "OracleValueScaleUpdated",
+    inputs: [
+      {
+        name: "oldScale",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "newScale",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "Paused",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        indexed: false,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PayoutShortfall",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "owed",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "paid",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PerilRegistryUpdated",
+    inputs: [
+      {
+        name: "oldRegistry",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "newRegistry",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PositionClosed",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "trader",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "pnl",
+        type: "int256",
+        indexed: false,
+        internalType: "int256"
+      },
+      {
+        name: "payout",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PositionLiquidated",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "liquidator",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "reward",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "badDebt",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "coveredDebt",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "PositionOpened",
+    inputs: [
+      {
+        name: "positionId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256"
+      },
+      {
+        name: "trader",
+        type: "address",
+        indexed: true,
+        internalType: "address"
+      },
+      {
+        name: "isLong",
+        type: "bool",
+        indexed: false,
+        internalType: "bool"
+      },
+      {
+        name: "collateral",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "leverage",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "virtualSize",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "markPrice",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "SkewReserveBpsUpdated",
+    inputs: [
+      {
+        name: "oldBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "newBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "SurplusSwept",
+    inputs: [
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "Unpaused",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        indexed: false,
+        internalType: "address"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "UtilizationFeeUpdated",
+    inputs: [
+      {
+        name: "oldBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "newBps",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "VaultReserveSynced",
+    inputs: [
+      {
+        name: "target",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "actual",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "event",
+    name: "VaultShortfallCovered",
+    inputs: [
+      {
+        name: "requested",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      },
+      {
+        name: "covered",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256"
+      }
+    ],
+    anonymous: false
+  },
+  {
+    type: "error",
+    name: "BelowMinCollateral",
+    inputs: [
+      {
+        name: "provided",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "required",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "EnforcedPause",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "ExceedsNotionalCapacity",
+    inputs: [
+      {
+        name: "resultingNotional",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "capacity",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "ExpectedPause",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InsufficientLiquidity",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InsufficientVaultBacking",
+    inputs: [
+      {
+        name: "shortfall",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "InvalidLeverage",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InvalidParameter",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "InvalidReserves",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "NonPositiveIndexPrice",
+    inputs: [
+      {
+        name: "reading",
+        type: "int256",
+        internalType: "int256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "PositionNotLiquidatable",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "PositionNotOpen",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "ReentrancyGuardReentrantCall",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "SafeERC20FailedOperation",
+    inputs: [
+      {
+        name: "token",
+        type: "address",
+        internalType: "address"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "SkewCapExceeded",
+    inputs: [
+      {
+        name: "resultingSkew",
+        type: "uint256",
+        internalType: "uint256"
+      },
+      {
+        name: "cap",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "TooManyOpenPositions",
+    inputs: [
+      {
+        name: "cap",
+        type: "uint256",
+        internalType: "uint256"
+      }
+    ]
+  },
+  {
+    type: "error",
+    name: "UnauthorizedCaller",
+    inputs: []
+  },
+  {
+    type: "error",
+    name: "ZeroAddress",
+    inputs: []
   }
 ];
 
