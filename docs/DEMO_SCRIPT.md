@@ -335,14 +335,52 @@ Scroll to the SDK code blocks.
 
 ---
 
-## 9. Close (13:30 – 15:00)
+## 9. Why Flare, and why now (13:30 – 14:15)
+
+This is the question you will be asked if the room knows Flare, and until recently it was
+the weakest part of the pitch. It is now the strongest. Do not skip it.
+
+> "One more thing, and it is the reason this is on Flare rather than anywhere else.
+>
+> On **14 July 2026**, Flare signed a Letter of Intent with **Kweather**, a South Korean
+> meteorological company, to publish weather data on-chain through **FTSO**. Rainfall,
+> temperature, the exact variables this protocol trades.
+>
+> And read what they say the partnership is for: **parametric climate insurance that pays
+> out when a pre-agreed environmental threshold is met, without a claims assessment**, and
+> **weather derivatives for agriculture, energy and logistics**.
+>
+> That is a description of what you have been looking at for the last twelve minutes. We
+> built it against that interface before the data existed."
+
+Then land the honest version, because someone will check:
+
+> "To be precise about it: that is a Letter of Intent, not a shipped feed. The Kweather data
+> is not live on FTSO yet, which is exactly why our FTSO adapter reverts today instead of
+> returning something invented.
+>
+> But the adapter is written, it satisfies the same interface the mock does, and there is a
+> test proving both are interchangeable. When that feed goes live, this is a one-line
+> configuration change, not a rebuild. The hard part, which is the pricing, the capital
+> model and the exposure caps, is already done and tested."
+
+**Why this framing wins.** Without it, "our oracle is a mock" sounds like an unfinished
+project. With it, the same fact is a deliberate sequencing decision: the product is ready
+and waiting on a data partnership that has already been announced. Same code, completely
+different story, and the second one is true.
+
+Source, if anyone wants it: the partnership was announced 14 July 2026 and covers FTSO
+publication of Kweather's meteorological datasets.
+
+---
+
+## 10. Close (14:15 – 15:00)
 
 > "Everything you just saw is live on Flare Coston2. Real contracts, real weather from a
 > 30-year archive, 1,080 strike probabilities published on-chain, and 569 tests passing.
 >
 > What it is not: it is a test network, the collateral is a demo token, and it has not been
-> audited. The oracle adapters for Flare's real data feeds are written but still stubs, so
-> settlement today runs on a trusted oracle.
+> audited. Settlement today runs on a trusted oracle rather than FTSO.
 >
 > All of that is in the whitepaper's limitations section rather than left for someone to
 > find. Including one result where our own simulation argues against a parameter we shipped."
@@ -358,10 +396,28 @@ Stop there.
 > deposits that push the pool away from those odds. And our perpetual has a pool taking the
 > other side, so a hedger never has to wait for a gambler to show up.
 
+**"Why Flare? This could run on any EVM chain."**
+> Two reasons, one of which is very recent. FTSO is a decentralised oracle network built for
+> exactly this: publishing a time series on-chain so it is tamper-proof from the point of
+> recording. And in July 2026 Flare signed an LOI with Kweather to publish meteorological
+> data through FTSO, specifically to enable parametric climate insurance and weather
+> derivatives. We are the application layer for that data. FAssets also means a hedge can
+> eventually be collateralised in FXRP rather than a stablecoin, which matters for the
+> regions this is aimed at.
+
 **"What if the oracle lies?"**
 > Today it is a trusted mock, and that is the biggest honest gap. The adapters for Flare's
 > FTSO and FDC are written against a real interface and revert rather than returning
-> anything fake. Nothing in the system pretends that data is verified when it is not.
+> anything fake. Nothing in the system pretends that data is verified when it is not. When
+> the Kweather feed lands on FTSO, swapping to it is a configuration change, and there is a
+> test asserting the mock and the adapter satisfy the same interface.
+
+**"Aren't you just waiting on someone else's partnership?"**
+> Partly, and deliberately. The data was always going to come from a meteorological company;
+> nobody builds their own weather stations to launch a derivatives protocol. What we control
+> is everything above the feed, and that is the part that is hard: pricing off 30 years of
+> history, capital that survives correlated losses, and settlement nobody can veto. That is
+> built and tested now, so the day the feed exists we are not starting.
 
 **"What stops one storm bankrupting the pool?"**
 > Correlated exposure caps. Weather risk is not diversified the way an insurer's portfolio
