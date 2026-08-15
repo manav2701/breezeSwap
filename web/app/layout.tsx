@@ -4,6 +4,7 @@ import './globals.css'
 import { Providers } from './providers'
 import { Navbar } from '../components/Navbar'
 import { Footer } from '../components/Footer'
+import { WelcomeGift } from '../components/WelcomeGift'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -63,6 +64,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
           <Footer />
+          {/* Inside Providers because it reads the connected account, and at the root so a
+              first-time wallet is funded wherever it happens to connect rather than only
+              on the pages that thought to ask. */}
+          <WelcomeGift />
         </Providers>
       </body>
     </html>
